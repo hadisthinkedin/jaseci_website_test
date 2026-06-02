@@ -49,11 +49,11 @@ export default function CodeComparePanes({
   return (
     <section
       className="cc"
-      aria-label="Same app: a polyglot stack vs a single Jac file"
+      aria-label="Same app: a single Jac file vs a polyglot stack"
     >
       <span className="sr-only">
-        The same mini-todo app: four files across Python, Next.js and CSS on
-        the left; one Jac file on the right.
+        The same mini-todo app: one Jac file on the left; four files across
+        Python, Next.js and CSS on the right.
       </span>
 
       <a
@@ -67,6 +67,7 @@ export default function CodeComparePanes({
       </a>
 
       <div className="cc__panes">
+        <JacPane file={jac} />
         <PolyPane
           files={poly}
           activeIdx={activeIdx}
@@ -75,7 +76,6 @@ export default function CodeComparePanes({
           tabRefs={tabRefs}
           activeFile={activeFile}
         />
-        <JacPane file={jac} />
       </div>
     </section>
   );
