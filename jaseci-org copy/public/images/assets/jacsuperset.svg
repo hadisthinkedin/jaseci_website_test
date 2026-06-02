@@ -1,0 +1,82 @@
+<svg width="1080" height="1080" viewBox="0 0 1080 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1080" height="1080" fill="transparent"/>
+
+  <!-- Jac outer circle (largest) -->
+  <circle cx="540" cy="500" r="380" stroke="#F97316" stroke-width="4" fill="url(#jacGradient)" fill-opacity="0.08"/>
+
+  <!-- Jac label -->
+  <text x="540" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="#F97316">Jac</text>
+
+  <!-- Python circle (left inner - no overlap) -->
+  <circle cx="350" cy="560" r="160" stroke="#3B82F6" stroke-width="3" fill="url(#pythonGradient)" fill-opacity="0.15"/>
+
+  <!-- Python label -->
+  <text x="350" y="570" text-anchor="middle" font-family="Arial, sans-serif" font-size="38" font-weight="bold" fill="#3B82F6">Python</text>
+
+  <!-- JavaScript circle (right inner - no overlap) -->
+  <circle cx="730" cy="560" r="160" stroke="#FBBF24" stroke-width="3" fill="url(#jsGradient)" fill-opacity="0.15"/>
+
+  <!-- JavaScript label -->
+  <text x="730" y="570" text-anchor="middle" font-family="Arial, sans-serif" font-size="38" font-weight="bold" fill="#D97706">JavaScript</text>
+
+  <!-- Plus sign between circles to show Jac combines them -->
+  <text x="540" y="575" text-anchor="middle" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#F97316">+</text>
+
+  <!-- Python Core box (bottom left) -->
+  <rect x="40" y="800" width="200" height="180" rx="16" fill="url(#pythonBoxGradient)" fill-opacity="0.9"/>
+  <text x="140" y="850" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white">PyPI</text>
+  <text x="140" y="885" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="white" fill-opacity="0.9">numpy, pandas</text>
+  <text x="140" y="910" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="white" fill-opacity="0.9">torch, sklearn</text>
+  <text x="140" y="935" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="white" fill-opacity="0.9">fastapi, flask</text>
+  <text x="140" y="960" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="white" fill-opacity="0.9">+ all libraries</text>
+
+  <!-- JavaScript/npm box (bottom right) -->
+  <rect x="840" y="800" width="200" height="180" rx="16" fill="url(#jsBoxGradient)" fill-opacity="0.9"/>
+  <text x="940" y="850" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white">npm</text>
+  <text x="940" y="885" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="white" fill-opacity="0.9">react, vue</text>
+  <text x="940" y="910" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="white" fill-opacity="0.9">@mui/material</text>
+  <text x="940" y="935" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="white" fill-opacity="0.9">tailwindcss</text>
+  <text x="940" y="960" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="white" fill-opacity="0.9">+ all packages</text>
+
+  <!-- Jac Extensions box (top right) -->
+  <rect x="820" y="80" width="220" height="200" rx="16" fill="url(#jacBoxGradient)" fill-opacity="0.9"/>
+  <text x="930" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="white">Jac Extensions</text>
+  <text x="930" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="white" fill-opacity="0.9">AI (byLLM)</text>
+  <text x="930" y="198" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="white" fill-opacity="0.9">Object-Spatial</text>
+  <text x="930" y="226" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="white" fill-opacity="0.9">jac-client (UI)</text>
+  <text x="930" y="254" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="white" fill-opacity="0.9">jac-scale (Deploy)</text>
+
+  <!-- Connecting lines -->
+  <line x1="240" y1="800" x2="300" y2="700" stroke="#3B82F6" stroke-width="2" stroke-dasharray="6,4" opacity="0.6"/>
+  <line x1="840" y1="800" x2="780" y2="700" stroke="#D97706" stroke-width="2" stroke-dasharray="6,4" opacity="0.6"/>
+  <line x1="820" y1="200" x2="700" y2="300" stroke="#F97316" stroke-width="2" stroke-dasharray="6,4" opacity="0.6"/>
+
+  <!-- Gradients -->
+  <defs>
+    <linearGradient id="jacGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F97316"/>
+      <stop offset="100%" stop-color="#FBBF24"/>
+    </linearGradient>
+    <linearGradient id="pythonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#60A5FA"/>
+    </linearGradient>
+    <linearGradient id="jsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <linearGradient id="pythonBoxGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#60A5FA"/>
+    </linearGradient>
+    <linearGradient id="jsBoxGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#FBBF24"/>
+    </linearGradient>
+    <linearGradient id="jacBoxGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F97316"/>
+      <stop offset="100%" stop-color="#FBBF24"/>
+    </linearGradient>
+  </defs>
+</svg>
