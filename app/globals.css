@@ -742,3 +742,292 @@ h6 {
     transition: none;
   }
 }
+
+/* ────────────────────────────────────────────────────────────────
+   Code comparison frame — repo bar + two dark editor panes
+   Muted-on-dark tints below derive from --code-text (cream) at
+   low opacity, scoped to the dark editor surface.
+   ──────────────────────────────────────────────────────────────── */
+
+.cc {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: var(--bg);
+  padding: clamp(1rem, 2vw, 1.5rem);
+  min-height: 100svh;
+}
+
+.cc__repobar {
+  align-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.55rem 1rem 0.55rem 0.85rem;
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  line-height: 1;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.cc__repobar::before {
+  content: "";
+  display: inline-block;
+  width: 1.75rem;
+  height: 2px;
+  background: var(--accent-gradient);
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+.cc__repobar:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.cc__repobar-arrow {
+  display: inline-block;
+  color: var(--accent);
+  font-weight: 500;
+  transition: transform 0.15s ease;
+}
+
+.cc__repobar:hover .cc__repobar-arrow {
+  transform: translateX(3px);
+}
+
+.cc__panes {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  min-height: 0;
+}
+
+.cc__pane {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--code-bg);
+  color: var(--code-text);
+  border: 1px solid rgba(243, 239, 230, 0.08);
+  border-radius: var(--radius-box);
+}
+
+.cc__pane--jac {
+  border-color: var(--accent);
+}
+
+.cc__tabstrip {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  padding: 0.4rem 0.4rem 0;
+  background: rgba(243, 239, 230, 0.02);
+  border-bottom: 1px solid rgba(243, 239, 230, 0.1);
+  overflow-x: auto;
+}
+
+.cc__traffic {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0 0.7rem 0.4rem 0.35rem;
+  flex-shrink: 0;
+}
+
+.cc__traffic-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(243, 239, 230, 0.15);
+}
+
+.cc__tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.cc__tab {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 0.85rem;
+  margin-bottom: -1px;
+  background: transparent;
+  border: 0;
+  border-top: 2px solid transparent;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  color: rgba(243, 239, 230, 0.55);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.cc__tab:hover {
+  color: var(--code-text);
+}
+
+.cc__tab[aria-selected="true"] {
+  color: var(--code-text);
+  background: rgba(243, 239, 230, 0.04);
+  border-top-color: var(--accent);
+}
+
+.cc__tab--static {
+  cursor: default;
+}
+
+.cc__tab-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.55rem;
+  height: 0.95rem;
+  padding: 0 0.3rem;
+  border-radius: 2px;
+  background: rgba(243, 239, 230, 0.08);
+  color: rgba(243, 239, 230, 0.7);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+}
+
+.cc__pane--jac .cc__tab--static .cc__tab-glyph {
+  background: rgba(238, 90, 36, 0.15); /* --accent @ ~15% */
+  color: var(--accent);
+}
+
+.cc__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 1rem;
+  background: rgba(243, 239, 230, 0.015);
+  border-bottom: 1px solid rgba(243, 239, 230, 0.06);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: rgba(243, 239, 230, 0.55);
+}
+
+.cc__breadcrumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cc__crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.cc__crumb--last {
+  color: var(--code-text);
+}
+
+.cc__crumb-sep {
+  color: rgba(243, 239, 230, 0.35);
+}
+
+.cc__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.18rem 0.6rem;
+  border: 1px solid rgba(243, 239, 230, 0.18);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(243, 239, 230, 0.7);
+  white-space: nowrap;
+}
+
+.cc__pane--jac .cc__badge {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.cc__code-area {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 1rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+/* Shiki output sits inside .cc__code-area; strip its layout, keep its colors. */
+.cc__code-area pre {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  overflow: visible; /* outer .cc__code-area scrolls instead */
+}
+
+.cc__code-area pre code {
+  display: block;
+  background: transparent;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+.cc__code-area .line {
+  display: block;
+  min-height: 1lh;
+}
+
+@media (max-width: 960px) {
+  .cc__panes {
+    grid-template-columns: 1fr;
+  }
+  .cc__pane {
+    min-height: 46svh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cc__repobar,
+  .cc__repobar-arrow,
+  .cc__tab {
+    transition: none;
+  }
+}
