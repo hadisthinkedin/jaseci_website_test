@@ -1,0 +1,744 @@
+@import "tailwindcss";
+
+/* ────────────────────────────────────────────────────────────────
+   Jaseci Digest editorial design system — single source of truth.
+   Warm cream page, near-black ink, single orange accent. Flat.
+   ──────────────────────────────────────────────────────────────── */
+
+:root {
+  /* surfaces — warm cream, flat (no dark theme, no starfield) */
+  --bg: #f3efe6;
+  --bg-soft: #ece7db;
+  --paper: #faf7f0;
+
+  /* ink */
+  --text: #0a0a0a;
+  --text-muted: #5a5752;
+
+  /* rules / borders */
+  --rule: #0a0a0a;
+  --rule-soft: rgba(26, 26, 26, 0.2);
+
+  /* accent — Jaseci orange (matched to screenshot) */
+  --accent: #ee5a24;
+  --accent-hover: #c8430f;
+  --accent-soft: #f7e0d0;
+  --accent-gradient: linear-gradient(90deg, #ee5a24 0%, #f4a93c 100%);
+  --on-accent: #f3efe6;
+
+  /* code block — dark, inverted, on the cream page */
+  --code-bg: #0a0a0a;
+  --code-text: #f3efe6;
+
+  /* shape — flat editorial: small radii, full pills */
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-box: 10px;
+  --radius-pill: 999px;
+
+  /* type — Inter for everything; next/font supplies the variable family */
+  --font-sans:
+    var(--font-inter), -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+    Arial, sans-serif;
+  --font-mono:
+    var(--font-jetbrains-mono), "Fira Code", Menlo, Monaco, Consolas, monospace;
+
+  /* layout */
+  --max-width: 1100px;
+  --content-width: 720px;
+  --gap-cols: 56px;
+}
+
+/* Tailwind v4 theme — bg-bg, text-accent, font-sans, etc. all resolve */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-soft: var(--bg-soft);
+  --color-paper: var(--paper);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-rule: var(--rule);
+  --color-rule-soft: var(--rule-soft);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-code-bg: var(--code-bg);
+  --color-code-text: var(--code-text);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-box: 10px;
+  --radius-pill: 999px;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Global baseline
+   ──────────────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  text-size-adjust: 100%;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Inter's single-storey 'g' (ss01) and single-storey 'a' (cv11) */
+  font-feature-settings: "ss01", "cv11";
+}
+
+a {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--accent);
+  transition:
+    color 0.15s ease,
+    text-decoration-color 0.15s ease;
+}
+
+a:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent-hover);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Inline code (anywhere except inside pre) */
+:not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  background: var(--bg-soft);
+  border-radius: var(--radius-sm);
+  padding: 0.1em 0.35em;
+}
+
+/* Code block — dark on cream */
+pre {
+  background: var(--code-bg);
+  color: var(--code-text);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  line-height: 1.55;
+}
+
+pre code {
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+  font-family: inherit;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 2rem 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Type utilities — heading roles
+   ──────────────────────────────────────────────────────────────── */
+
+/* Display headline — heavy, uppercase, tightly tracked. Reserved for <h1>. */
+.display {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: clamp(2.25rem, 5.5vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+/* Section heading — used for h2 by default */
+h2 {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 3.2vw, 2.15rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* Eyebrow / kicker — orange caps preceded by the gradient dash */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--accent);
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  line-height: 1;
+}
+
+.eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 1.75rem;
+  height: 2px;
+  background: var(--accent-gradient);
+  border-radius: 1px;
+}
+
+/* Nav / label caps */
+.nav-caps {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text);
+}
+
+/* Active / current nav item — outlined in the accent */
+.nav-item--active {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Shared components
+   ──────────────────────────────────────────────────────────────── */
+
+/* Outline pill CTA — primary call-to-action shape */
+.cta-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.75rem;
+  border: 1px solid var(--text);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.cta-pill:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+  /* keep the link underline override consistent */
+  text-decoration: none;
+}
+
+/* Solid variant — primary "Subscribe"-style button */
+.cta-pill--solid {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.cta-pill--solid:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: var(--on-accent);
+}
+
+/* Soft panel — cream-orange callout with thick left bar (Subscribe-box) */
+.panel {
+  position: relative;
+  padding: 1.5rem 1.75rem;
+  border-radius: var(--radius-box);
+  background: var(--accent-soft);
+  border-left: 5px solid var(--accent);
+}
+
+/* Section divider — short gradient stub fading into a soft rule */
+.divider {
+  position: relative;
+  border: 0;
+  border-top: 1px solid var(--rule-soft);
+  margin: 2.5rem 0;
+}
+
+.divider::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 4rem;
+  height: 2px;
+  background: var(--accent-gradient);
+  border-radius: 1px;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Screen-reader-only utility
+   ──────────────────────────────────────────────────────────────── */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Hero shell
+   ──────────────────────────────────────────────────────────────── */
+
+.hero {
+  background: var(--bg);
+  padding-block: clamp(3rem, 6vw, 5.5rem);
+}
+
+.hero__inner {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2rem);
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: var(--gap-cols);
+  align-items: start;
+}
+
+.hero__left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+.hero__right {
+  min-width: 0;
+}
+
+@media (max-width: 960px) {
+  .hero__inner {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero__inner {
+    padding-inline: 1.25rem;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Announcement pill — small link above the headline
+   ──────────────────────────────────────────────────────────────── */
+
+.pill {
+  align-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.9rem 0.4rem 1rem;
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.pill:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.pill__arrow {
+  display: inline-block;
+  color: var(--accent);
+  transition: transform 0.15s ease;
+}
+
+.pill:hover .pill__arrow {
+  transform: translateX(3px);
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Headline — page <h1>, mirrors .display but is the dedicated class
+   ──────────────────────────────────────────────────────────────── */
+
+.headline {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: clamp(2.25rem, 5.5vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.headline__accent {
+  color: var(--accent);
+  font-style: normal;
+  font-weight: inherit;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Typewriter description — visible animated layer over an
+   invisible ghost line that locks the paragraph's height.
+   ──────────────────────────────────────────────────────────────── */
+
+.tw {
+  position: relative;
+  margin: 0;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+
+.tw__ghost {
+  display: block;
+  visibility: hidden;
+}
+
+.tw__display {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.tw__text {
+  display: inline;
+  color: var(--text);
+}
+
+.tw__code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  background: var(--bg-soft);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 0.08em 0.35em;
+}
+
+.tw__caret {
+  display: inline-block;
+  margin-left: 1px;
+  color: var(--accent);
+  font-weight: 400;
+  animation: tw-caret-blink 1s steps(1, end) infinite;
+}
+
+@keyframes tw-caret-blink {
+  0%,
+  49.99% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tw__caret {
+    animation: none;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Install block — H2, tablist with bottom-border active state,
+   right-aligned "view install script" link, dark code blocks.
+   ──────────────────────────────────────────────────────────────── */
+
+.install {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.install__heading {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: clamp(1.1rem, 1.6vw, 1.25rem);
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.install__tablist {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.install__tab {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  margin-bottom: -1px;
+  padding: 0.55rem 0.85rem;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.install__tab:hover {
+  color: var(--text);
+}
+
+.install__tab[aria-selected="true"] {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+
+.install__viewlink {
+  margin-left: auto;
+  padding: 0.55rem 0.25rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
+
+.install__viewlink:hover {
+  color: var(--accent);
+}
+
+.install__steplabel {
+  margin-top: 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.install__note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* Code block — dark surface (--code-bg / --code-text). Muted-on-dark
+   tints derive from --code-text (cream) at low opacity. */
+.codeblock {
+  position: relative;
+  background: var(--code-bg);
+  color: var(--code-text);
+  border-radius: var(--radius-md);
+  padding: 1rem 3rem 1rem 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  overflow-x: auto;
+}
+
+.codeblock > code {
+  display: block;
+  background: transparent;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  white-space: pre;
+}
+
+.codeblock__line {
+  display: block;
+}
+
+.codeblock__prompt {
+  margin-right: 0.65rem;
+  color: rgba(243, 239, 230, 0.4); /* --code-text @ 40% — faint $ */
+  user-select: none;
+}
+
+.codeblock__copy {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid rgba(243, 239, 230, 0.2); /* --code-text @ 20% */
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--code-text);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.codeblock__copy:hover {
+  background: rgba(243, 239, 230, 0.08); /* --code-text @ 8% */
+  border-color: rgba(243, 239, 230, 0.4);
+}
+
+.codeblock__copy svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Benchmark widget — title + paper card + horizontal bar chart.
+   Bars animate width on intersection (driven by inline style).
+   ──────────────────────────────────────────────────────────────── */
+
+.benchmark {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.benchmark__title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.benchmark__card {
+  margin: 0;
+  padding: 1.5rem 1.5rem 1.75rem;
+  background: var(--paper);
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--radius-box);
+}
+
+.benchmark__chart {
+  display: grid;
+  grid-template-columns: minmax(7rem, max-content) 1fr;
+  column-gap: 1rem;
+  row-gap: 0.9rem;
+  align-items: center;
+}
+
+.benchmark__row-label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.benchmark__row-track {
+  position: relative;
+  height: 14px;
+  background: var(--bg-soft);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.benchmark__row-bar {
+  height: 100%;
+  border-radius: inherit;
+  transition: width 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.benchmark__row-bar--accent {
+  background: var(--accent);
+}
+
+.benchmark__row-bar--gray {
+  background: var(--rule-soft);
+}
+
+.benchmark__view-link {
+  align-self: end;
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+}
+
+.benchmark__view-link:hover {
+  color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .benchmark__row-bar {
+    transition: none;
+  }
+}
