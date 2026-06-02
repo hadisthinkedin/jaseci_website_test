@@ -66,6 +66,14 @@ export default function CodeComparePanes({
         <span className="cc__repobar-arrow" aria-hidden="true">→</span>
       </a>
 
+      <div className="cc__framing">
+        <span className="eyebrow">The polyglot tax</span>
+        <p className="cc__framing-line">
+          The same mini-todo app — AI categorization and all. One Jac file on
+          the left. Four files across Python, Next.js, and CSS on the right.
+        </p>
+      </div>
+
       <div className="cc__panes">
         <JacPane file={jac} />
         <PolyPane

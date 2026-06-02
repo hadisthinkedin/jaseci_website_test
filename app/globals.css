@@ -1031,3 +1031,41 @@ h6 {
     transition: none;
   }
 }
+
+.cc__framing {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 70ch;
+  padding-block: 0.25rem;
+}
+
+.cc__framing-line {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: clamp(0.95rem, 1.3vw, 1.05rem);
+  line-height: 1.55;
+}
+
+/* Subtle scroll-driven entry — fades + lifts as the frame enters viewport.
+   Falls back to no animation on browsers without animation-timeline support. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .cc {
+      animation: cc-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+    @keyframes cc-reveal {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+}
