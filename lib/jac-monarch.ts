@@ -107,33 +107,28 @@ export function registerJacLanguage(monaco: any): void {
 }
 
 /**
- * A dark theme tuned to the design system: `--code-bg #0a0a0a` background,
- * `--code-text #f3efe6` foreground, `--accent #ee5a24` accent for the Jac
- * graph sigils and `by llm()` highlight.
+ * VS Code's current default theme is Dark Modern (replaced Dark+ as the
+ * default in 2023). Dark Modern's theme JSON overrides only workbench
+ * colors and inherits Dark+ for all syntax token colors. So we base on
+ * Monaco's built-in `vs-dark` (Dark+ tokens) and override only the
+ * editor.* workbench values with the exact Dark Modern hexes from
+ * microsoft/vscode/extensions/theme-defaults/themes/dark_modern.json.
+ *
+ * The custom Jac token rules (orange sigil/gold by-llm overlay) used to
+ * live here; they were a Jaseci embellishment, not Dark Modern, so this
+ * function now leaves token rules empty so Jac renders with the same
+ * defaults VS Code would use if it didn't know the language.
  */
 export function defineJaseciTheme(monaco: any): void {
-  monaco.editor.defineTheme("jaseci-dark", {
+  monaco.editor.defineTheme("vs-dark-modern", {
     base: "vs-dark",
     inherit: true,
-    rules: [
-      { token: "keyword.def", foreground: "569cd6", fontStyle: "bold" },
-      { token: "keyword.special", foreground: "f4a93c", fontStyle: "bold" },
-      { token: "operator.sigil", foreground: "ee5a24", fontStyle: "bold" },
-      { token: "type.special", foreground: "4ec9b0" },
-    ],
+    rules: [],
     colors: {
-      "editor.background": "#0a0a0a",
-      "editor.foreground": "#f3efe6",
-      // VS Code Dark+ defaults for line numbers (muted gray, active brighter)
-      "editorLineNumber.foreground": "#858585",
-      "editorLineNumber.activeForeground": "#c6c6c6",
-      "editor.lineHighlightBackground": "#141414",
-      "editor.lineHighlightBorder": "#14141400",
-      "editorGutter.background": "#0a0a0a",
-      "editorCursor.foreground": "#f3efe6",
-      "scrollbarSlider.background": "#3a3a3a55",
-      "scrollbarSlider.hoverBackground": "#5a5a5a55",
-      "scrollbarSlider.activeBackground": "#7a7a7a55",
+      "editor.background": "#1F1F1F",
+      "editor.foreground": "#CCCCCC",
+      "editorLineNumber.foreground": "#6E7681",
+      "editorLineNumber.activeForeground": "#CCCCCC",
     },
   });
 }

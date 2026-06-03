@@ -57,6 +57,11 @@
   --max-width: 1100px;
   --content-width: 720px;
   --gap-cols: 56px;
+  /* Hero-specific: wider container + larger column gap so the headline
+     side and the benchmark side feel more spread out than the other
+     sections (which share --max-width). */
+  --hero-max-width: 1320px;
+  --hero-gap-cols: 96px;
 }
 
 /* Tailwind v4 theme — bg-bg, text-accent, font-sans, etc. all resolve */
@@ -367,12 +372,12 @@ h6 {
 }
 
 .hero__inner {
-  max-width: var(--max-width);
+  max-width: var(--hero-max-width);
   margin-inline: auto;
   padding-inline: clamp(0.75rem, 2.4vw, 1.2rem);
   display: grid;
   grid-template-columns: 1.05fr 1fr;
-  gap: var(--gap-cols);
+  gap: var(--hero-gap-cols);
   align-items: start;
 }
 

@@ -29,7 +29,7 @@ const MONACO_LANG: Record<SupportedLang, string> = {
 };
 
 const EDITOR_OPTIONS = {
-  theme: "jaseci-dark",
+  theme: "vs-dark-modern",
   readOnly: true,
   automaticLayout: true,
   minimap: { enabled: false },
