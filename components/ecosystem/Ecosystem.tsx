@@ -87,8 +87,10 @@ export default function Ecosystem() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Explore {brand}
-              <span aria-hidden="true"> →</span>
+              <span>Explore {brand}</span>
+              <span className="eco__explore-arrow" aria-hidden="true">
+                <ArrowUpRight />
+              </span>
             </a>
           </article>
         ))}
@@ -100,10 +102,30 @@ export default function Ecosystem() {
         target="_blank"
         rel="noopener noreferrer"
       >
-        All packs on github
-        <span aria-hidden="true"> →</span>
+        <span>All packs on github</span>
+        <span className="eco__explore-arrow" aria-hidden="true">
+          <ArrowUpRight />
+        </span>
       </a>
     </section>
+  );
+}
+
+function ArrowUpRight() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M11.9852 4L12 10.7704H10.9314V6.60741L10.9462 5.80741L4.74211 12L4 11.2444L10.2041 5.03704L9.47681 5.05185L5.21707 5.05185V4L11.9852 4Z"
+        fill="currentColor"
+      />
+    </svg>
   );
 }
 

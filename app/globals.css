@@ -1533,12 +1533,13 @@ h6 {
 .eco__card {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
   min-width: 0;
+  /* No flex gap — vertical rhythm is set by explicit margins below in
+     the reference's 32/24/16/24 pattern so each step reads deliberately. */
 }
 
 /* Dark diagram panel — deep navy gradient with a soft highlight at the
-   top-left, matching the architectural-screenshot mood. */
+   top-left. 32px gap below it (image → content). */
 .eco__diagram {
   position: relative;
   aspect-ratio: 16 / 9;
@@ -1548,7 +1549,7 @@ h6 {
     radial-gradient(ellipse 70% 60% at 25% 20%, #2e2c70 0%, transparent 60%),
     radial-gradient(ellipse 70% 50% at 80% 80%, #0f172a 0%, transparent 60%),
     linear-gradient(140deg, #1f1f4e 0%, #0a0a23 100%);
-  margin-bottom: 0.85rem;
+  margin-bottom: 32px;
 }
 
 .eco__diagram svg {
@@ -1558,67 +1559,93 @@ h6 {
   height: 100%;
 }
 
+/* Brand row — 40x40 glyph + wordmark. 24px gap below (brand → headline). */
 .eco__brand {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
 .eco__glyph {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
   background: var(--text);
   color: var(--bg);
+  flex-shrink: 0;
 }
 
 .eco__glyph svg {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
 }
 
 .eco__wordmark {
   font-family: var(--font-mono);
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 500;
   color: var(--text);
   letter-spacing: -0.01em;
 }
 
+/* Headline. 16px gap below (headline → description). */
 .eco__cardline {
-  margin: 0.4rem 0 0;
+  margin: 0 0 16px;
   font-family: var(--font-sans);
   font-weight: 700;
   font-size: clamp(1.35rem, 1.9vw, 1.6rem);
-  line-height: 1.15;
+  line-height: 1.2;
   letter-spacing: -0.02em;
   color: var(--text);
 }
 
+/* Description. 24px gap below (description → explore link). */
 .eco__carddesc {
-  margin: 0;
+  margin: 0 0 24px;
   color: var(--text-muted);
   font-family: var(--font-sans);
   font-size: 0.95rem;
   line-height: 1.5;
 }
 
+/* Explore link with arrow that slides left into the label on hover —
+   the reference does the same transform. */
 .eco__explore {
-  margin-top: 0.4rem;
-  align-self: start;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-family: var(--font-mono);
   font-size: 0.9rem;
+  font-weight: 500;
   color: var(--text);
   text-decoration: none;
   letter-spacing: -0.01em;
-  transition: color 0.15s ease;
+  transition: color 0.2s ease;
 }
 
+.eco__explore-arrow {
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.eco__card:hover .eco__explore,
 .eco__explore:hover {
   color: var(--accent);
+}
+
+.eco__card:hover .eco__explore-arrow,
+.eco__explore:hover .eco__explore-arrow {
+  transform: translateX(-0.75rem);
+}
+
+.eco__all:hover .eco__explore-arrow {
+  transform: translateX(-0.5rem);
 }
 
 .eco__diagram {
@@ -1629,13 +1656,17 @@ h6 {
 /* "All packs on github →" — centered below the grid */
 .eco__all {
   align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   margin-top: clamp(1.5rem, 3vw, 2.25rem);
   font-family: var(--font-mono);
   font-size: 0.9rem;
+  font-weight: 500;
   color: var(--text);
   text-decoration: none;
   letter-spacing: -0.01em;
-  transition: color 0.15s ease;
+  transition: color 0.2s ease;
 }
 
 .eco__all:hover {
