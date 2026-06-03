@@ -9,36 +9,42 @@ type Card = {
   brand: string;
   headline: string;
   description: string;
+  href: string;
   Glyph: () => React.JSX.Element;
   Diagram: () => React.JSX.Element;
 };
 
 const CARDS: Card[] = [
   {
-    slug: "nodeforge",
-    brand: "nodeforge",
-    headline: "Build graphs that reason.",
-    description: "For agents and decision loops.",
+    slug: "jacpacks",
+    brand: "jacpacks",
+    headline: "The pack registry for Jac.",
+    description: "Search, install, and publish Jac packages.",
+    href: "https://github.com/jaseci-labs/jacpacks",
     Glyph: GlyphNodes,
     Diagram: DiagramAgent,
   },
   {
-    slug: "walkerpath",
-    brand: "walkerpath",
-    headline: "State that lives in your graph.",
-    description: "For persistent objects without a database.",
-    Glyph: GlyphWalker,
-    Diagram: DiagramWalker,
-  },
-  {
-    slug: "jacline",
-    brand: "jacline",
-    headline: "Deploy any walker as an endpoint.",
-    description: "For zero-glue services.",
+    slug: "jac-shadcn",
+    brand: "jac-shadcn",
+    headline: "shadcn components for Jac.",
+    description: "Drop-in UI primitives for cl def views.",
+    href: "https://github.com/jaseci-labs/jac-shadcn",
     Glyph: GlyphLine,
     Diagram: DiagramDeploy,
   },
+  {
+    slug: "littleX",
+    brand: "littleX",
+    headline: "A small social platform, fully in Jac.",
+    description: "Reference template for end-to-end Jaseci apps.",
+    href: "https://github.com/jaseci-labs/littleX",
+    Glyph: GlyphWalker,
+    Diagram: DiagramWalker,
+  },
 ];
+
+const ORG_URL = "https://github.com/jaseci-labs";
 
 export default function Ecosystem() {
   return (
@@ -56,11 +62,17 @@ export default function Ecosystem() {
       </header>
 
       <div className="eco__grid">
-        {CARDS.map(({ slug, brand, headline, description, Glyph, Diagram }) => (
+        {CARDS.map(({ slug, brand, headline, description, href, Glyph, Diagram }) => (
           <article key={slug} className="eco__card">
-            <div className="eco__diagram" aria-hidden="true">
+            <a
+              className="eco__diagram"
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${brand} on GitHub`}
+            >
               <Diagram />
-            </div>
+            </a>
             <div className="eco__brand">
               <span className="eco__glyph" aria-hidden="true">
                 <Glyph />
@@ -69,13 +81,28 @@ export default function Ecosystem() {
             </div>
             <h3 className="eco__cardline">{headline}</h3>
             <p className="eco__carddesc">{description}</p>
-            <a className="eco__explore" href={`#${slug}`}>
+            <a
+              className="eco__explore"
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Explore {brand}
               <span aria-hidden="true"> →</span>
             </a>
           </article>
         ))}
       </div>
+
+      <a
+        className="eco__all"
+        href={ORG_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        All packs on github
+        <span aria-hidden="true"> →</span>
+      </a>
     </section>
   );
 }

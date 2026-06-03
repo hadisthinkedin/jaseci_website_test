@@ -3,6 +3,7 @@ import CodeCompare from "@/components/code-compare/CodeCompare";
 import Interop from "@/components/interop/Interop";
 import CaseStudies from "@/components/case-studies/CaseStudies";
 import Ecosystem from "@/components/ecosystem/Ecosystem";
+import Footer from "@/components/footer/Footer";
 
 const SECTIONS = [
   { id: "home", label: "Home" },
@@ -10,6 +11,7 @@ const SECTIONS = [
   { id: "interop", label: "Import from any ecosystem" },
   { id: "cases", label: "Case studies" },
   { id: "ecosystem", label: "Build with the Jac family" },
+  { id: "contact", label: "Contact" },
 ];
 
 export default function Home() {
@@ -45,6 +47,13 @@ export default function Home() {
           aria-label="Build with the Jac framework family"
         >
           <Ecosystem />
+        </section>
+        <section
+          id="contact"
+          className="snap-section"
+          aria-label="Contact and footer"
+        >
+          <Footer />
         </section>
         <nav className="scroll-nav" aria-label="Section navigation">
           {SECTIONS.map((s) => (
