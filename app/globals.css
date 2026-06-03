@@ -2649,11 +2649,17 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   pointer-events: auto;
 }
 
+/* IMG_4925.jpg is cropped into the same rounded-square shape as the big
+   tile that the lottie animation resolves to — replaces the blue tile bg
+   from the reference frame. Square aspect, sized by height so it stays
+   contained within the img-cover canvas. */
 .vp-final img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: var(--radius-box);
+  height: 78%;
+  width: auto;
+  aspect-ratio: 1;
+  max-width: 78%;
+  object-fit: cover;
+  border-radius: 18%;
 }
 
 /* Projects link below the image — fades in after the animation completes. */
