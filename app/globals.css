@@ -2620,8 +2620,9 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
 
 /* Stacked layers inside img-cover. vp-final (IMG_4925.jpg texture) is the
    backdrop; vp-anim (lottie SVG) is the foreground and stays visible the
-   whole time — on complete its big-tile bg is stripped via JS so the
-   texture shows through behind the icon grid. */
+   whole time — on complete its filter groups (big-tile bg + icon-tile
+   shadows) are stripped via JS so the texture shows through behind the
+   icon grid. */
 .vp-anim,
 .vp-final {
   position: absolute;
@@ -2631,9 +2632,9 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 500ms ease;
 }
 
+/* No fade — texture pops on instantly when the lottie completes. */
 .vp-final {
   z-index: 1;
   opacity: 0;

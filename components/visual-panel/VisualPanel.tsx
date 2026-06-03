@@ -8,41 +8,29 @@ const LOTTIE_SRC =
   "https://cdn.prod.website-files.com/68c9c3107effc2ea46e1a81f/69b6b37ab732de7af40519e5_MoveModels.json";
 const PROJECTS_HREF = "/projects";
 
-const BIG_TILE_MIN_AREA = 20000;
-
 /**
- * The lottie SVG resolves to a big rounded tile holding 9 icon tiles. To
- * replace the tile background with IMG_4925.jpg while keeping the icons,
- * find the 2 largest filled elements in the SVG (empirically the front
- * and shadow of the big tile, ~171×152 each) and clear their fill so the
- * texture below shows through. Smaller fills (100×100 icon faces, black
- * shadows, colorful glyphs) are untouched.
+ * The lottie SVG paints the big rounded tile and each of the 9 icon tiles
+ * through `<g filter="url(#__lottie_element_…)">` groups whose only filter
+ * is a Gaussian blur. The blur of the white tile face + the blurs of nine
+ * dark icon-tile backings stack into the soft blueish halo we see behind
+ * the icons. Hiding every filter group strips the big-tile background
+ * AND the icon-tile shadows in one pass, leaving only the unfiltered
+ * icon-face squares + colorful glyphs on top of the IMG_4925.jpg texture
+ * behind.
  */
-function hideBigTileBg(svg: SVGSVGElement) {
-  type Item = { el: Element; area: number; orig: string };
-  const items: Item[] = [];
-  svg.querySelectorAll<SVGElement>("[fill]").forEach((el) => {
-    const f = el.getAttribute("fill");
-    if (!f || f === "none") return;
-    try {
-      // @ts-expect-error getBBox is on SVGGraphicsElement
-      const b = el.getBBox();
-      items.push({ el, area: b.width * b.height, orig: f });
-    } catch {
-      // not a graphics element
-    }
+function hideLottieGlowLayers(svg: SVGSVGElement) {
+  svg.querySelectorAll<SVGGraphicsElement>("g[filter]").forEach((g) => {
+    g.setAttribute("data-vp-hidden", "1");
+    g.style.display = "none";
   });
-  items.sort((a, b) => b.area - a.area);
-  for (let i = 0; i < 2; i++) {
-    const item = items[i];
-    if (item && item.area > BIG_TILE_MIN_AREA) {
-      item.el.setAttribute("data-orig-fill", item.orig);
-      item.el.setAttribute("fill", "none");
-    }
-  }
 }
 
-function restoreBigTileBg(svg: SVGSVGElement) {
+function restoreLottieGlowLayers(svg: SVGSVGElement) {
+  svg.querySelectorAll<SVGGraphicsElement>("[data-vp-hidden]").forEach((el) => {
+    el.style.display = "";
+    el.removeAttribute("data-vp-hidden");
+  });
+  // Clean up any legacy state from earlier fill-clearing approach
   svg.querySelectorAll<SVGElement>("[data-orig-fill]").forEach((el) => {
     const orig = el.getAttribute("data-orig-fill");
     if (orig) el.setAttribute("fill", orig);
@@ -85,7 +73,7 @@ export default function VisualPanel() {
           );
           if (e.isIntersecting) {
             setDone(false);
-            if (svg) restoreBigTileBg(svg);
+            if (svg) restoreLottieGlowLayers(svg);
             player.goToAndPlay(0, true);
           } else {
             player.stop();
@@ -108,8 +96,9 @@ export default function VisualPanel() {
           <div className="vp-stage">
             <div className="img-cover">
               {/* Backdrop layer (z-index 1) — IMG_4925.jpg, cropped to the
-                  same rounded-square shape as the lottie's big tile. Fades
-                  in once the animation completes. */}
+                  same rounded-square shape as the lottie's big tile.
+                  Instant-on at done (no fade); covered by the lottie's
+                  glow layers until they're hidden. */}
               <div
                 className={`vp-final${done ? " vp-final--visible" : ""}`}
                 aria-hidden={!done}
@@ -118,7 +107,7 @@ export default function VisualPanel() {
                 <img src="/IMG_4925.jpg" alt="Projects built with Jaseci" />
               </div>
               {/* Lottie layer (z-index 2) — always visible. On complete we
-                  strip the big tile bg so the icons sit on the texture. */}
+                  strip the filter groups so the icons sit on the texture. */}
               <div className="vp-anim" aria-hidden="true">
                 {data ? (
                   <Lottie
@@ -131,7 +120,7 @@ export default function VisualPanel() {
                       const svg = sectionRef.current?.querySelector<SVGSVGElement>(
                         ".vp-anim svg",
                       );
-                      if (svg) hideBigTileBg(svg);
+                      if (svg) hideLottieGlowLayers(svg);
                     }}
                     rendererSettings={{ preserveAspectRatio: "xMidYMid meet" }}
                     style={{ width: "100%", height: "100%" }}
