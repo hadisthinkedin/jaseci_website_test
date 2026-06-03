@@ -789,19 +789,6 @@ h6 {
   color: var(--text-muted);
 }
 
-.benchmark__view-link {
-  align-self: end;
-  color: var(--text);
-  font-size: 0.85rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  text-decoration: none;
-}
-
-.benchmark__view-link:hover {
-  color: var(--accent);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .benchmark__row-bar {
     transition: none;
@@ -912,6 +899,12 @@ h6 {
   background: rgba(243, 239, 230, 0.02);
   border-bottom: 1px solid rgba(243, 239, 230, 0.1);
   overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.cc__tabstrip::-webkit-scrollbar {
+  display: none;
 }
 
 .cc__traffic {

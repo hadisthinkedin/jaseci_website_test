@@ -81,14 +81,16 @@ export default function BenchmarkWidget() {
         </div>
       </figure>
 
-      <a
-        className="benchmark__view-link"
-        href={BENCHMARK_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        View benchmark →
-      </a>
+      <div className="mt-4 text-center text-sm text-gray-400">
+        <a
+          href={BENCHMARK_URL}
+          className="hover:text-gray-300"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          View benchmark →
+        </a>
+      </div>
     </section>
   );
 }
