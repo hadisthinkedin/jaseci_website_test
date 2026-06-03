@@ -6,7 +6,7 @@ export default function AnnouncementPill() {
       target="_blank"
       rel="noopener noreferrer"
     >
-      JacBuilder v2 is here!
+      Try Jac in your browser
       <span className="pill__arrow" aria-hidden="true">
         →
       </span>

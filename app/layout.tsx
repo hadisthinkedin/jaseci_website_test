@@ -23,9 +23,26 @@ const cascadiaMono = Cascadia_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Jaseci — one language for backend, frontend, and AI",
+  title: "Jac — the AI-native programming language | Jaseci",
   description:
-    "Jac is one language for backend, frontend, and AI. Replaces Python, JavaScript, and C/Zig/Rust with full PyPI, npm, and C-ABI access.",
+    "Jac is an AI-native programming language for full-stack apps — backend, frontend, and AI in one file. Built by Jaseci Labs, powered by the Jaseci runtime. Full PyPI, npm, and C-ABI access; deploys to Kubernetes with one flag.",
+  keywords: [
+    "Jac",
+    "Jac language",
+    "Jac programming language",
+    "AI-native programming language",
+    "Jaseci",
+    "Jaseci Jac",
+    "full-stack AI programming language",
+    "by llm()",
+    "Jaseci Labs",
+  ],
+  openGraph: {
+    title: "Jac — the AI-native programming language",
+    description:
+      "One file. Backend, frontend, AI. Built by Jaseci Labs.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
