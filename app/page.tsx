@@ -5,11 +5,14 @@ import CaseStudies from "@/components/case-studies/CaseStudies";
 import Ecosystem from "@/components/ecosystem/Ecosystem";
 import Footer from "@/components/footer/Footer";
 import Navbar from "@/components/navbar/Navbar";
+import FeatureSpotlight from "@/components/feature-spotlight/FeatureSpotlight";
 
 const SECTIONS = [
   { id: "home", label: "Home" },
   { id: "code", label: "One file vs four" },
   { id: "interop", label: "Import from any ecosystem" },
+  { id: "spotlight-1", label: "Spotlight 1" },
+  { id: "spotlight-2", label: "Spotlight 2" },
   { id: "cases", label: "Case studies" },
   { id: "ecosystem", label: "Build with the Jac family" },
   { id: "contact", label: "Contact" },
@@ -35,6 +38,31 @@ export default function Home() {
           aria-label="Import from any ecosystem"
         >
           <Interop />
+        </section>
+        <section
+          id="spotlight-1"
+          className="snap-section"
+          aria-label="Feature spotlight"
+        >
+          <FeatureSpotlight
+            headingMain="[Section heading goes here]"
+            headingMuted="with a muted continuation that finishes the thought."
+            ctaLabel="Get started"
+            ctaHref="#code"
+          />
+        </section>
+        <section
+          id="spotlight-2"
+          className="snap-section"
+          aria-label="Feature spotlight"
+        >
+          <FeatureSpotlight
+            reversed
+            headingMain="[Second heading goes here]"
+            headingMuted="with its own muted line below the bold part."
+            ctaLabel="Learn more"
+            ctaHref="#ecosystem"
+          />
         </section>
         <section
           id="cases"

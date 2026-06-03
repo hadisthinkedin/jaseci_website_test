@@ -1945,6 +1945,133 @@ h6 {
 }
 
 /* ────────────────────────────────────────────────────────────────
+   Feature Spotlight — two-column section (text + CTA / large media).
+   The heading uses a main statement + muted continuation. Use the
+   --reversed modifier to flip media to the left for visual variety
+   between stacked spotlights.
+   ──────────────────────────────────────────────────────────────── */
+
+.spotlight {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--bg);
+  padding-block: clamp(2.5rem, 6vw, 5rem);
+}
+
+.spotlight__inner {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  width: 100%;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+}
+
+/* Flip via order so the DOM order stays text → media for screen readers. */
+.spotlight--reversed .spotlight__text {
+  order: 2;
+}
+
+.spotlight--reversed .spotlight__media {
+  order: 1;
+}
+
+.spotlight__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 30ch;
+}
+
+.spotlight__heading {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.spotlight__heading-muted {
+  color: var(--text-muted);
+}
+
+.spotlight__cta {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.8rem 1.5rem;
+  background: var(--text);
+  color: var(--bg);
+  border-radius: 999px;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.spotlight__cta:hover {
+  background: var(--accent);
+  transform: translateY(-1px);
+}
+
+.spotlight__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  background: #111;
+}
+
+.spotlight__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Placeholder when no media is supplied — a soft animated gradient so
+   the slot reads as "media goes here" instead of an empty black box. */
+.spotlight__placeholder {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 25% 30%, #2e2c70 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 75% 80%, #0f172a 0%, transparent 60%),
+    linear-gradient(140deg, #1a1a3e 0%, #0a0a1f 100%);
+}
+
+@media (max-width: 820px) {
+  .spotlight__inner {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  /* On mobile keep the natural DOM order (text first, media below). */
+  .spotlight--reversed .spotlight__text {
+    order: 0;
+  }
+  .spotlight--reversed .spotlight__media {
+    order: 0;
+  }
+  .spotlight__media {
+    aspect-ratio: 4 / 3;
+  }
+  .spotlight__text {
+    max-width: none;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────
    Case Studies carousel — Pocketnest placeholder content.
    Per-slide accent colors (indigo/teal/amber) and gradients are
    scoped to .cs__* only; they're explicit placeholders per the spec,
