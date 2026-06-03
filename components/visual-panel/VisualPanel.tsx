@@ -19,9 +19,30 @@ const PROJECTS_HREF = "/projects";
  * behind.
  */
 function hideLottieGlowLayers(svg: SVGSVGElement) {
+  // 1. Hide every <g filter=…>. These are the Gaussian-blur groups that
+  // produce the big tile's halo + each icon-tile's dark shadow stack.
   svg.querySelectorAll<SVGGraphicsElement>("g[filter]").forEach((g) => {
     g.setAttribute("data-vp-hidden", "1");
     g.style.display = "none";
+  });
+
+  // 2. The lottie also draws an unfiltered duplicate of the big tile face
+  // (a solid white path the same 171×152 bbox as the blur-group version)
+  // that sits on top once the filter group is gone. Catch any path with
+  // significantly larger bbox than an icon tile (10000 area) — only the
+  // big tile face hits this threshold; icon faces (100×100), shadows
+  // (101×101), and glyphs are all comfortably under it.
+  svg.querySelectorAll<SVGGraphicsElement>("path, rect").forEach((el) => {
+    if (el.closest("[data-vp-hidden]")) return;
+    try {
+      const b = el.getBBox();
+      if (b.width * b.height > 20000) {
+        el.setAttribute("data-vp-hidden", "1");
+        el.style.display = "none";
+      }
+    } catch {
+      // not a graphics element
+    }
   });
 }
 
