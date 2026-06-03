@@ -1,11 +1,13 @@
 import Hero from "@/components/hero/Hero";
 import CodeCompare from "@/components/code-compare/CodeCompare";
 import Interop from "@/components/interop/Interop";
+import CaseStudies from "@/components/case-studies/CaseStudies";
 
 const SECTIONS = [
   { id: "home", label: "Home" },
   { id: "code", label: "One file vs four" },
   { id: "interop", label: "Import from any ecosystem" },
+  { id: "cases", label: "Case studies" },
 ];
 
 export default function Home() {
@@ -27,6 +29,13 @@ export default function Home() {
           aria-label="Import from any ecosystem"
         >
           <Interop />
+        </section>
+        <section
+          id="cases"
+          className="snap-section"
+          aria-label="Case studies"
+        >
+          <CaseStudies />
         </section>
         <nav className="scroll-nav" aria-label="Section navigation">
           {SECTIONS.map((s) => (
