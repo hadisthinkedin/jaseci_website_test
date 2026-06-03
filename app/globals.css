@@ -858,6 +858,20 @@ h6 {
   filter: blur(0);
 }
 
+/* When the polyglot pane is hovered, desaturate the surrounding chrome:
+   navbar, jac editor, and the view-repo button. The navbar lives outside
+   .cc so the :has() selector starts from body to reach all three. */
+.nav-wrap,
+.cc__pane--jac,
+.cc__repobar {
+  transition: filter 0.5s ease;
+}
+body:has(.cc__pane--poly:hover) .nav-wrap,
+body:has(.cc__pane--poly:hover) .cc__pane--jac,
+body:has(.cc__pane--poly:hover) .cc__repobar {
+  filter: grayscale(1);
+}
+
 /* Keep editor surfaces + repobar above the fx layer. */
 .cc__panes,
 .cc__repobar {
