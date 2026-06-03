@@ -1221,6 +1221,174 @@ h6 {
 }
 
 /* ────────────────────────────────────────────────────────────────
+   Ecosystem section — three-card framework showcase.
+   Header row (title left, lede top-right) + three equal cards with
+   a dark diagram panel on top and brand/headline/desc/link below.
+   ──────────────────────────────────────────────────────────────── */
+
+.eco {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--bg);
+  padding-block: clamp(2.5rem, 6vw, 5rem);
+}
+
+.eco__header {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  align-items: start;
+  gap: clamp(2rem, 6vw, 4rem);
+  max-width: var(--max-width);
+  margin-inline: auto;
+  width: 100%;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+  margin-bottom: clamp(1.75rem, 4vw, 3rem);
+}
+
+.eco__title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--text);
+}
+
+.eco__lede {
+  margin: 0.5rem 0 0;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: clamp(0.95rem, 1.3vw, 1.05rem);
+  line-height: 1.55;
+  max-width: 36ch;
+  justify-self: end;
+}
+
+.eco__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1rem, 2vw, 1.5rem);
+  max-width: var(--max-width);
+  margin-inline: auto;
+  width: 100%;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+}
+
+.eco__card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+/* Dark diagram panel — deep navy gradient with a soft highlight at the
+   top-left, matching the architectural-screenshot mood. */
+.eco__diagram {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.85rem;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 70% 60% at 25% 20%, #2e2c70 0%, transparent 60%),
+    radial-gradient(ellipse 70% 50% at 80% 80%, #0f172a 0%, transparent 60%),
+    linear-gradient(140deg, #1f1f4e 0%, #0a0a23 100%);
+  margin-bottom: 0.85rem;
+}
+
+.eco__diagram svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.eco__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.eco__glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: var(--text);
+  color: var(--bg);
+}
+
+.eco__glyph svg {
+  width: 20px;
+  height: 20px;
+}
+
+.eco__wordmark {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.eco__cardline {
+  margin: 0.4rem 0 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(1.35rem, 1.9vw, 1.6rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.eco__carddesc {
+  margin: 0;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.eco__explore {
+  margin-top: 0.4rem;
+  align-self: start;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  transition: color 0.15s ease;
+}
+
+.eco__explore:hover {
+  color: var(--accent);
+}
+
+@media (max-width: 960px) {
+  .eco__header {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .eco__lede {
+    justify-self: start;
+    max-width: none;
+  }
+  .eco__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .eco__title {
+    font-size: 2rem;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────
    Case Studies carousel — Pocketnest placeholder content.
    Per-slide accent colors (indigo/teal/amber) and gradients are
    scoped to .cs__* only; they're explicit placeholders per the spec,
