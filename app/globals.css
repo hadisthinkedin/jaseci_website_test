@@ -588,14 +588,13 @@ h6 {
   color: var(--text);
 }
 
-/* Active tab: solid --accent fill with DARK text — same "black on the
-   accent color" look the reference uses for its active tab. Border
-   stays 2px but takes the accent color so the tab merges with the
-   codeblock's 2px accent border below it. */
+/* Active tab: solid --accent fill with white text. Border takes the
+   accent color so the tab merges with the codeblock's 2px accent
+   border below it. */
 .install__tab[aria-selected="true"] {
   background: var(--accent);
   border-color: var(--accent);
-  color: var(--text);
+  color: #ffffff;
   font-weight: 600;
   z-index: 1;
 }
