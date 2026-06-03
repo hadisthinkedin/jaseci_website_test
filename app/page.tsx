@@ -4,6 +4,7 @@ import Interop from "@/components/interop/Interop";
 import CaseStudies from "@/components/case-studies/CaseStudies";
 import Ecosystem from "@/components/ecosystem/Ecosystem";
 import Footer from "@/components/footer/Footer";
+import Navbar from "@/components/navbar/Navbar";
 
 const SECTIONS = [
   { id: "home", label: "Home" },
@@ -20,6 +21,7 @@ export default function Home() {
       <a href="#home" className="skip-to-content">
         Skip to content
       </a>
+      <Navbar />
       <main className="scroll-root">
         <section id="home" className="snap-section" aria-label="Home">
           <Hero />
