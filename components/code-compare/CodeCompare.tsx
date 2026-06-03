@@ -1,5 +1,7 @@
-import { highlight, type SupportedLang } from "@/lib/highlighter";
-import CodeComparePanes, { type FileBundle } from "./CodeComparePanes";
+import CodeComparePanes, {
+  type FileBundle,
+  type SupportedLang,
+} from "./CodeComparePanes";
 
 type FileSpec = {
   name: string;
@@ -250,22 +252,9 @@ cl def:pub app -> JsxElement {
 const REPO_URL =
   "https://github.com/Jaseci-Labs/jaseci/tree/main/jac/examples/mini_todo";
 
-async function buildBundle(spec: FileSpec): Promise<FileBundle> {
-  return {
-    name: spec.name,
-    lang: spec.lang,
-    glyph: spec.glyph,
-    breadcrumb: spec.breadcrumb,
-    raw: spec.source,
-    html: await highlight(spec.source, spec.lang),
-  };
-}
-
-export default async function CodeCompare() {
-  const [poly, jac] = await Promise.all([
-    Promise.all(POLY_FILES.map(buildBundle)),
-    buildBundle(JAC_FILE),
-  ]);
+export default function CodeCompare() {
+  const poly: FileBundle[] = POLY_FILES.map((f) => ({ ...f }));
+  const jac: FileBundle = { ...JAC_FILE };
   return (
     <CodeComparePanes
       poly={poly}

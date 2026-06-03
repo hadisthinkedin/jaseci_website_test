@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Cascadia_Mono } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -11,6 +11,13 @@ const inter = Inter({
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const cascadiaMono = Cascadia_Mono({
+  variable: "--font-cascadia-mono",
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   display: "swap",
 });
@@ -27,9 +34,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
+    <html
+      lang="en"
+      className={`${inter.variable} ${jetbrainsMono.variable} ${cascadiaMono.variable} h-full`}
+    >
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} min-h-full flex flex-col`}
+        className="min-h-full flex flex-col"
         suppressHydrationWarning
       >
         {children}

@@ -42,6 +42,10 @@
     Arial, sans-serif;
   --font-mono:
     var(--font-jetbrains-mono), "Fira Code", Menlo, Monaco, Consolas, monospace;
+  /* Code editor surfaces (Prompt 9 panes) — Cascadia Mono with the same fallbacks */
+  --font-code:
+    var(--font-cascadia-mono), var(--font-jetbrains-mono), "Cascadia Mono",
+    "Cascadia Code", Menlo, Monaco, Consolas, monospace;
 
   /* layout */
   --max-width: 1100px;
@@ -876,7 +880,7 @@ h6 {
   border-top: 2px solid transparent;
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   color: rgba(243, 239, 230, 0.55);
-  font-family: var(--font-mono);
+  font-family: var(--font-code);
   font-size: 0.78rem;
   letter-spacing: 0.01em;
   white-space: nowrap;
@@ -930,7 +934,7 @@ h6 {
   padding: 0.55rem 1rem;
   background: rgba(243, 239, 230, 0.015);
   border-bottom: 1px solid rgba(243, 239, 230, 0.06);
-  font-family: var(--font-mono);
+  font-family: var(--font-code);
   font-size: 0.74rem;
   color: rgba(243, 239, 230, 0.55);
 }
@@ -979,40 +983,17 @@ h6 {
   border-color: var(--accent);
 }
 
-.cc__code-area {
+/* Monaco editor host. Monaco owns the inner layout (scrollbars, gutter,
+   line numbers, padding, font) — we just give it a sized container. */
+.cc__editor {
   flex: 1;
   min-height: 0;
-  overflow: auto;
-  padding: 1rem 1.25rem;
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  line-height: 1.55;
+  position: relative;
 }
 
-/* Shiki output sits inside .cc__code-area; strip its layout, keep its colors. */
-.cc__code-area pre {
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  border-radius: 0;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  overflow: visible; /* outer .cc__code-area scrolls instead */
-}
-
-.cc__code-area pre code {
-  display: block;
-  background: transparent;
-  padding: 0;
-  font-family: inherit;
-  font-size: inherit;
-  color: inherit;
-}
-
-.cc__code-area .line {
-  display: block;
-  min-height: 1lh;
+.cc__editor .monaco-editor,
+.cc__editor .monaco-editor .overflow-guard {
+  border-radius: 0 0 var(--radius-box) var(--radius-box);
 }
 
 @media (max-width: 960px) {

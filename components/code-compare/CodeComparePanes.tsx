@@ -1,15 +1,19 @@
 "use client";
 
-import { type KeyboardEvent, useCallback, useMemo, useRef, useState } from "react";
-import type { SupportedLang } from "@/lib/highlighter";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { type KeyboardEvent, useEffect, useRef, useState } from "react";
+import { loadMonaco } from "@/lib/monaco-loader";
+import { defineJaseciTheme, registerJacLanguage } from "@/lib/jac-monarch";
+
+export type SupportedLang = "python" | "tsx" | "css" | "jac";
 
 export type FileBundle = {
   name: string;
   lang: SupportedLang;
   glyph: string;
   breadcrumb: string[];
-  raw: string;
-  html: string;
+  source: string;
 };
 
 type Props = {
@@ -17,6 +21,36 @@ type Props = {
   jac: FileBundle;
   defaultActive: string;
   repoUrl: string;
+};
+
+const MONACO_LANG: Record<SupportedLang, string> = {
+  python: "python",
+  tsx: "typescript",
+  css: "css",
+  jac: "jac",
+};
+
+const EDITOR_OPTIONS = {
+  theme: "jaseci-dark",
+  readOnly: true,
+  automaticLayout: true,
+  minimap: { enabled: false },
+  scrollBeyondLastLine: false,
+  fontFamily: '"Cascadia Mono", "JetBrains Mono", Menlo, Monaco, Consolas, monospace',
+  fontSize: 13,
+  lineHeight: 20,
+  renderLineHighlight: "none" as const,
+  lineNumbers: "on" as const,
+  glyphMargin: false,
+  folding: false,
+  contextmenu: false,
+  wordWrap: "off" as const,
+  scrollbar: {
+    verticalScrollbarSize: 10,
+    horizontalScrollbarSize: 10,
+  },
+  padding: { top: 12, bottom: 12 },
+  domReadOnly: true,
 };
 
 export default function CodeComparePanes({
@@ -104,6 +138,46 @@ function PolyPane({
   tabRefs: React.MutableRefObject<(HTMLButtonElement | null)[]>;
   activeFile: FileBundle;
 }) {
+  const editorHostRef = useRef<HTMLDivElement>(null);
+  const editorRef = useRef<any>(null);
+  const modelsRef = useRef<Map<string, any>>(new Map());
+
+  useEffect(() => {
+    let cancelled = false;
+    loadMonaco().then((monaco: any) => {
+      if (cancelled || !editorHostRef.current) return;
+      registerJacLanguage(monaco);
+      defineJaseciTheme(monaco);
+
+      for (const f of files) {
+        modelsRef.current.set(
+          f.name,
+          monaco.editor.createModel(f.source, MONACO_LANG[f.lang]),
+        );
+      }
+
+      editorRef.current = monaco.editor.create(editorHostRef.current, {
+        model: modelsRef.current.get(files[activeIdx].name),
+        ...EDITOR_OPTIONS,
+      });
+    });
+    return () => {
+      cancelled = true;
+      editorRef.current?.dispose();
+      for (const m of modelsRef.current.values()) m.dispose();
+      modelsRef.current.clear();
+    };
+    // Mount once; later renders update via the activeIdx effect below
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const model = modelsRef.current.get(files[activeIdx].name);
+    if (editorRef.current && model) {
+      editorRef.current.setModel(model);
+    }
+  }, [activeIdx, files]);
+
   return (
     <div className="cc__pane cc__pane--poly">
       <div className="cc__tabstrip">
@@ -129,7 +203,7 @@ function PolyPane({
                 role="tab"
                 type="button"
                 aria-selected={selected}
-                aria-controls={`cc-panel-${f.name}`}
+                aria-controls="cc-poly-editor"
                 tabIndex={selected ? 0 : -1}
                 className="cc__tab"
                 onClick={() => setActiveIdx(idx)}
@@ -150,23 +224,45 @@ function PolyPane({
         <span className="cc__badge">4 files · Next.js + FastAPI</span>
       </div>
 
-      {files.map((f, idx) => (
-        <div
-          key={f.name}
-          id={`cc-panel-${f.name}`}
-          role="tabpanel"
-          aria-labelledby={`cc-tab-${f.name}`}
-          aria-label={`${langLabel(f.lang)}: ${f.breadcrumb.join("/")}`}
-          className="cc__code-area"
-          hidden={idx !== activeIdx}
-          dangerouslySetInnerHTML={{ __html: f.html }}
-        />
-      ))}
+      <div
+        id="cc-poly-editor"
+        ref={editorHostRef}
+        className="cc__editor"
+        aria-label={`Editor: ${activeFile.breadcrumb.join("/")}`}
+      />
     </div>
   );
 }
 
 function JacPane({ file }: { file: FileBundle }) {
+  const editorHostRef = useRef<HTMLDivElement>(null);
+  const editorRef = useRef<any>(null);
+  const modelRef = useRef<any>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    loadMonaco().then((monaco: any) => {
+      if (cancelled || !editorHostRef.current) return;
+      registerJacLanguage(monaco);
+      defineJaseciTheme(monaco);
+
+      modelRef.current = monaco.editor.createModel(
+        file.source,
+        MONACO_LANG[file.lang],
+      );
+
+      editorRef.current = monaco.editor.create(editorHostRef.current, {
+        model: modelRef.current,
+        ...EDITOR_OPTIONS,
+      });
+    });
+    return () => {
+      cancelled = true;
+      editorRef.current?.dispose();
+      modelRef.current?.dispose();
+    };
+  }, [file.source, file.lang]);
+
   return (
     <div className="cc__pane cc__pane--jac">
       <div className="cc__tabstrip">
@@ -196,41 +292,31 @@ function JacPane({ file }: { file: FileBundle }) {
       </div>
 
       <div
-        className="cc__code-area"
-        aria-label={`Jac: ${file.breadcrumb.join("/")}`}
-        dangerouslySetInnerHTML={{ __html: file.html }}
+        ref={editorHostRef}
+        className="cc__editor"
+        aria-label={`Editor: ${file.breadcrumb.join("/")}`}
       />
     </div>
   );
 }
 
 function Breadcrumb({ segments }: { segments: string[] }) {
-  const parts = useMemo(
-    () =>
-      segments.map((s, i) => ({
-        key: `${i}-${s}`,
-        text: s,
-        last: i === segments.length - 1,
-      })),
-    [segments],
-  );
   return (
     <span className="cc__breadcrumb" aria-label="File path">
-      {parts.map((p, i) => (
-        <span key={p.key} className={p.last ? "cc__crumb cc__crumb--last" : "cc__crumb"}>
-          {p.text}
-          {!p.last && <span className="cc__crumb-sep" aria-hidden="true">›</span>}
-        </span>
-      ))}
+      {segments.map((s, i) => {
+        const last = i === segments.length - 1;
+        return (
+          <span
+            key={`${i}-${s}`}
+            className={last ? "cc__crumb cc__crumb--last" : "cc__crumb"}
+          >
+            {s}
+            {!last && (
+              <span className="cc__crumb-sep" aria-hidden="true">›</span>
+            )}
+          </span>
+        );
+      })}
     </span>
   );
-}
-
-function langLabel(lang: SupportedLang): string {
-  switch (lang) {
-    case "python": return "Python";
-    case "tsx": return "TSX";
-    case "css": return "CSS";
-    case "jac": return "Jac";
-  }
 }
