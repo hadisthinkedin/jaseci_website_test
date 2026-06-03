@@ -860,16 +860,30 @@ h6 {
 
 /* When the polyglot pane is hovered, desaturate the surrounding chrome:
    navbar, jac editor, and the view-repo button. The navbar lives outside
-   .cc so the :has() selector starts from body to reach all three. */
+   .cc so the :has() selector starts from body to reach all three.
+   Backgrounds on .nav and .cc__repobar are cream (var(--paper)) which is
+   nearly desaturated already, so grayscale alone leaves them looking white.
+   We also override the bg/border directly to a flat gray. */
 .nav-wrap,
 .cc__pane--jac,
-.cc__repobar {
-  transition: filter 0.5s ease;
+.cc__repobar,
+.nav {
+  transition:
+    filter 0.5s ease,
+    background-color 0.5s ease,
+    border-color 0.5s ease,
+    color 0.5s ease;
 }
 body:has(.cc__pane--poly:hover) .nav-wrap,
 body:has(.cc__pane--poly:hover) .cc__pane--jac,
 body:has(.cc__pane--poly:hover) .cc__repobar {
   filter: grayscale(1);
+}
+body:has(.cc__pane--poly:hover) .nav,
+body:has(.cc__pane--poly:hover) .cc__repobar {
+  background-color: #b8b8b8;
+  border-color: #8a8a8a;
+  color: #2a2a2a;
 }
 
 /* Keep editor surfaces + repobar above the fx layer. */
@@ -2568,6 +2582,207 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Two-column layout: accuracy chart on the left (compact), lottie + final
+   image + projects link on the right (larger). Stacks on narrow viewports. */
+.section-base_visual .visual-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  align-items: center;
+}
+
+.section-base_visual .visual-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+/* Right column stage: img-cover (lottie/image) on top, projects link below. */
+.section-base_visual .visual-col--lottie .vp-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* Lottie column — larger canvas, stacks lottie + image layers absolutely. */
+.section-base_visual .visual-col--lottie .img-cover {
+  max-width: 720px;
+  position: relative;
+}
+
+/* Stacked layers inside img-cover. Both fill the aspect-locked parent
+   so they swap in-place via opacity. */
+.vp-anim,
+.vp-final {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 500ms ease;
+}
+
+.vp-anim {
+  opacity: 1;
+}
+.vp-anim--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.vp-final {
+  opacity: 0;
+  pointer-events: none;
+}
+.vp-final--visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.vp-final img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-box);
+}
+
+/* Projects link below the image — fades in after the animation completes. */
+.vp-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition:
+    opacity 500ms ease 200ms,
+    transform 500ms ease 200ms,
+    color 0.15s ease;
+}
+.vp-link--visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.vp-link:hover {
+  color: var(--accent-hover);
+}
+.vp-link__arrow {
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+.vp-link:hover .vp-link__arrow {
+  transform: translateX(3px);
+}
+
+@media (max-width: 900px) {
+  .section-base_visual .visual-cols {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+/* Accuracy chart card — flat editorial, Jaseci tokens (accent orange
+   primary, amber secondary), half-donut radial. Mirrors the shadcn
+   ChartRadialStacked structure (header / chart / footer) but uses the
+   project's palette and typography instead of shadcn defaults. */
+.accuracy {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 380px;
+  background: transparent;
+  border: 0;
+  padding: 1.5rem;
+  gap: 1rem;
+  font-family: var(--font-sans);
+}
+
+.accuracy__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.accuracy__title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+.accuracy__sub {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.accuracy__chart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.accuracy__chart .recharts-wrapper {
+  margin-inline: auto;
+}
+
+.accuracy__total {
+  font-size: 1.5rem;
+  font-weight: 700;
+  fill: var(--text);
+}
+
+.accuracy__total-sub {
+  font-size: 0.85rem;
+  fill: var(--text-muted);
+}
+
+.accuracy__foot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  text-align: center;
+  align-items: center;
+}
+
+.accuracy__trend {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.accuracy__trend-icon {
+  width: 1rem;
+  height: 1rem;
+  stroke-width: 1.75;
+}
+
+.accuracy__caption {
+  color: var(--text-muted);
 }
 
 .section-base_visual .img-cover > svg,

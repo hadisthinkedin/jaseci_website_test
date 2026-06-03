@@ -2,12 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import Lottie, { type LottieRefCurrentProps } from "lottie-react";
+import AccuracyChart from "./AccuracyChart";
 
 const LOTTIE_SRC =
   "https://cdn.prod.website-files.com/68c9c3107effc2ea46e1a81f/69b6b37ab732de7af40519e5_MoveModels.json";
+const PROJECTS_HREF = "/projects";
 
 export default function VisualPanel() {
   const [data, setData] = useState<unknown>(null);
+  const [done, setDone] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const lottieRef = useRef<LottieRefCurrentProps>(null);
 
@@ -25,8 +28,8 @@ export default function VisualPanel() {
   }, []);
 
   // Replay the animation each time the section enters the snap viewport.
-  // The .scroll-root in app/page.tsx is the actual scroll container, so
-  // IntersectionObserver uses it as the root (not document).
+  // Resets the post-animation overlay too, so the sequence (lottie → image →
+  // link) restarts each time. .scroll-root is the actual scroll container.
   useEffect(() => {
     const node = sectionRef.current;
     if (!node || !data) return;
@@ -37,6 +40,7 @@ export default function VisualPanel() {
           const player = lottieRef.current;
           if (!player) continue;
           if (e.isIntersecting) {
+            setDone(false);
             player.goToAndPlay(0, true);
           } else {
             player.stop();
@@ -51,17 +55,50 @@ export default function VisualPanel() {
 
   return (
     <div ref={sectionRef} className="section-base_visual">
-      <div className="img-cover" aria-hidden="true">
-        {data ? (
-          <Lottie
-            lottieRef={lottieRef}
-            animationData={data}
-            autoplay={false}
-            loop={false}
-            rendererSettings={{ preserveAspectRatio: "xMidYMid meet" }}
-            style={{ width: "100%", height: "100%" }}
-          />
-        ) : null}
+      <div className="visual-cols">
+        <div className="visual-col visual-col--chart">
+          <AccuracyChart />
+        </div>
+        <div className="visual-col visual-col--lottie">
+          <div className="vp-stage">
+            <div className="img-cover">
+              <div
+                className={`vp-anim${done ? " vp-anim--hidden" : ""}`}
+                aria-hidden="true"
+              >
+                {data ? (
+                  <Lottie
+                    lottieRef={lottieRef}
+                    animationData={data}
+                    autoplay={false}
+                    loop={false}
+                    onComplete={() => setDone(true)}
+                    rendererSettings={{ preserveAspectRatio: "xMidYMid meet" }}
+                    style={{ width: "100%", height: "100%" }}
+                  />
+                ) : null}
+              </div>
+              <div
+                className={`vp-final${done ? " vp-final--visible" : ""}`}
+                aria-hidden={!done}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/IMG_4925.jpg" alt="Projects built with Jaseci" />
+              </div>
+            </div>
+            <a
+              className={`vp-link${done ? " vp-link--visible" : ""}`}
+              href={PROJECTS_HREF}
+              tabIndex={done ? 0 : -1}
+              aria-hidden={!done}
+            >
+              view projects built with jaseci
+              <span className="vp-link__arrow" aria-hidden="true">
+                →
+              </span>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );
