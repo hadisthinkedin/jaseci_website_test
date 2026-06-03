@@ -25,11 +25,6 @@ type TabConfig = {
   content: ContentItem[];
 };
 
-const LAUNCH_BLOCK: CodeBlockData = {
-  command: "jac create --use client myapp\ncd myapp && jac start main.jac",
-  prompt: true,
-};
-
 const TABS: TabConfig[] = [
   {
     id: "unix",
@@ -43,8 +38,6 @@ const TABS: TabConfig[] = [
           prompt: true,
         },
       },
-      { kind: "label", text: "Then launch a full-stack app" },
-      { kind: "block", block: LAUNCH_BLOCK },
     ],
   },
   {
@@ -55,8 +48,6 @@ const TABS: TabConfig[] = [
         kind: "block",
         block: { command: "pip install jaseci", prompt: true },
       },
-      { kind: "label", text: "Then launch a full-stack app" },
-      { kind: "block", block: LAUNCH_BLOCK },
     ],
   },
   {
@@ -66,18 +57,6 @@ const TABS: TabConfig[] = [
       {
         kind: "block",
         block: { command: "pip install jac-mcp", prompt: true },
-      },
-      {
-        kind: "label",
-        text: "Register in your MCP client (claude_desktop_config.json)",
-      },
-      {
-        kind: "block",
-        block: {
-          command:
-            '{\n  "mcpServers": {\n    "jac-mcp": {\n      "command": "jac",\n      "args": ["mcp"]\n    }\n  }\n}',
-          prompt: false,
-        },
       },
     ],
   },
