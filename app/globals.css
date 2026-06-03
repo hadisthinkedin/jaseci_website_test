@@ -2618,8 +2618,10 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   position: relative;
 }
 
-/* Stacked layers inside img-cover. Both fill the aspect-locked parent
-   so they swap in-place via opacity. */
+/* Stacked layers inside img-cover. vp-final (IMG_4925.jpg texture) is the
+   backdrop; vp-anim (lottie SVG) is the foreground and stays visible the
+   whole time — on complete its big-tile bg is stripped via JS so the
+   texture shows through behind the icon grid. */
 .vp-anim,
 .vp-final {
   position: absolute;
@@ -2632,21 +2634,19 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   transition: opacity 500ms ease;
 }
 
-.vp-anim {
-  opacity: 1;
-}
-.vp-anim--hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-
 .vp-final {
+  z-index: 1;
   opacity: 0;
   pointer-events: none;
 }
 .vp-final--visible {
   opacity: 1;
   pointer-events: auto;
+}
+
+.vp-anim {
+  z-index: 2;
+  opacity: 1;
 }
 
 /* IMG_4925.jpg is cropped into the same rounded-square shape as the big
