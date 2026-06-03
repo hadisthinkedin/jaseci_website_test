@@ -6,7 +6,14 @@ import { type KeyboardEvent, useEffect, useRef, useState } from "react";
 import { loadMonaco } from "@/lib/monaco-loader";
 import { defineJaseciTheme, registerJacLanguage } from "@/lib/jac-monarch";
 
-export type SupportedLang = "python" | "tsx" | "css" | "jac";
+export type SupportedLang =
+  | "python"
+  | "tsx"
+  | "ts"
+  | "css"
+  | "json"
+  | "plaintext"
+  | "jac";
 
 export type FileBundle = {
   name: string;
@@ -24,7 +31,10 @@ type Props = {
 const MONACO_LANG: Record<SupportedLang, string> = {
   python: "python",
   tsx: "typescript",
+  ts: "typescript",
   css: "css",
+  json: "json",
+  plaintext: "plaintext",
   jac: "jac",
 };
 
