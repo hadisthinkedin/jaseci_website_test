@@ -42,13 +42,13 @@ export default function Home() {
         <section
           id="spotlight-1"
           className="snap-section"
-          aria-label="Feature spotlight"
+          aria-label="Zero to infinite scale"
         >
           <FeatureSpotlight
-            headingMain="[Section heading goes here]"
-            headingMuted="with a muted continuation that finishes the thought."
-            ctaLabel="Get started"
-            ctaHref="#code"
+            headingMain="Zero to infinite scale."
+            headingMuted="The same jac file runs locally with hot reload, or auto-deploys to a Kubernetes cluster — Redis, MongoDB, secrets, volumes provisioned for you. No Dockerfile, no manifests, no DevOps."
+            ctaLabel="Read the deploy guide"
+            ctaHref="https://github.com/jaseci-labs/jaseci"
           />
         </section>
         <section
