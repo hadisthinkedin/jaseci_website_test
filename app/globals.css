@@ -1006,18 +1006,22 @@ h6 {
   border: 1px solid rgba(243, 239, 230, 0.08);
   border-radius: var(--radius-box);
   overflow: hidden;
-  box-shadow:
-    0 14px 32px rgba(0, 0, 0, 0.22),
-    0 2px 6px rgba(0, 0, 0, 0.14);
 }
 
-/* Terminal overlaps the editor's bottom-left, smaller — shape cue from
-   the Deno reference. Below 960px it stacks normally. */
+/* Terminal floats below-and-left over the editor's bottom edge. Per
+   Prompt 11's spec it could be position: absolute within a relatively-
+   positioned wrapper; using negative margins instead because it gives
+   a consistent overlap regardless of either window's content height
+   (absolute + bottom requires reserved padding that depends on terminal
+   height). The one place a subtle shadow is allowed in the flat system. */
 .interop__window--terminal {
-  margin-top: -2.25rem;
+  margin-top: -2.5rem;
   margin-left: -2.5rem;
-  max-width: 78%;
+  width: 78%;
   z-index: 1;
+  box-shadow:
+    0 16px 36px rgba(0, 0, 0, 0.28),
+    0 3px 8px rgba(0, 0, 0, 0.16);
 }
 
 .interop__titlebar {
@@ -1063,8 +1067,8 @@ h6 {
   font-size: 13px;
   line-height: 1.55;
   padding: 1rem 1.25rem;
-  max-height: 360px;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
   overscroll-behavior: contain;
 }
 
@@ -1089,10 +1093,10 @@ h6 {
   color: inherit;
 }
 
-.interop__editor-body .line {
-  display: block;
-  min-height: 1lh;
-}
+/* Shiki emits `<span class="line">text</span>\n` separated by literal
+   newlines inside <pre>. With white-space: pre the newlines do the
+   line breaks; .line spans stay inline as highlight wrappers. Forcing
+   display: block here would double-space every line. */
 
 .interop__terminal-body {
   margin: 0;
@@ -1111,6 +1115,11 @@ h6 {
   display: block;
 }
 
+/* Commands ($ + command echo) in accent — Prompt 11's on-brand option */
+.interop__term-line--cmd {
+  color: var(--accent);
+}
+
 .interop__term-line--out {
   color: rgba(243, 239, 230, 0.85);
 }
@@ -1121,7 +1130,7 @@ h6 {
 }
 
 .interop__term-prompt {
-  color: rgba(243, 239, 230, 0.45);
+  color: var(--accent);
   margin-right: 0.7rem;
   user-select: none;
 }
@@ -1165,21 +1174,43 @@ h6 {
   .interop__window--terminal {
     margin-top: 1.25rem;
     margin-left: 0;
-    max-width: 100%;
+    width: 100%;
   }
 }
 
+@media (max-width: 560px) {
+  .interop__titlebar {
+    padding: 0.4rem 0.6rem;
+  }
+  .interop__title {
+    font-size: 11px;
+    padding: 0.15rem 0.5rem;
+  }
+  .interop__editor-body,
+  .interop__terminal-body {
+    padding: 0.85rem 0.9rem;
+    font-size: 12px;
+  }
+}
+
+/* Subtle staggered scroll-driven reveal. Editor arrives first; terminal
+   follows a beat later (offset animation-range), matching Prompt 11. */
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
-    .interop {
+    .interop__window--editor {
       animation: interop-reveal linear both;
       animation-timeline: view();
-      animation-range: entry 0% entry 60%;
+      animation-range: entry 0% entry 45%;
+    }
+    .interop__window--terminal {
+      animation: interop-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 12% entry 55%;
     }
     @keyframes interop-reveal {
       from {
         opacity: 0;
-        transform: translateY(18px);
+        transform: translateY(20px);
       }
       to {
         opacity: 1;

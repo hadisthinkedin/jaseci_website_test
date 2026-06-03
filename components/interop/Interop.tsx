@@ -83,7 +83,7 @@ export default async function Interop() {
               }
               if (line.kind === "cmd") {
                 return (
-                  <span key={i} className="interop__term-line">
+                  <span key={i} className="interop__term-line interop__term-line--cmd">
                     <span className="interop__term-prompt" aria-hidden="true">$</span>
                     {line.text}
                   </span>
