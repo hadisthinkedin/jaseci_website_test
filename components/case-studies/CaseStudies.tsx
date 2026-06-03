@@ -4,6 +4,7 @@ import {
   type KeyboardEvent,
   type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
+  type TransitionEvent as ReactTransitionEvent,
   useCallback,
   useEffect,
   useRef,
@@ -59,15 +60,27 @@ const SLIDES: Slide[] = [
   },
 ];
 
+const NUM = SLIDES.length;
+// Virtual track: [last-clone, ...real, first-clone]. Indexes 1..NUM are real;
+// 0 and NUM+1 are clones used only for the seamless wrap animation.
+const VIRTUAL: Slide[] = [SLIDES[NUM - 1], ...SLIDES, SLIDES[0]];
+const FIRST_REAL = 1;
+const LAST_REAL = NUM;
+const LEFT_CLONE = 0;
+const RIGHT_CLONE = NUM + 1;
+
 const READ_STORY_URL = "#";
-const CARD_RATIO = 0.8; // 80% of viewport width
-const CARD_RATIO_NARROW = 0.9; // <820px
+const CARD_RATIO = 0.8;
+const CARD_RATIO_NARROW = 0.9;
 const GAP = 26;
-const DRAG_THRESHOLD_RATIO = 0.18; // 18% of card width
-const CLICK_VS_DRAG_PX = 5; // distance below which counts as a click
+const DRAG_THRESHOLD_RATIO = 0.18;
+const CLICK_VS_DRAG_PX = 5;
 
 export default function CaseStudies() {
-  const [activeIdx, setActiveIdx] = useState(0);
+  // `displayPos` is the position in the VIRTUAL track (0..NUM+1).
+  // `activeIdx` is the user-facing 0..NUM-1 derived from it.
+  const [displayPos, setDisplayPos] = useState<number>(FIRST_REAL);
+  const [transitionOn, setTransitionOn] = useState(true);
   const [viewportWidth, setViewportWidth] = useState(0);
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -80,7 +93,6 @@ export default function CaseStudies() {
     suppressClick: false,
   });
 
-  // Track viewport width on mount + resize (also after fonts load).
   useEffect(() => {
     const el = viewportRef.current;
     if (!el) return;
@@ -88,7 +100,6 @@ export default function CaseStudies() {
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
-    // Re-measure after web fonts settle (their final metrics can shift layout).
     if (typeof document !== "undefined" && "fonts" in document) {
       document.fonts.ready.then(measure).catch(() => {});
     }
@@ -98,22 +109,36 @@ export default function CaseStudies() {
   const narrow = viewportWidth > 0 && viewportWidth < 820;
   const cardWidth = viewportWidth * (narrow ? CARD_RATIO_NARROW : CARD_RATIO);
   const centerOffset = (viewportWidth - cardWidth) / 2;
-  const baseTranslateX =
-    centerOffset - activeIdx * (cardWidth + GAP);
+  const baseTranslateX = centerOffset - displayPos * (cardWidth + GAP);
   const trackTranslateX = baseTranslateX + (isDragging ? dragOffset : 0);
 
-  const go = useCallback((i: number) => {
-    setActiveIdx((prev) => {
-      const next = Math.max(0, Math.min(SLIDES.length - 1, i));
-      return next === prev ? prev : next;
-    });
+  // Derived 0..NUM-1 active index. Clones map to the real slide they mirror.
+  const activeIdx = ((displayPos - 1) % NUM + NUM) % NUM;
+
+  const next = useCallback(() => {
+    // Clamp at RIGHT_CLONE so a rapid double-click doesn't shoot past it.
+    setDisplayPos((p) => (p >= RIGHT_CLONE ? p : p + 1));
   }, []);
 
-  const prev = useCallback(() => go(activeIdx - 1), [activeIdx, go]);
-  const next = useCallback(() => go(activeIdx + 1), [activeIdx, go]);
+  const prev = useCallback(() => {
+    setDisplayPos((p) => (p <= LEFT_CLONE ? p : p - 1));
+  }, []);
 
-  const atFirst = activeIdx === 0;
-  const atLast = activeIdx === SLIDES.length - 1;
+  // After the snap-into-clone animation completes, jump (no transition) to
+  // the equivalent real slide so the next gesture lands in valid territory.
+  const onTrackTransitionEnd = (e: ReactTransitionEvent<HTMLDivElement>) => {
+    if (e.propertyName !== "transform") return;
+    if (displayPos !== LEFT_CLONE && displayPos !== RIGHT_CLONE) return;
+
+    const realPos = displayPos === LEFT_CLONE ? LAST_REAL : FIRST_REAL;
+    setTransitionOn(false);
+    setDisplayPos(realPos);
+    // Two rAFs: first lets the no-transition jump paint, second re-enables
+    // the transition for the next user-driven move.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setTransitionOn(true));
+    });
+  };
 
   const onKey = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "ArrowLeft") {
@@ -151,17 +176,13 @@ export default function CaseStudies() {
     setIsDragging(false);
     setDragOffset(0);
     const threshold = cardWidth * DRAG_THRESHOLD_RATIO;
-    if (dx < -threshold && !atLast) {
-      setActiveIdx((i) => Math.min(i + 1, SLIDES.length - 1));
-    } else if (dx > threshold && !atFirst) {
-      setActiveIdx((i) => Math.max(i - 1, 0));
-    }
+    if (dx < -threshold) next();
+    else if (dx > threshold) prev();
     (e.currentTarget as Element).releasePointerCapture?.(
       dragRef.current.pointerId,
     );
   };
 
-  // Stop a click from advancing past the active slide if the user was dragging.
   const onCardClick = (
     e: ReactMouseEvent<HTMLElement>,
     i: number,
@@ -171,11 +192,10 @@ export default function CaseStudies() {
       e.preventDefault();
       return;
     }
-    // Read Story click — let it through, don't advance the carousel.
     if ((e.target as HTMLElement).closest(".cs__read")) return;
-    if (i !== activeIdx) {
+    if (i !== displayPos) {
       e.preventDefault();
-      go(i);
+      setDisplayPos(i);
     }
   };
 
@@ -195,7 +215,6 @@ export default function CaseStudies() {
             type="button"
             className="cs__arrow"
             onClick={prev}
-            disabled={atFirst}
             aria-label="Previous case study"
           >
             <ArrowLeft />
@@ -204,7 +223,6 @@ export default function CaseStudies() {
             type="button"
             className="cs__arrow"
             onClick={next}
-            disabled={atLast}
             aria-label="Next case study"
           >
             <ArrowRight />
@@ -229,22 +247,28 @@ export default function CaseStudies() {
           className="cs__track"
           style={{
             transform: `translateX(${trackTranslateX}px)`,
-            transitionDuration: isDragging ? "0ms" : undefined,
+            transitionDuration: !transitionOn || isDragging ? "0ms" : undefined,
           }}
+          onTransitionEnd={onTrackTransitionEnd}
         >
-          {SLIDES.map((slide, i) => {
-            const isActive = i === activeIdx;
+          {VIRTUAL.map((slide, i) => {
+            const isActive = i === displayPos;
+            const isClone = i === LEFT_CLONE || i === RIGHT_CLONE;
+            const realPos = isClone
+              ? (i === LEFT_CLONE ? NUM : 1) // 1-based real index a clone mirrors
+              : i;
             return (
               <article
-                key={slide.theme}
+                key={i}
                 className={`cs__card cs__card--${slide.theme}${
                   isActive ? " cs__card--active" : ""
                 }`}
                 style={{ width: `${cardWidth}px` }}
                 role="group"
                 aria-roledescription="slide"
-                aria-label={`${i + 1} of ${SLIDES.length}`}
-                aria-current={isActive ? "true" : undefined}
+                aria-label={isClone ? undefined : `${realPos} of ${NUM}`}
+                aria-current={isActive && !isClone ? "true" : undefined}
+                aria-hidden={isClone || undefined}
                 onClick={(e) => onCardClick(e, i)}
               >
                 <div className="cs__bg" aria-hidden="true" />
@@ -278,8 +302,8 @@ export default function CaseStudies() {
                   className="cs__read"
                   href={READ_STORY_URL}
                   onClick={onReadClick}
-                  tabIndex={isActive ? 0 : -1}
-                  aria-hidden={!isActive}
+                  tabIndex={isActive && !isClone ? 0 : -1}
+                  aria-hidden={!isActive || isClone}
                 >
                   <span>Read Story</span>
                   <span className="cs__read-chevron" aria-hidden="true">
