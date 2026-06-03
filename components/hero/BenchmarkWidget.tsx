@@ -1,13 +1,13 @@
 "use client";
 
 /**
- * BenchmarkWidget — title + stylized bar chart + link.
+ * BenchmarkWidget — title + row chart + link.
  *
- * Honesty note: the bar widths below are an intentionally STYLIZED hero
- * visual. They exaggerate the gaps between backends to tell the speed-ranking
- * story at a glance, but rank order is faithful. No numeric timings are
- * shown anywhere — the real benchmark data is one click away behind the
- * "View benchmark →" link.
+ * Row layout follows the "label + bar + numeric value" pattern from
+ * benchmark widgets on similar marketing sites. The widths and timings
+ * below are STYLIZED (proportional rank order is faithful; the exact
+ * numbers are placeholders for the real chess benchmark linked at the
+ * bottom). Swap for real numbers when wiring up to the actual run.
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -16,16 +16,20 @@ type BarVariant = "accent" | "gray";
 
 type BarRow = {
   name: string;
-  /** Stylized width %, not a real measurement. */
+  /** Sub-label below the name, e.g. compiler version or runtime tag. */
+  version: string;
+  /** Stylized width %, proportional to time vs. slowest in the set. */
   pct: number;
+  /** Numeric time string shown on the right. */
+  time: string;
   variant: BarVariant;
 };
 
 const ROWS: BarRow[] = [
-  { name: "Native binary", pct: 18, variant: "accent" },
-  { name: "Jac --autonative", pct: 40, variant: "accent" },
-  { name: "Jac chess.na.jac", pct: 44, variant: "accent" },
-  { name: "Python", pct: 84, variant: "gray" },
+  { name: "Native binary",     version: "C++ (gcc -O3)",     pct: 21,  time: "95 ms",   variant: "accent" },
+  { name: "Jac --autonative",  version: "jac compile",       pct: 48,  time: "215 ms",  variant: "accent" },
+  { name: "Jac chess.na.jac",  version: "jac run",           pct: 53,  time: "240 ms",  variant: "accent" },
+  { name: "Python",            version: "CPython 3.12",      pct: 100, time: "450 ms",  variant: "gray"   },
 ];
 
 const BENCHMARK_URL =
@@ -96,8 +100,9 @@ function Row({
 }) {
   return (
     <>
-      <div className="benchmark__row-label" aria-hidden="true">
-        {row.name}
+      <div className={`benchmark__row-label benchmark__row-label--${row.variant}`} aria-hidden="true">
+        <div className="benchmark__row-name">{row.name}</div>
+        <div className="benchmark__row-version">{row.version}</div>
       </div>
       <div className="benchmark__row-track" aria-hidden="true">
         <div
@@ -107,6 +112,9 @@ function Row({
             transitionDelay: `${idx * 60}ms`,
           }}
         />
+      </div>
+      <div className={`benchmark__row-time benchmark__row-time--${row.variant}`} aria-hidden="true">
+        {row.time}
       </div>
     </>
   );
