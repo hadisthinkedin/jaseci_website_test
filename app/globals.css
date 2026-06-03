@@ -1321,6 +1321,15 @@ h6 {
   transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Used during the loop snap-back (and while the user is dragging) to kill
+   both the track's transform transition AND the cards' scale/opacity
+   transitions. Without this, the real slide that gains --active after the
+   silent jump animates in from its inactive state and looks like a pulse. */
+.cs__track--instant,
+.cs__track--instant .cs__card {
+  transition: none;
+}
+
 .cs__card {
   position: relative;
   flex-shrink: 0;

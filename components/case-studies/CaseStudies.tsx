@@ -92,6 +92,16 @@ export default function CaseStudies() {
     active: false,
     suppressClick: false,
   });
+  // Guards the snap-back so bubbled transitionend events from cards don't
+  // re-trigger the wrap (or stomp on the in-flight setTransitionOn(true)).
+  const snappingRef = useRef(false);
+  const snapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (snapTimerRef.current) clearTimeout(snapTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     const el = viewportRef.current;
@@ -128,16 +138,22 @@ export default function CaseStudies() {
   // the equivalent real slide so the next gesture lands in valid territory.
   const onTrackTransitionEnd = (e: ReactTransitionEvent<HTMLDivElement>) => {
     if (e.propertyName !== "transform") return;
+    if (snappingRef.current) return;
     if (displayPos !== LEFT_CLONE && displayPos !== RIGHT_CLONE) return;
 
+    snappingRef.current = true;
     const realPos = displayPos === LEFT_CLONE ? LAST_REAL : FIRST_REAL;
     setTransitionOn(false);
     setDisplayPos(realPos);
-    // Two rAFs: first lets the no-transition jump paint, second re-enables
-    // the transition for the next user-driven move.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => setTransitionOn(true));
-    });
+    // Re-enable the transition after the snap render has had a chance to
+    // paint. setTimeout is more reliable than nested rAF here — under React
+    // 18+ batching the rAF callbacks were not consistently firing the final
+    // setTransitionOn(true), so the carousel stayed in "instant" mode.
+    snapTimerRef.current = setTimeout(() => {
+      setTransitionOn(true);
+      snappingRef.current = false;
+      snapTimerRef.current = null;
+    }, 60);
   };
 
   const onKey = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -244,11 +260,10 @@ export default function CaseStudies() {
         onPointerCancel={finishDrag}
       >
         <div
-          className="cs__track"
-          style={{
-            transform: `translateX(${trackTranslateX}px)`,
-            transitionDuration: !transitionOn || isDragging ? "0ms" : undefined,
-          }}
+          className={`cs__track${
+            !transitionOn || isDragging ? " cs__track--instant" : ""
+          }`}
+          style={{ transform: `translateX(${trackTranslateX}px)` }}
           onTransitionEnd={onTrackTransitionEnd}
         >
           {VIRTUAL.map((slide, i) => {
