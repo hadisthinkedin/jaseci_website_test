@@ -1976,7 +1976,13 @@ h6 {
   padding-inline: clamp(1rem, 4vw, 2rem);
 }
 
-/* Flip via order so the DOM order stays text → media for screen readers. */
+/* Flip via order so the DOM order stays text → media for screen readers.
+   Also swap the grid track widths — without this the text would land
+   in the narrower 1fr track in reversed mode and overflow vertically. */
+.spotlight--reversed .spotlight__inner {
+  grid-template-columns: 1fr 1.5fr;
+}
+
 .spotlight--reversed .spotlight__text {
   order: 2;
 }
