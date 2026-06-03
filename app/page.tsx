@@ -1,9 +1,11 @@
 import Hero from "@/components/hero/Hero";
 import CodeCompare from "@/components/code-compare/CodeCompare";
+import Interop from "@/components/interop/Interop";
 
 const SECTIONS = [
   { id: "home", label: "Home" },
   { id: "code", label: "One file vs four" },
+  { id: "interop", label: "Import from any ecosystem" },
 ];
 
 export default function Home() {
@@ -18,6 +20,13 @@ export default function Home() {
         </section>
         <section id="code" className="snap-section" aria-label="Code comparison">
           <CodeCompare />
+        </section>
+        <section
+          id="interop"
+          className="snap-section"
+          aria-label="Import from any ecosystem"
+        >
+          <Interop />
         </section>
         <nav className="scroll-nav" aria-label="Section navigation">
           {SECTIONS.map((s) => (

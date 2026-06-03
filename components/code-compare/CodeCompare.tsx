@@ -3,20 +3,12 @@ import CodeComparePanes, {
   type SupportedLang,
 } from "./CodeComparePanes";
 
-type FileSpec = {
-  name: string;
-  lang: SupportedLang;
-  glyph: string;
-  breadcrumb: string[];
-  source: string;
-};
+type FileSpec = FileBundle;
 
 const POLY_FILES: FileSpec[] = [
   {
     name: "globals.css",
     lang: "css",
-    glyph: "css",
-    breadcrumb: ["app", "globals.css"],
     source: `* { box-sizing: border-box; }
 body { font-family: system-ui, sans-serif; margin: 2rem; }
 input { padding: 0.5rem; margin-right: 0.5rem; }
@@ -27,8 +19,6 @@ p { margin: 0.25rem 0; }
   {
     name: "layout.tsx",
     lang: "tsx",
-    glyph: "tsx",
-    breadcrumb: ["app", "layout.tsx"],
     source: `import "./globals.css";
 import type { ReactNode } from "react";
 
@@ -46,8 +36,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   {
     name: "page.tsx",
     lang: "tsx",
-    glyph: "tsx",
-    breadcrumb: ["app", "page.tsx"],
     source: `"use client";
 import { useEffect, useState } from "react";
 
@@ -96,8 +84,6 @@ export default function Page() {
   {
     name: "main.py",
     lang: "python",
-    glyph: "py",
-    breadcrumb: ["backend", "main.py"],
     source: `import os
 import requests
 from dotenv import load_dotenv
@@ -171,8 +157,6 @@ def add_todo(body: TodoIn) -> Todo:
 const JAC_FILE: FileSpec = {
   name: "main.jac",
   lang: "jac",
-  glyph: "jac",
-  breadcrumb: ["jac", "examples", "mini_todo", "main.jac"],
   source: `node Todo {
     has title: str,
         category: str = "other",

@@ -11,8 +11,6 @@ export type SupportedLang = "python" | "tsx" | "css" | "jac";
 export type FileBundle = {
   name: string;
   lang: SupportedLang;
-  glyph: string;
-  breadcrumb: string[];
   source: string;
 };
 
@@ -100,17 +98,11 @@ export default function CodeComparePanes({
         target="_blank"
         rel="noopener noreferrer"
       >
-        <span className="cc__repobar-label">View repo for yourself</span>
+        <span className="cc__repobar-label">
+          One Jac file vs 11 polygot files — view the repo yourself
+        </span>
         <span className="cc__repobar-arrow" aria-hidden="true">→</span>
       </a>
-
-      <div className="cc__framing">
-        <span className="eyebrow">The polyglot tax</span>
-        <p className="cc__framing-line">
-          The same mini-todo app — AI categorization and all. One Jac file on
-          the left. Four files across Python, Next.js, and CSS on the right.
-        </p>
-      </div>
 
       <div className="cc__panes">
         <JacPane file={jac} />
@@ -213,9 +205,6 @@ function PolyPane({
                 onClick={() => setActiveIdx(idx)}
                 onKeyDown={(e) => handleKeyDown(e, idx)}
               >
-                <span className="cc__tab-glyph" aria-hidden="true">
-                  {f.glyph}
-                </span>
                 <span className="cc__tab-name">{f.name}</span>
               </button>
             );
@@ -223,16 +212,11 @@ function PolyPane({
         </div>
       </div>
 
-      <div className="cc__meta">
-        <Breadcrumb segments={activeFile.breadcrumb} />
-        <span className="cc__badge">4 files · Next.js + FastAPI</span>
-      </div>
-
       <div
         id="cc-poly-editor"
         ref={editorHostRef}
         className="cc__editor"
-        aria-label={`Editor: ${activeFile.breadcrumb.join("/")}`}
+        aria-label={`Editor: ${activeFile.name}`}
       />
     </div>
   );
@@ -282,45 +266,17 @@ function JacPane({ file }: { file: FileBundle }) {
             aria-selected="true"
             aria-disabled="true"
           >
-            <span className="cc__tab-glyph" aria-hidden="true">
-              {file.glyph}
-            </span>
             <span className="cc__tab-name">{file.name}</span>
           </span>
         </div>
       </div>
 
-      <div className="cc__meta">
-        <Breadcrumb segments={file.breadcrumb} />
-        <span className="cc__badge">1 file · entire app</span>
-      </div>
-
       <div
         ref={editorHostRef}
         className="cc__editor"
-        aria-label={`Editor: ${file.breadcrumb.join("/")}`}
+        aria-label={`Editor: ${file.name}`}
       />
     </div>
   );
 }
 
-function Breadcrumb({ segments }: { segments: string[] }) {
-  return (
-    <span className="cc__breadcrumb" aria-label="File path">
-      {segments.map((s, i) => {
-        const last = i === segments.length - 1;
-        return (
-          <span
-            key={`${i}-${s}`}
-            className={last ? "cc__crumb cc__crumb--last" : "cc__crumb"}
-          >
-            {s}
-            {!last && (
-              <span className="cc__crumb-sep" aria-hidden="true">›</span>
-            )}
-          </span>
-        );
-      })}
-    </span>
-  );
-}

@@ -774,13 +774,14 @@ h6 {
 }
 
 .cc__repobar {
-  align-self: start;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.85rem;
-  padding: 0.55rem 1rem 0.55rem 0.85rem;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.8rem 1.25rem;
   border: 1px solid var(--rule-soft);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   background: var(--paper);
   color: var(--text);
   font-family: var(--font-sans);
@@ -790,7 +791,9 @@ h6 {
   text-transform: uppercase;
   text-decoration: none;
   line-height: 1;
+  text-align: center;
   transition:
+    background-color 0.15s ease,
     border-color 0.15s ease,
     color 0.15s ease;
 }
@@ -916,87 +919,6 @@ h6 {
   cursor: default;
 }
 
-.cc__tab-glyph {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 1.5rem;
-  height: 14px;
-  padding: 0 0.3rem;
-  border-radius: 2px;
-  background: rgba(243, 239, 230, 0.08);
-  color: rgba(243, 239, 230, 0.7);
-  font-family: var(--font-vscode-ui);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  text-transform: lowercase;
-}
-
-.cc__pane--jac .cc__tab--static .cc__tab-glyph {
-  background: rgba(238, 90, 36, 0.15); /* --accent @ ~15% */
-  color: var(--accent);
-}
-
-.cc__meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.4rem 1rem;
-  background: rgba(243, 239, 230, 0.015);
-  border-bottom: 1px solid rgba(243, 239, 230, 0.06);
-  font-family: var(--font-vscode-ui);
-  font-size: 13px;
-  font-weight: 400;
-  letter-spacing: normal;
-  color: rgba(243, 239, 230, 0.55);
-}
-
-.cc__breadcrumb {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.cc__crumb {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.cc__crumb--last {
-  color: var(--code-text);
-}
-
-.cc__crumb-sep {
-  color: rgba(243, 239, 230, 0.35);
-}
-
-.cc__badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.18rem 0.6rem;
-  border: 1px solid rgba(243, 239, 230, 0.18);
-  border-radius: var(--radius-pill);
-  font-family: var(--font-vscode-ui);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(243, 239, 230, 0.7);
-  white-space: nowrap;
-}
-
-.cc__pane--jac .cc__badge {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
 /* Monaco editor host. Monaco owns the inner layout (scrollbars, gutter,
    line numbers, padding, font) — we just give it a sized container.
    `overscroll-behavior: contain` prevents the wheel/touch event from
@@ -1031,22 +953,6 @@ h6 {
   }
 }
 
-.cc__framing {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  max-width: 70ch;
-  padding-block: 0.25rem;
-}
-
-.cc__framing-line {
-  margin: 0;
-  color: var(--text);
-  font-family: var(--font-sans);
-  font-size: clamp(0.95rem, 1.3vw, 1.05rem);
-  line-height: 1.55;
-}
-
 /* Subtle scroll-driven entry — fades + lifts as the frame enters viewport.
    Falls back to no animation on browsers without animation-timeline support. */
 @media (prefers-reduced-motion: no-preference) {
@@ -1057,6 +963,191 @@ h6 {
       animation-range: entry 0% entry 60%;
     }
     @keyframes cc-reveal {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Interop section (Prompt 12) — editor + terminal windows on the
+   left, eyebrow + headline + lede on the right.
+   ──────────────────────────────────────────────────────────────── */
+
+.interop {
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+  padding-block: clamp(2rem, 5vw, 4rem);
+}
+
+.interop__windows {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.interop__window {
+  background: var(--code-bg);
+  color: var(--code-text);
+  border: 1px solid rgba(243, 239, 230, 0.08);
+  border-radius: var(--radius-box);
+  overflow: hidden;
+}
+
+.interop__titlebar {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.5rem 0.85rem;
+  background: rgba(243, 239, 230, 0.02);
+  border-bottom: 1px solid rgba(243, 239, 230, 0.08);
+}
+
+.interop__traffic {
+  display: inline-flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.interop__traffic-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(243, 239, 230, 0.18);
+}
+
+.interop__title {
+  font-family: var(--font-vscode-ui);
+  font-size: 12px;
+  color: rgba(243, 239, 230, 0.65);
+}
+
+.interop__editor-body {
+  font-family: var(--font-code);
+  font-size: 13px;
+  line-height: 1.55;
+  padding: 1rem 1.25rem;
+  max-height: 360px;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+/* Shiki output sits inside .interop__editor-body — strip its layout, keep colors */
+.interop__editor-body pre {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  overflow: visible;
+}
+
+.interop__editor-body pre code {
+  display: block;
+  background: transparent;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+.interop__editor-body .line {
+  display: block;
+  min-height: 1lh;
+}
+
+.interop__terminal-body {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  font-family: var(--font-code);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--code-text);
+  background: transparent;
+  overflow-x: auto;
+  overscroll-behavior: contain;
+  white-space: pre;
+}
+
+.interop__term-line {
+  display: block;
+}
+
+.interop__term-line--out {
+  color: rgba(243, 239, 230, 0.85);
+}
+
+.interop__term-line--spacer {
+  display: block;
+  height: 0.45em;
+}
+
+.interop__term-prompt {
+  color: rgba(243, 239, 230, 0.45);
+  margin-right: 0.7rem;
+  user-select: none;
+}
+
+.interop__term-check {
+  color: var(--accent);
+  margin-right: 0.6rem;
+}
+
+.interop__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 52ch;
+}
+
+.interop__headline {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.interop__lede {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: clamp(1rem, 1.4vw, 1.1rem);
+  line-height: 1.6;
+}
+
+@media (max-width: 960px) {
+  .interop {
+    grid-template-columns: 1fr;
+    padding-block: 2.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .interop {
+      animation: interop-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+    @keyframes interop-reveal {
       from {
         opacity: 0;
         transform: translateY(18px);
