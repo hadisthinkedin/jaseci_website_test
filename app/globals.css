@@ -559,10 +559,14 @@ h6 {
 
 .install__tab {
   appearance: none;
+  /* 2px border on top/left/right, NO bottom border — "open bottom" so
+     the inactive tab visually sits like a card with its bottom edge
+     opening into the panel below. */
   background: var(--paper);
-  border: 1px solid var(--rule-soft);
+  border: 2px solid var(--rule-soft);
+  border-bottom: 0;
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-  padding: 0.45rem 0.95rem;
+  padding: 0.5rem 1rem;
   color: var(--text-muted);
   font-family: var(--font-sans);
   font-size: 0.88rem;
@@ -580,12 +584,14 @@ h6 {
   color: var(--text);
 }
 
-/* Active tab: solid --accent fill so it visually "attaches" to the dark
-   codeblock below, whose top border is also --accent. */
+/* Active tab: solid --accent fill with DARK text — same "black on the
+   accent color" look the reference uses for its active tab. Border
+   stays 2px but takes the accent color so the tab merges with the
+   codeblock's 2px accent border below it. */
 .install__tab[aria-selected="true"] {
   background: var(--accent);
   border-color: var(--accent);
-  color: var(--on-accent);
+  color: var(--text);
   font-weight: 600;
   z-index: 1;
 }
@@ -628,9 +634,9 @@ h6 {
      into the codeblock's top edge — "tab attached to box" look. */
   border: 2px solid var(--accent);
   border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
-  padding: 1rem 3rem 1rem 1.1rem;
+  padding: 1.25rem 3rem 1.25rem 1.25rem;
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: 1rem;
   line-height: 1.55;
   overflow-x: auto;
 }
@@ -657,31 +663,29 @@ h6 {
 
 .codeblock__copy {
   position: absolute;
-  top: 0.55rem;
-  right: 0.55rem;
+  top: 0.6rem;
+  right: 0.6rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border: 1px solid rgba(243, 239, 230, 0.2); /* --code-text @ 20% */
-  border-radius: var(--radius-sm);
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 0;
   background: transparent;
   color: var(--code-text);
+  opacity: 0.7;
   cursor: pointer;
-  transition:
-    background-color 0.15s ease,
-    border-color 0.15s ease;
+  transition: opacity 0.15s ease;
 }
 
-.codeblock__copy:hover {
-  background: rgba(243, 239, 230, 0.08); /* --code-text @ 8% */
-  border-color: rgba(243, 239, 230, 0.4);
+.codeblock__copy:hover,
+.codeblock__copy:focus-visible {
+  opacity: 1;
 }
 
 .codeblock__copy svg {
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
 }
 
 /* ────────────────────────────────────────────────────────────────
