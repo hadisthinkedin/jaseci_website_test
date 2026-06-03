@@ -54,14 +54,14 @@ export default function Home() {
         <section
           id="spotlight-2"
           className="snap-section"
-          aria-label="Feature spotlight"
+          aria-label="One file for the whole stack"
         >
           <FeatureSpotlight
             reversed
-            headingMain="[Second heading goes here]"
-            headingMuted="with its own muted line below the bold part."
-            ctaLabel="Learn more"
-            ctaHref="#ecosystem"
+            headingMain="One file for the whole stack."
+            headingMuted="React-style UI, walker calls that skip HTTP, and full npm access — all in Jac. Types check across the seam, state auto-manages, hot reload included."
+            ctaLabel="See littleX"
+            ctaHref="https://github.com/jaseci-labs/littleX"
           />
         </section>
         <section
