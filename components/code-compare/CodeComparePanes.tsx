@@ -36,9 +36,13 @@ const EDITOR_OPTIONS = {
   automaticLayout: true,
   minimap: { enabled: false },
   scrollBeyondLastLine: false,
-  fontFamily: '"Cascadia Mono", "JetBrains Mono", Menlo, Monaco, Consolas, monospace',
-  fontSize: 13,
-  lineHeight: 20,
+  // Matches VS Code's editor.fontFamily default chain across platforms
+  // (Cascadia Mono → Menlo on mac → Consolas on Windows → generic).
+  fontFamily: '"Cascadia Mono", Menlo, Monaco, Consolas, "Droid Sans Mono", "Source Code Pro", monospace',
+  fontSize: 14,
+  // lineHeight: 0 lets Monaco auto-calculate from fontSize using the
+  // GOLDEN_LINE_HEIGHT_RATIO that VS Code itself uses (1.5 on mac, 1.35 elsewhere).
+  lineHeight: 0,
   renderLineHighlight: "none" as const,
   lineNumbers: "on" as const,
   glyphMargin: false,

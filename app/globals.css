@@ -46,6 +46,12 @@
   --font-code:
     var(--font-cascadia-mono), var(--font-jetbrains-mono), "Cascadia Mono",
     "Cascadia Code", Menlo, Monaco, Consolas, monospace;
+  /* VS Code workbench UI font — system sans-serif stack matching VS Code's
+     workbench.fontFamily defaults (per platform). Used by editor chrome
+     in the comparison frame: tabs, breadcrumb, badge. NOT used for code. */
+  --font-vscode-ui:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Segoe WPC", Ubuntu,
+    "Droid Sans", "Helvetica Neue", system-ui, sans-serif;
 
   /* layout */
   --max-width: 1100px;
@@ -354,6 +360,10 @@ h6 {
 .hero {
   background: var(--bg);
   padding-block: clamp(3rem, 6vw, 5.5rem);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .hero__inner {
@@ -872,17 +882,18 @@ h6 {
   appearance: none;
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
-  padding: 0.55rem 0.85rem;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
   margin-bottom: -1px;
   background: transparent;
   border: 0;
   border-top: 2px solid transparent;
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  border-radius: 0;
   color: rgba(243, 239, 230, 0.55);
-  font-family: var(--font-code);
-  font-size: 0.78rem;
-  letter-spacing: 0.01em;
+  font-family: var(--font-vscode-ui);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: normal;
   white-space: nowrap;
   cursor: pointer;
   transition:
@@ -909,15 +920,16 @@ h6 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 1.55rem;
-  height: 0.95rem;
+  min-width: 1.5rem;
+  height: 14px;
   padding: 0 0.3rem;
   border-radius: 2px;
   background: rgba(243, 239, 230, 0.08);
   color: rgba(243, 239, 230, 0.7);
-  font-size: 0.6rem;
+  font-family: var(--font-vscode-ui);
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   text-transform: lowercase;
 }
 
@@ -931,11 +943,13 @@ h6 {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.55rem 1rem;
+  padding: 0.4rem 1rem;
   background: rgba(243, 239, 230, 0.015);
   border-bottom: 1px solid rgba(243, 239, 230, 0.06);
-  font-family: var(--font-code);
-  font-size: 0.74rem;
+  font-family: var(--font-vscode-ui);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: normal;
   color: rgba(243, 239, 230, 0.55);
 }
 
@@ -969,10 +983,10 @@ h6 {
   padding: 0.18rem 0.6rem;
   border: 1px solid rgba(243, 239, 230, 0.18);
   border-radius: var(--radius-pill);
-  font-family: var(--font-sans);
-  font-size: 0.68rem;
+  font-family: var(--font-vscode-ui);
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(243, 239, 230, 0.7);
   white-space: nowrap;
@@ -984,11 +998,15 @@ h6 {
 }
 
 /* Monaco editor host. Monaco owns the inner layout (scrollbars, gutter,
-   line numbers, padding, font) — we just give it a sized container. */
+   line numbers, padding, font) — we just give it a sized container.
+   `overscroll-behavior: contain` prevents the wheel/touch event from
+   bubbling up to the .scroll-root snap container when Monaco reaches
+   its own scroll limit, so scrolling inside the editor stays inside it. */
 .cc__editor {
   flex: 1;
   min-height: 0;
   position: relative;
+  overscroll-behavior: contain;
 }
 
 .cc__editor .monaco-editor,
@@ -1048,5 +1066,103 @@ h6 {
         transform: translateY(0);
       }
     }
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Full-page scrolling shell — Prompt 10
+   CSS Scroll-Snap (option B): native, no library, no license.
+   <main class="scroll-root"> is the snap container; each direct
+   child .snap-section fills the viewport and snaps as a unit.
+   ──────────────────────────────────────────────────────────────── */
+
+.scroll-root {
+  position: relative;
+  height: 100svh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+.snap-section {
+  min-height: 100svh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* Section navigation dots — fixed on the right edge, vertically centered.
+   Static anchor links to each section's id; clicking advances the snap
+   container even when the cursor is over a code pane. */
+.scroll-nav {
+  position: fixed;
+  top: 50%;
+  right: clamp(0.85rem, 2vw, 1.5rem);
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  z-index: 20;
+}
+
+.scroll-nav__dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1px solid var(--text);
+  background: transparent;
+  text-decoration: none;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.scroll-nav__dot:hover,
+.scroll-nav__dot:focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: scale(1.15);
+}
+
+/* Skip-to-content — keyboard-only, slides in on focus. */
+.skip-to-content {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: var(--text);
+  color: var(--on-accent);
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  z-index: 100;
+  transform: translateY(-150%);
+  transition: transform 0.15s ease;
+}
+
+.skip-to-content:focus,
+.skip-to-content:focus-visible {
+  transform: translateY(0);
+}
+
+@media (max-width: 900px) {
+  /* Below 900px, fall back to normal scrolling — better for stacked code
+     panes and avoids snap-jacking on small touchscreens. */
+  .scroll-root {
+    scroll-snap-type: none;
+    height: auto;
+    overflow: visible;
+  }
+  .scroll-nav {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-root {
+    scroll-behavior: auto;
   }
 }

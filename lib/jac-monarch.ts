@@ -124,8 +124,9 @@ export function defineJaseciTheme(monaco: any): void {
     colors: {
       "editor.background": "#0a0a0a",
       "editor.foreground": "#f3efe6",
-      "editorLineNumber.foreground": "#5a5752",
-      "editorLineNumber.activeForeground": "#f3efe6",
+      // VS Code Dark+ defaults for line numbers (muted gray, active brighter)
+      "editorLineNumber.foreground": "#858585",
+      "editorLineNumber.activeForeground": "#c6c6c6",
       "editor.lineHighlightBackground": "#141414",
       "editor.lineHighlightBorder": "#14141400",
       "editorGutter.background": "#0a0a0a",
