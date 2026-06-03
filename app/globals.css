@@ -1952,19 +1952,20 @@ h6 {
    ──────────────────────────────────────────────────────────────── */
 
 .spotlight {
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  /* Taller than the viewport so there's scroll-room *inside* the section.
+     The text column stays vertically centered in the viewport via sticky
+     while the media column scrolls past it naturally. */
+  min-height: 180svh;
   background: var(--bg);
-  padding-block: clamp(2.5rem, 6vw, 5rem);
 }
 
 .spotlight__inner {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   gap: clamp(2rem, 5vw, 4rem);
-  align-items: center;
+  /* align-items: start so the sticky text column can establish its own
+     range. If centered, sticky wouldn't have anywhere to "go". */
+  align-items: start;
   max-width: var(--max-width);
   margin-inline: auto;
   width: 100%;
@@ -1981,8 +1982,17 @@ h6 {
 }
 
 .spotlight__text {
+  /* Sticky-pin to viewport, full-height so flex-center keeps the text
+     content visually at the viewport's vertical center. As the page
+     scrolls within .spotlight's tall range, this column stays put;
+     once the sticky range ends (section's bottom passes), it releases
+     and continues scrolling normally. */
+  position: sticky;
+  top: 0;
+  height: 100svh;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 2rem;
   max-width: 30ch;
 }
@@ -2027,10 +2037,13 @@ h6 {
 .spotlight__media {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1 / 1;
   border-radius: 1.5rem;
   overflow: hidden;
   background: #111;
+  /* Sits at the top of the section so the user has the full sticky
+     range to scroll it past the centered text column. */
+  margin-top: clamp(3rem, 8svh, 6rem);
 }
 
 .spotlight__video {
@@ -2051,23 +2064,42 @@ h6 {
     linear-gradient(140deg, #1a1a3e 0%, #0a0a1f 100%);
 }
 
+/* These sections are taller than 100svh; the parent uses proximity snap
+   now so they get a soft snap at their top edge but the user can scroll
+   through their full range to drive the sticky text column. */
+#spotlight-1,
+#spotlight-2 {
+  scroll-snap-stop: normal;
+}
+
 @media (max-width: 820px) {
+  .spotlight {
+    /* On mobile, drop the sticky-tall layout — fall back to a single
+       100svh section with stacked content. */
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: clamp(2.5rem, 6vw, 5rem);
+  }
   .spotlight__inner {
     grid-template-columns: 1fr;
     gap: 2rem;
+    align-items: center;
   }
   /* On mobile keep the natural DOM order (text first, media below). */
-  .spotlight--reversed .spotlight__text {
-    order: 0;
-  }
+  .spotlight--reversed .spotlight__text,
   .spotlight--reversed .spotlight__media {
     order: 0;
   }
+  .spotlight__text {
+    position: static;
+    height: auto;
+    max-width: none;
+  }
   .spotlight__media {
     aspect-ratio: 4 / 3;
-  }
-  .spotlight__text {
-    max-width: none;
+    margin-top: 0;
   }
 }
 
@@ -2489,7 +2521,11 @@ h6 {
   height: 100svh;
   overflow-y: scroll;
   overflow-x: hidden;
-  scroll-snap-type: y mandatory;
+  /* Proximity (not mandatory) so taller sections (the feature spotlights
+     with sticky internal text) can be scrolled *through* without being
+     yanked back to the snap start. Sections still snap when the user
+     stops scrolling near a boundary. */
+  scroll-snap-type: y proximity;
   scroll-behavior: smooth;
 }
 

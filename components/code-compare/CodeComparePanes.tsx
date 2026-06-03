@@ -102,18 +102,6 @@ export default function CodeComparePanes({
         Python, Next.js and CSS on the right.
       </span>
 
-      <a
-        className="cc__repobar"
-        href={repoUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <span className="cc__repobar-label">
-          One Jac file vs 11 polygot files — view the repo yourself
-        </span>
-        <span className="cc__repobar-arrow" aria-hidden="true">→</span>
-      </a>
-
       <div className="cc__panes">
         <JacPane file={jac} />
         <PolyPane
@@ -125,6 +113,18 @@ export default function CodeComparePanes({
           activeFile={activeFile}
         />
       </div>
+
+      <a
+        className="cc__repobar"
+        href={repoUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span className="cc__repobar-label">
+          One Jac file vs 11 polygot files — view the repo yourself
+        </span>
+        <span className="cc__repobar-arrow" aria-hidden="true">→</span>
+      </a>
     </section>
   );
 }
