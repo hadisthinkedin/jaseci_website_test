@@ -1,4 +1,5 @@
 import Hero from "@/components/hero/Hero";
+import VisualPanel from "@/components/visual-panel/VisualPanel";
 import CodeCompare from "@/components/code-compare/CodeCompare";
 import Interop from "@/components/interop/Interop";
 import CaseStudies from "@/components/case-studies/CaseStudies";
@@ -9,6 +10,7 @@ import FeatureSpotlight from "@/components/feature-spotlight/FeatureSpotlight";
 
 const SECTIONS = [
   { id: "home", label: "Home" },
+  { id: "visual", label: "Visual" },
   { id: "code", label: "One file vs four" },
   { id: "interop", label: "Import from any ecosystem" },
   { id: "spotlight-1", label: "Spotlight 1" },
@@ -28,6 +30,9 @@ export default function Home() {
       <main className="scroll-root">
         <section id="home" className="snap-section" aria-label="Home">
           <Hero />
+        </section>
+        <section id="visual" className="snap-section" aria-label="Visual">
+          <VisualPanel />
         </section>
         <section id="code" className="snap-section" aria-label="Code comparison">
           <CodeCompare />

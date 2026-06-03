@@ -557,7 +557,7 @@ h6 {
 .install__tablist {
   display: flex;
   align-items: flex-end;
-  gap: 0.35rem;
+  gap: 0;
   flex-wrap: wrap;
 }
 
@@ -582,6 +582,11 @@ h6 {
     background-color 0.15s ease,
     color 0.15s ease,
     border-color 0.15s ease;
+}
+
+/* Adjacent tabs share a single 2px border instead of stacking two. */
+.install__tab + .install__tab {
+  margin-left: -2px;
 }
 
 .install__tab:hover {
@@ -2480,6 +2485,38 @@ h6 {
   .cs__read-chevron {
     transition: none !important;
   }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   VisualPanel — placeholder section right after Hero. Holds a
+   centered visual (lottie/image) inside a flexible aspect-locked
+   canvas. Final asset + copy provided later.
+   ──────────────────────────────────────────────────────────────── */
+
+.section-base_visual {
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 6vw, 5rem) clamp(1rem, 4vw, 3rem);
+  background: var(--bg);
+}
+
+.section-base_visual .img-cover {
+  width: 100%;
+  max-width: 780px;
+  aspect-ratio: 780 / 680;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-base_visual .img-cover > svg,
+.section-base_visual .img-cover > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 /* ────────────────────────────────────────────────────────────────
