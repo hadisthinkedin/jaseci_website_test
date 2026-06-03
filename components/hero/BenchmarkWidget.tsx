@@ -25,11 +25,15 @@ type BarRow = {
   variant: BarVariant;
 };
 
+// Real numbers from the 20-game chess benchmark. Widths are
+// proportional to wall time with the slowest row at 100%.
+// (C++ reference is intentionally omitted.)
 const ROWS: BarRow[] = [
-  { name: "Native binary",     version: "C++ (gcc -O3)",     pct: 21,  time: "95 ms",   variant: "accent" },
-  { name: "Jac --autonative",  version: "jac compile",       pct: 48,  time: "215 ms",  variant: "accent" },
-  { name: "Jac chess.na.jac",  version: "jac run",           pct: 53,  time: "240 ms",  variant: "accent" },
-  { name: "Python",            version: "CPython 3.12",      pct: 100, time: "450 ms",  variant: "gray"   },
+  { name: "Native binary",       version: "AOT, run only",   pct: 31,  time: "2.313 s",  variant: "accent" },
+  { name: "Jac --autonative",    version: "compile + run",   pct: 44,  time: "3.333 s",  variant: "accent" },
+  { name: "Jac chess.na.jac",    version: "compile + run",   pct: 49,  time: "3.661 s",  variant: "accent" },
+  { name: "Python",              version: "chess.py",        pct: 88,  time: "6.584 s",  variant: "gray"   },
+  { name: "Jac default backend", version: "jac run",         pct: 100, time: "7.522 s",  variant: "gray"   },
 ];
 
 const BENCHMARK_URL =
