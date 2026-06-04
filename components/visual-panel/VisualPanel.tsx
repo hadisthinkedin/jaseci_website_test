@@ -114,6 +114,13 @@ export default function VisualPanel() {
         <div className="visual-col visual-col--lottie">
           <div className="vp-stage">
             <div className="img-cover">
+              {/* Always-on backdrop: IMG_4925.jpg sits behind the lottie
+                  in the same rounded-square spot the old blue Tile.png
+                  occupied. Decorative. */}
+              <div className="vp-final vp-final--visible" aria-hidden="true">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/IMG_4925.jpg" alt="" />
+              </div>
               <div className="vp-anim" aria-hidden="true">
                 {data ? (
                   <Lottie
