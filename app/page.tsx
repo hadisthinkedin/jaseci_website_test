@@ -3,11 +3,11 @@ import VisualPanel from "@/components/visual-panel/VisualPanel";
 import CodeCompare from "@/components/code-compare/CodeCompare";
 import Interop from "@/components/interop/Interop";
 import ScaleShowcase from "@/components/scale-showcase/ScaleShowcase";
+import StackShowcase from "@/components/stack-showcase/StackShowcase";
 import CaseStudies from "@/components/case-studies/CaseStudies";
 import Ecosystem from "@/components/ecosystem/Ecosystem";
 import Footer from "@/components/footer/Footer";
 import Navbar from "@/components/navbar/Navbar";
-import FeatureSpotlight from "@/components/feature-spotlight/FeatureSpotlight";
 
 const SECTIONS = [
   { id: "home", label: "Home" },
@@ -57,13 +57,7 @@ export default function Home() {
           className="snap-section"
           aria-label="One file for the whole stack"
         >
-          <FeatureSpotlight
-            reversed
-            headingMain="One file for the whole stack."
-            headingMuted="React-style UI, walker calls that skip HTTP, and full npm access — all in Jac. Types check across the seam, state auto-manages, hot reload included."
-            ctaLabel="See littleX"
-            ctaHref="https://github.com/jaseci-labs/littleX"
-          />
+          <StackShowcase />
         </section>
         <section
           id="cases"

@@ -7,40 +7,13 @@ import AccuracyChart from "./AccuracyChart";
 const LOTTIE_SRC = "/lotties/movemodels.json";
 const PROJECTS_HREF = "/projects";
 
-/**
- * The lottie SVG paints the big rounded tile and each of the 9 icon tiles
- * through `<g filter="url(#__lottie_element_…)">` groups whose only filter
- * is a Gaussian blur. The blur of the white tile face + the blurs of nine
- * dark icon-tile backings stack into the soft blueish halo we see behind
- * the icons. Hiding every filter group strips the big-tile background
- * AND the icon-tile shadows in one pass, leaving only the unfiltered
- * icon-face squares + colorful glyphs over the page background.
- */
+// Each shadow layer renders as a `<g filter="url(#…)">` Gaussian-blur group.
+// On animation complete, hide those so the icons sit cleanly on the backdrop
+// without the dark blurred halos.
 function hideLottieGlowLayers(svg: SVGSVGElement) {
-  // 1. Hide every <g filter=…>. These are the Gaussian-blur groups that
-  // produce the big tile's halo + each icon-tile's dark shadow stack.
   svg.querySelectorAll<SVGGraphicsElement>("g[filter]").forEach((g) => {
     g.setAttribute("data-vp-hidden", "1");
     g.style.display = "none";
-  });
-
-  // 2. The lottie also draws an unfiltered duplicate of the big tile face
-  // (a solid white path the same 171×152 bbox as the blur-group version)
-  // that sits on top once the filter group is gone. Catch any path with
-  // significantly larger bbox than an icon tile (10000 area) — only the
-  // big tile face hits this threshold; icon faces (100×100), shadows
-  // (101×101), and glyphs are all comfortably under it.
-  svg.querySelectorAll<SVGGraphicsElement>("path, rect").forEach((el) => {
-    if (el.closest("[data-vp-hidden]")) return;
-    try {
-      const b = el.getBBox();
-      if (b.width * b.height > 20000) {
-        el.setAttribute("data-vp-hidden", "1");
-        el.style.display = "none";
-      }
-    } catch {
-      // not a graphics element
-    }
   });
 }
 
@@ -48,12 +21,6 @@ function restoreLottieGlowLayers(svg: SVGSVGElement) {
   svg.querySelectorAll<SVGGraphicsElement>("[data-vp-hidden]").forEach((el) => {
     el.style.display = "";
     el.removeAttribute("data-vp-hidden");
-  });
-  // Clean up any legacy state from earlier fill-clearing approach
-  svg.querySelectorAll<SVGElement>("[data-orig-fill]").forEach((el) => {
-    const orig = el.getAttribute("data-orig-fill");
-    if (orig) el.setAttribute("fill", orig);
-    el.removeAttribute("data-orig-fill");
   });
 }
 
@@ -94,9 +61,12 @@ export default function VisualPanel() {
             setDone(false);
             if (svg) restoreLottieGlowLayers(svg);
             player.goToAndPlay(0, true);
-          } else {
-            player.stop();
           }
+          // Leaving the viewport: leave the player wherever it is.
+          // Calling .stop() rewinds to frame 0, where every icon is at
+          // its offscreen start position — which the user perceives as
+          // "icons disappeared" if the section is still partially in
+          // view. The next intersect will replay from 0 via goToAndPlay.
         }
       },
       { root, threshold: 0.35 },
@@ -134,6 +104,7 @@ export default function VisualPanel() {
                         ".vp-anim svg",
                       );
                       if (svg) hideLottieGlowLayers(svg);
+                      lottieRef.current?.goToAndStop(60, true);
                     }}
                     rendererSettings={{ preserveAspectRatio: "xMidYMid meet" }}
                     style={{ width: "100%", height: "100%" }}
