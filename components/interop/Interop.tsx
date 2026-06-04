@@ -1,26 +1,20 @@
 import { highlight } from "@/lib/highlighter";
 
 const ACCOUNT_JAC = `# account.jac — one file, two ecosystems
-
 import numpy as np;  # PyPI (server)
 import from "lodash-es" { capitalize }  # npm (client)
-
 def average(balances: list[float]) -> float {
     return float(np.round(np.mean(balances), 2));  # PyPI: numpy
 }
-
 with entry {
     print(f"Average balance: \${average([42.0, 18.5, 63.25])}");
 }
-
 cl def:pub Summary -> JsxElement {
     has owner: str = "alice",
         avg: float = 0.0;
-
     async can with entry {
         avg = await average([42.0, 18.5, 63.25]);  # frontend → backend
     }
-
     return <p>{capitalize(owner)}'s avg: \${avg}</p>;  # npm: lodash-es
 }
 `;
