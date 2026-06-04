@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Reference snapshots of the old site, kept for visual/code reference.
+    // Not part of the active Next.js build, so don't lint them.
+    "jaseci-org copy/**",
+    "ayushversiontest/**",
   ]),
 ]);
 
