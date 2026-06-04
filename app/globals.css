@@ -640,6 +640,18 @@ h6 {
   z-index: 1;
 }
 
+/* When the install block is hovered, all three tabs run their gradient
+   (driven by React state) and their labels flip to white so they read
+   against the orange/navy background. Targets the label span directly to
+   override both the muted default and the individual `.install__tab:hover`
+   rule above without specificity ambiguity. */
+.install:hover .install__tab,
+.install:hover .install__tab:hover,
+.install:hover .install__tab[aria-selected="true"],
+.install:hover .install__tab .install__tab-label {
+  color: #ffffff;
+}
+
 .install__viewlink {
   margin-left: auto;
   padding: 0.55rem 0.25rem;
@@ -2411,23 +2423,60 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   outline-offset: -2px;
 }
 
-/* Edge arrows: same look as the header .cs__arrow buttons, absolute-positioned
-   at the left/right ends of the viewport and vertically centered. They sit
-   above the track for clicks; the onPointerDown stopPropagation on the JSX
-   side keeps the viewport's drag handler from engaging when the user just
-   wants to click an arrow. */
+/* Carousel row: edge arrow buttons flanking the viewport, vertically
+   centered against the card. Arrows live OUTSIDE the viewport (their own
+   component) so they never get clipped by the viewport's overflow:hidden
+   and don't compete with the drag handler. */
+.cs__main {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1.5vw, 1.25rem);
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: clamp(0.5rem, 2vw, 1.5rem);
+}
+.cs__main .cs__viewport {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Chunky orange chevron buttons. No background fill — just the bold
+   accent-colored chevron between the page bg and the carousel. */
 .cs__edge {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 5;
-  background: var(--bg);
+  appearance: none;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(40px, 5vw, 64px);
+  height: clamp(40px, 5vw, 64px);
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: var(--accent);
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    transform 0.15s ease,
+    opacity 0.15s ease;
 }
-.cs__edge--prev {
-  left: 1rem;
+.cs__edge svg {
+  width: 100%;
+  height: 100%;
 }
-.cs__edge--next {
-  right: 1rem;
+.cs__edge:hover:not(:disabled) {
+  color: var(--accent-hover, var(--accent));
+  transform: scale(1.08);
+}
+.cs__edge:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+.cs__edge:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
 .cs__track {

@@ -246,41 +246,32 @@ export default function CaseStudies() {
         </div>
       </header>
 
-      <div
-        ref={viewportRef}
-        className="cs__viewport"
-        role="region"
-        aria-roledescription="carousel"
-        aria-label="Case studies"
-        tabIndex={0}
-        onKeyDown={onKey}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={finishDrag}
-        onPointerCancel={finishDrag}
-      >
+      <div className="cs__main">
         <button
           type="button"
-          className="cs__arrow cs__edge cs__edge--prev"
+          className="cs__edge cs__edge--prev"
           onClick={prev}
-          onPointerDown={(e) => e.stopPropagation()}
           aria-label="Previous case study"
         >
-          <ArrowLeft />
-        </button>
-        <button
-          type="button"
-          className="cs__arrow cs__edge cs__edge--next"
-          onClick={next}
-          onPointerDown={(e) => e.stopPropagation()}
-          aria-label="Next case study"
-        >
-          <ArrowRight />
+          <Chevron direction="left" />
         </button>
         <div
-          className={`cs__track${
-            !transitionOn || isDragging ? " cs__track--instant" : ""
-          }`}
+          ref={viewportRef}
+          className="cs__viewport"
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="Case studies"
+          tabIndex={0}
+          onKeyDown={onKey}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={finishDrag}
+          onPointerCancel={finishDrag}
+        >
+          <div
+            className={`cs__track${
+              !transitionOn || isDragging ? " cs__track--instant" : ""
+            }`}
           style={{ transform: `translateX(${trackTranslateX}px)` }}
           onTransitionEnd={onTrackTransitionEnd}
         >
@@ -346,7 +337,16 @@ export default function CaseStudies() {
               </article>
             );
           })}
+          </div>
         </div>
+        <button
+          type="button"
+          className="cs__edge cs__edge--next"
+          onClick={next}
+          aria-label="Next case study"
+        >
+          <Chevron direction="right" />
+        </button>
       </div>
     </section>
   );
@@ -380,6 +380,24 @@ function ArrowRight() {
       aria-hidden="true"
     >
       <path d="M10 6l6 6-6 6" />
+    </svg>
+  );
+}
+
+// Big chunky chevron for the edge buttons that flank the carousel.
+function Chevron({ direction }: { direction: "left" | "right" }) {
+  const d = direction === "right" ? "M9 4l8 8-8 8" : "M15 4l-8 8 8 8";
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d={d} />
     </svg>
   );
 }
