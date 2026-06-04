@@ -4,8 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Lottie, { type LottieRefCurrentProps } from "lottie-react";
 import AccuracyChart from "./AccuracyChart";
 
-const LOTTIE_SRC =
-  "https://cdn.prod.website-files.com/68c9c3107effc2ea46e1a81f/69b6b37ab732de7af40519e5_MoveModels.json";
+const LOTTIE_SRC = "/lotties/movemodels.json";
 const PROJECTS_HREF = "/projects";
 
 /**
@@ -15,8 +14,7 @@ const PROJECTS_HREF = "/projects";
  * dark icon-tile backings stack into the soft blueish halo we see behind
  * the icons. Hiding every filter group strips the big-tile background
  * AND the icon-tile shadows in one pass, leaving only the unfiltered
- * icon-face squares + colorful glyphs on top of the IMG_4925.jpg texture
- * behind.
+ * icon-face squares + colorful glyphs over the page background.
  */
 function hideLottieGlowLayers(svg: SVGSVGElement) {
   // 1. Hide every <g filter=…>. These are the Gaussian-blur groups that
@@ -116,19 +114,6 @@ export default function VisualPanel() {
         <div className="visual-col visual-col--lottie">
           <div className="vp-stage">
             <div className="img-cover">
-              {/* Backdrop layer (z-index 1) — IMG_4925.jpg, cropped to the
-                  same rounded-square shape as the lottie's big tile.
-                  Instant-on at done (no fade); covered by the lottie's
-                  glow layers until they're hidden. */}
-              <div
-                className={`vp-final${done ? " vp-final--visible" : ""}`}
-                aria-hidden={!done}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/IMG_4925.jpg" alt="Projects built with Jaseci" />
-              </div>
-              {/* Lottie layer (z-index 2) — always visible. On complete we
-                  strip the filter groups so the icons sit on the texture. */}
               <div className="vp-anim" aria-hidden="true">
                 {data ? (
                   <Lottie
