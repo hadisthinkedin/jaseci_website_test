@@ -158,6 +158,14 @@ export default async function StackShowcase() {
           all in Jac. Types check across the seam, state auto-manages, hot
           reload included.
         </p>
+        <a
+          className="cta-pill interop__cta"
+          href="https://docs.jaseci.org/tutorials/client/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn more
+        </a>
       </div>
     </div>
   );
