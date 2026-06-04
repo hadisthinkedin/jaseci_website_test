@@ -1,40 +1,39 @@
 import { highlight } from "@/lib/highlighter";
 import LearnMoreLink from "@/components/ui/LearnMoreLink";
 
-const MAIN_JAC = `# main.jac — full-stack todo, one file
-node Todo { has text: str, done: bool = False; }   # graph node, persisted
-walker:pub add_todo {                              # auto-exposed as a POST route
-    has text: str;
-    can with \`root entry { here ++> Todo(text=self.text); }
-}
+const MAIN_JAC = `# main.jac — full-stack todo in one file
+node Todo { has text: str, done: bool = False; }
+
+walker:pub add_todo {  has text: str;     # auto-exposed POST
+    can with \`root entry { here ++> Todo(text=self.text); } }
 walker:pub toggle_todo {
-    can with Todo entry { here.done = not here.done; }
-}
+    can with Todo entry { here.done = not here.done; } }
 walker:pub get_todos {
-    can with \`root entry { report [-->(\`?Todo)]; }
-}
-# Below this block runs in the browser
-cl {
-    import lodash;                                 # npm package, bundled at build
+    can with \`root entry { report [-->(\`?Todo)]; } }
+
+cl {                                      # runs in the browser
+    import from "lodash-es" { sortBy };   # npm, bundled
+
     def:pub app() -> JsxElement {
-        has todos: list = [],                      # has  →  useState
-            text: str = "";
-        async def refresh() -> None {
-            result = get_todos() spawn root;       # direct walker call, no fetch
-            todos = lodash.sortBy(result.reports[0], "text");
+        has todos: list = [], text: str = "";
+
+        async def refresh {               # walker call, no fetch
+            r = get_todos() spawn root;
+            todos = sortBy(r.reports[0], "text");
         }
-        async def add() -> None {
+        async def add {
             add_todo(text=text) spawn root;
-            text = "";
-            await refresh();
+            text = ""; await refresh();
         }
+
         return <div>
             <input value={text}
-                onChange={lambda e: any -> None { text = e.target.value; }}
-                placeholder="What needs doing?" />
+                placeholder="What needs doing?"
+                onChange={lambda e { text = e.target.value; }} />
             <button onClick={add}>Add</button>
-            <ul>{todos.map(lambda t: any -> any {
-                return <li onClick={lambda { toggle_todo() spawn t; }}>
+            <ul>{todos.map(lambda t {
+                return <li onClick={
+                        lambda { toggle_todo() spawn t; }}>
                     {t.done ? "✓ " : "· "}{t.text}
                 </li>;
             })}</ul>
@@ -50,15 +49,23 @@ type TermLine =
   | { kind: "arrow"; text: string }
   | { kind: "spacer" };
 
+// Two-pane story: serve the file, then drive it from the jac client CLI.
+// Same walkers the React UI calls — but here we're hitting them straight
+// from the shell to show the walker → JSON contract in action.
 const TERMINAL: TermLine[] = [
-  { kind: "cmd", text: "jac start --dev" },
-  { kind: "check", text: "vite dev server :8000" },
-  { kind: "check", text: "api server :8001" },
-  { kind: "check", text: "walker rpc generated — no http boilerplate" },
-  { kind: "check", text: "types: client ↔ server checked" },
+  { kind: "cmd", text: "jac serve main.jac" },
+  { kind: "check", text: "api server :8000" },
+  { kind: "check", text: "walker rpc — add_todo, toggle_todo, get_todos" },
   { kind: "arrow", text: "http://localhost:8000/cl/app" },
   { kind: "spacer" },
-  { kind: "out", text: "[hmr] main.jac changed → reload in 84ms" },
+  { kind: "cmd", text: 'jac client call add_todo --text "buy milk"' },
+  { kind: "out", text: '{ "jid": "n:Todo:1", "text": "buy milk", "done": false }' },
+  { kind: "spacer" },
+  { kind: "cmd", text: "jac client call get_todos" },
+  { kind: "out", text: '[ { "jid": "n:Todo:1", "text": "buy milk", "done": false } ]' },
+  { kind: "spacer" },
+  { kind: "cmd", text: "jac client call toggle_todo --on n:Todo:1" },
+  { kind: "out", text: '{ "jid": "n:Todo:1", "text": "buy milk", "done": true }' },
 ];
 
 export default async function StackShowcase() {

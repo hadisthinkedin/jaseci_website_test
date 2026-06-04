@@ -69,7 +69,7 @@ const INSTALL_SCRIPT_URL =
 export default function InstallBlock() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [announcement, setAnnouncement] = useState("");
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [installHover, setInstallHover] = useState(false);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const announce = useCallback((msg: string) => {
@@ -90,7 +90,11 @@ export default function InstallBlock() {
   };
 
   return (
-    <div className="install">
+    <div
+      className="install"
+      onMouseEnter={() => setInstallHover(true)}
+      onMouseLeave={() => setInstallHover(false)}
+    >
       <h2 className="install__heading">Install with one command</h2>
 
       <div
@@ -115,12 +119,8 @@ export default function InstallBlock() {
               className="install__tab"
               onClick={() => setActiveIdx(idx)}
               onKeyDown={(e) => handleKeyDown(e, idx)}
-              onMouseEnter={() => setHoveredIdx(idx)}
-              onMouseLeave={() =>
-                setHoveredIdx((cur) => (cur === idx ? null : cur))
-              }
             >
-              <LiquidGradient active={hoveredIdx === idx} />
+              <LiquidGradient active={installHover} />
               <span className="install__tab-label">{tab.label}</span>
             </button>
           );

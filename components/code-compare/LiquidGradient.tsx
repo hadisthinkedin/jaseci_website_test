@@ -136,10 +136,44 @@ export default function LiquidGradient({ active, clipPath }: Props) {
       // RAF tick — avoids a flash of nothing on first hover.
       renderer.render(scene, camera);
 
-      // Synthetic drifting cursor — sum of incommensurate sines so the
-      // path never repeats predictably.
+      // Per-instance drift trajectory — randomized at mount so every
+      // <LiquidGradient> on the page moves on its own unique Lissajous
+      // path instead of all instances animating in lockstep.
+      //   • fx/fy : sine frequencies (rad/s-equivalent on driftTime)
+      //   • px/py : initial phase offsets
+      //   • ax/ay : amplitudes (kept inside 0..1 with margin)
+      // The two-sine sum (one slow base + one faster detail) gives an
+      // organic, non-repeating curve since the frequencies are
+      // incommensurate.
+      const rand = (min: number, max: number) =>
+        min + Math.random() * (max - min);
       const drift = { x: 0.5, y: 0.5 };
-      let driftTime = 0;
+      const driftParams = {
+        fx1: rand(0.25, 0.55),
+        fx2: rand(0.65, 1.05),
+        fy1: rand(0.30, 0.55),
+        fy2: rand(0.60, 0.95),
+        px1: rand(0, Math.PI * 2),
+        px2: rand(0, Math.PI * 2),
+        py1: rand(0, Math.PI * 2),
+        py2: rand(0, Math.PI * 2),
+        ax1: rand(0.26, 0.36),
+        ax2: rand(0.08, 0.16),
+        ay1: rand(0.26, 0.36),
+        ay2: rand(0.08, 0.16),
+        // Sign flips so some instances orbit clockwise, some counter.
+        sx: Math.random() < 0.5 ? 1 : -1,
+        sy: Math.random() < 0.5 ? 1 : -1,
+        // Use sin OR cos for the base axis per instance — another
+        // independent source of variation.
+        coreX: Math.random() < 0.5 ? Math.sin : Math.cos,
+        coreY: Math.random() < 0.5 ? Math.sin : Math.cos,
+      };
+      // Start with a random time offset so the shader's own animated
+      // gradient centers (driven by uTime) also land in different phases
+      // across instances on first show.
+      (uniforms.uTime.value as number) = rand(0, 1000);
+      let driftTime = rand(0, 100);
 
       const resizeObserver = new ResizeObserver(() => {
         const w = Math.max(1, parent.clientWidth);
@@ -181,18 +215,18 @@ export default function LiquidGradient({ active, clipPath }: Props) {
           return;
         }
 
-        // Drift the synthetic cursor. Sums of incommensurate sines give
-        // a Lissajous-like path that never repeats; tiny noise term adds
-        // micro-jitter so ripples don't fall on the same line.
+        // Drift the synthetic cursor along this instance's random
+        // Lissajous path. Sums of incommensurate sines never repeat.
         driftTime += delta;
+        const p = driftParams;
         const tx =
           0.5 +
-          Math.sin(driftTime * 0.37) * 0.32 +
-          Math.sin(driftTime * 0.91 + 1.1) * 0.13;
+          p.sx * p.coreX(driftTime * p.fx1 + p.px1) * p.ax1 +
+          p.coreX(driftTime * p.fx2 + p.px2) * p.ax2;
         const ty =
           0.5 +
-          Math.cos(driftTime * 0.43) * 0.32 +
-          Math.cos(driftTime * 0.79 + 0.4) * 0.13;
+          p.sy * p.coreY(driftTime * p.fy1 + p.py1) * p.ay1 +
+          p.coreY(driftTime * p.fy2 + p.py2) * p.ay2;
         const ease = 1 - Math.exp(-6 * delta);
         drift.x += (tx - drift.x) * ease;
         drift.y += (ty - drift.y) * ease;

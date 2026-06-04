@@ -53,6 +53,15 @@
     -apple-system, BlinkMacSystemFont, "Segoe UI", "Segoe WPC", Ubuntu,
     "Droid Sans", "Helvetica Neue", system-ui, sans-serif;
 
+  /* Faint hex mosaic — filled honeycomb in 4 close cream tones derived
+     from --paper, --bg, --bg-soft, and a low-warmth tint of --accent-soft.
+     Tile (112×192) repeats; edge hexes share colors with adjacent tiles
+     so the lattice reads continuous. Sized up via --bg-size so hexes feel
+     architectural, not noisy. */
+  --bg-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='112' height='192' viewBox='0 0 112 192'><polygon points='0,-32 28,-16 28,16 0,32 -28,16 -28,-16' fill='%23ede8dc'/><polygon points='56,-32 84,-16 84,16 56,32 28,16 28,-16' fill='%23f3efe6'/><polygon points='112,-32 140,-16 140,16 112,32 84,16 84,-16' fill='%23ede8dc'/><polygon points='28,16 56,32 56,64 28,80 0,64 0,32' fill='%23faf7f0'/><polygon points='84,16 112,32 112,64 84,80 56,64 56,32' fill='%23f3efe6'/><polygon points='0,64 28,80 28,112 0,128 -28,112 -28,80' fill='%23f6ecdb'/><polygon points='56,64 84,80 84,112 56,128 28,112 28,80' fill='%23faf7f0'/><polygon points='112,64 140,80 140,112 112,128 84,112 84,80' fill='%23f6ecdb'/><polygon points='28,112 56,128 56,160 28,176 0,160 0,128' fill='%23ede8dc'/><polygon points='84,112 112,128 112,160 84,176 56,160 56,128' fill='%23faf7f0'/><polygon points='0,160 28,176 28,208 0,224 -28,208 -28,176' fill='%23ede8dc'/><polygon points='56,160 84,176 84,208 56,224 28,208 28,176' fill='%23f3efe6'/><polygon points='112,160 140,176 140,208 112,224 84,208 84,176' fill='%23ede8dc'/></svg>");
+  --bg-size: 168px 288px;
+
   /* layout */
   --max-width: 1100px;
   --content-width: 720px;
@@ -107,6 +116,8 @@ html,
 body {
   margin: 0;
   background: var(--bg);
+  background-image: var(--bg-image);
+  background-size: var(--bg-size);
   color: var(--text);
   font-family: var(--font-sans);
   font-size: 17px;
@@ -362,6 +373,8 @@ h6 {
 
 .hero {
   background: var(--bg);
+  background-image: var(--bg-image);
+  background-size: var(--bg-size);
   padding-block: clamp(3rem, 6vw, 5.5rem);
   min-height: 100svh;
   display: flex;
@@ -843,6 +856,8 @@ h6 {
   flex-direction: column;
   gap: 0.75rem;
   background: var(--bg);
+  background-image: var(--bg-image);
+  background-size: var(--bg-size);
   padding: clamp(1rem, 2vw, 1.5rem);
   /* Extra top padding so the fixed navbar (~60px + its 1rem wrap padding
      once scrolled = ~76px tall) doesn't overlay the editor tab strip.
@@ -1365,23 +1380,27 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   margin-top: 0.25rem;
 }
 
-/* Wrapper around "Learn more" pills — holds the LiquidGradient canvas
-   behind the pill so a small halo plays on hover while the pill itself
-   stays opaque. */
-.learn-more-wrap {
+/* "Learn more" pill — hosts the LiquidGradient inside the button itself
+   so the gradient fills the entire pill on hover. position:relative +
+   overflow:hidden clip the canvas to the pill shape. */
+.learn-more {
   position: relative;
-  align-self: flex-start;
-  display: inline-block;
-  margin-top: 0.25rem;
-  padding: 6px;
-  border-radius: var(--radius-pill);
   overflow: hidden;
 }
 
-.learn-more-wrap .cta-pill {
+.learn-more__label {
   position: relative;
   z-index: 1;
-  margin-top: 0;
+}
+
+/* Override .cta-pill:hover — its solid var(--accent) fill would paint
+   over the gradient canvas. Keep the background transparent so the
+   liquid gradient is what the user sees, and flip the label to white
+   for contrast. */
+.learn-more:hover {
+  background: transparent;
+  border-color: var(--text);
+  color: #ffffff;
 }
 
 @media (max-width: 960px) {
@@ -1653,6 +1672,8 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   flex-direction: column;
   justify-content: center;
   background: var(--bg);
+  background-image: var(--bg-image);
+  background-size: var(--bg-size);
   padding-block: clamp(2.5rem, 6vw, 5rem);
 }
 
@@ -2174,6 +2195,8 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   flex-direction: column;
   justify-content: center;
   background: var(--bg);
+  background-image: var(--bg-image);
+  background-size: var(--bg-size);
   padding-block: clamp(2.5rem, 6vw, 5rem);
 }
 
@@ -2306,6 +2329,8 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   justify-content: center;
   padding-block: clamp(2.5rem, 6vw, 5rem);
   background: var(--bg);
+  background-image: var(--bg-image);
+  background-size: var(--bg-size);
 }
 
 .cs__header {
@@ -2712,6 +2737,8 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   justify-content: center;
   padding: clamp(2rem, 6vw, 5rem) clamp(1rem, 4vw, 3rem);
   background: var(--bg);
+  background-image: var(--bg-image);
+  background-size: var(--bg-size);
 }
 
 .section-base_visual .img-cover {
