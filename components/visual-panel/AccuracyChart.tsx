@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { TrendingUp } from "lucide-react";
+import { ChevronLeft, ChevronRight, TrendingUp } from "lucide-react";
 import {
   Label,
   PolarRadiusAxis,
@@ -10,10 +10,48 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-// Placeholder dataset — swap for real benchmark numbers later.
-const SERIES_A = 570;
-const SERIES_B = 1260;
-const TOTAL = SERIES_A + SERIES_B;
+// Placeholder benchmarks — swap for real numbers later. Each carousel
+// slide is its own accuracy benchmark on a different dataset; total is
+// derived from seriesA + seriesB.
+type Benchmark = {
+  name: string;
+  title: string;
+  sub: string;
+  seriesA: number;
+  seriesB: number;
+  trend: string;
+  caption: string;
+};
+
+const BENCHMARKS: Benchmark[] = [
+  {
+    name: "MMLU",
+    title: "Accuracy Benchmark",
+    sub: "MMLU (placeholder)",
+    seriesA: 570,
+    seriesB: 1260,
+    trend: "Trending up by 5.2% this run",
+    caption: "Placeholder copy",
+  },
+  {
+    name: "GSM8K",
+    title: "Accuracy Benchmark",
+    sub: "GSM8K (placeholder)",
+    seriesA: 690,
+    seriesB: 1040,
+    trend: "Trending up by 3.8% this run",
+    caption: "Placeholder copy",
+  },
+  {
+    name: "HumanEval",
+    title: "Accuracy Benchmark",
+    sub: "HumanEval (placeholder)",
+    seriesA: 420,
+    seriesB: 1420,
+    trend: "Trending up by 8.1% this run",
+    caption: "Placeholder copy",
+  },
+];
 
 export default function AccuracyChart() {
   // Mirrors the Hero BenchmarkWidget pattern: bars start at 0 and tween up
@@ -21,6 +59,7 @@ export default function AccuracyChart() {
   // re-entry replays the animation. Recharts' built-in animation handles
   // the tween between the two states.
   const [inView, setInView] = useState(false);
+  const [idx, setIdx] = useState(0);
   const cardRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -40,30 +79,54 @@ export default function AccuracyChart() {
     return () => io.disconnect();
   }, []);
 
+  const current = BENCHMARKS[idx];
+  const total = current.seriesA + current.seriesB;
   const data = [
     {
       name: "current",
-      seriesA: inView ? SERIES_A : 0,
-      seriesB: inView ? SERIES_B : 0,
+      seriesA: inView ? current.seriesA : 0,
+      seriesB: inView ? current.seriesB : 0,
     },
   ];
-  const displayedTotal = inView ? TOTAL : 0;
+  const displayedTotal = inView ? total : 0;
+
+  const prev = () =>
+    setIdx((i) => (i - 1 + BENCHMARKS.length) % BENCHMARKS.length);
+  const next = () => setIdx((i) => (i + 1) % BENCHMARKS.length);
 
   return (
-    <article ref={cardRef} className="accuracy" aria-label="Accuracy benchmark">
+    <article ref={cardRef} className="accuracy" aria-label="Accuracy benchmarks">
       <header className="accuracy__head">
-        <h3 className="accuracy__title">Accuracy Benchmark</h3>
-        <p className="accuracy__sub">Placeholder dataset</p>
+        <button
+          type="button"
+          className="accuracy__nav"
+          onClick={prev}
+          aria-label="Previous benchmark"
+        >
+          <ChevronLeft size={20} aria-hidden="true" />
+        </button>
+        <div className="accuracy__head-text">
+          <h3 className="accuracy__title">{current.title}</h3>
+          <p className="accuracy__sub">{current.sub}</p>
+        </div>
+        <button
+          type="button"
+          className="accuracy__nav"
+          onClick={next}
+          aria-label="Next benchmark"
+        >
+          <ChevronRight size={20} aria-hidden="true" />
+        </button>
       </header>
 
       <div className="accuracy__chart">
-        <ResponsiveContainer width="100%" height={220}>
+        <ResponsiveContainer width="100%" height={320}>
           <RadialBarChart
             data={data}
             startAngle={180}
             endAngle={0}
-            innerRadius={80}
-            outerRadius={110}
+            innerRadius={125}
+            outerRadius={175}
           >
             <RadialBar
               dataKey="seriesA"
@@ -104,7 +167,7 @@ export default function AccuracyChart() {
                         </tspan>
                         <tspan
                           x={cx}
-                          y={cy + 6}
+                          y={cy + 14}
                           className="accuracy__total-sub"
                         >
                           Total
@@ -122,11 +185,29 @@ export default function AccuracyChart() {
 
       <footer className="accuracy__foot">
         <div className="accuracy__trend">
-          Trending up by 5.2% this run
+          {current.trend}
           <TrendingUp className="accuracy__trend-icon" aria-hidden="true" />
         </div>
-        <div className="accuracy__caption">Placeholder copy</div>
+        <div className="accuracy__caption">{current.caption}</div>
       </footer>
+
+      <div
+        className="accuracy__dots"
+        role="tablist"
+        aria-label="Benchmark slides"
+      >
+        {BENCHMARKS.map((b, i) => (
+          <button
+            key={b.name}
+            type="button"
+            role="tab"
+            aria-selected={i === idx}
+            aria-label={`Show ${b.name}`}
+            className={`accuracy__dot${i === idx ? " accuracy__dot--active" : ""}`}
+            onClick={() => setIdx(i)}
+          />
+        ))}
+      </div>
     </article>
   );
 }

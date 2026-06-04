@@ -826,8 +826,8 @@ h6 {
    Sits behind .cc__panes / .cc__repobar (panes have solid dark backgrounds
    so the effect only shows in the cream margins surrounding the editors).
    Two hover states, routed via :has():
-   - jac pane hover → soft, blurred multi-color halo (Jac-orange led, no
-     mouse tracking, no shape — just a colored glow on the surround).
+   - jac pane hover → soft, blurred orange halo (Jac-brand tones only, no
+     mouse tracking, no shape — just a warm glow on the surround).
    - poly pane hover → flat gray wash that desaturates the surround. */
 .cc::before {
   content: "";
@@ -845,10 +845,10 @@ h6 {
 .cc:has(.cc__pane--jac:hover)::before {
   opacity: 1;
   background:
-    radial-gradient(55% 45% at 18% 28%, rgba(238, 90, 36, 0.55), transparent 70%),
-    radial-gradient(45% 40% at 82% 18%, rgba(244, 169, 60, 0.5), transparent 70%),
-    radial-gradient(50% 50% at 72% 78%, rgba(1, 164, 236, 0.38), transparent 70%),
-    radial-gradient(48% 45% at 12% 86%, rgba(126, 186, 0, 0.4), transparent 70%);
+    radial-gradient(55% 45% at 18% 28%, rgba(238, 90, 36, 0.6), transparent 70%),
+    radial-gradient(45% 40% at 82% 18%, rgba(244, 169, 60, 0.55), transparent 70%),
+    radial-gradient(50% 50% at 72% 78%, rgba(255, 122, 41, 0.45), transparent 70%),
+    radial-gradient(48% 45% at 12% 86%, rgba(217, 65, 20, 0.45), transparent 70%);
   filter: blur(80px) saturate(140%);
 }
 
@@ -1326,6 +1326,11 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   color: var(--text-muted);
   font-size: clamp(1rem, 1.4vw, 1.1rem);
   line-height: 1.6;
+}
+
+.interop__cta {
+  align-self: flex-start;
+  margin-top: 0.25rem;
 }
 
 @media (max-width: 960px) {
@@ -2621,12 +2626,15 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   justify-content: center;
 }
 
-/* Two-column layout: accuracy chart on the left (compact), lottie + final
-   image + projects link on the right (larger). Stacks on narrow viewports. */
+/* Two-column layout: accuracy carousel on the left (now a substantial
+   half-donut + nav arrows), lottie + final image + projects link on the
+   right. The chart column claims a larger share of the grid and the gap
+   tightens so the chart visually overlaps the lottie's empty halo on
+   the right side. Stacks on narrow viewports. */
 .section-base_visual .visual-cols {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr);
-  gap: clamp(2rem, 4vw, 4rem);
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.6fr);
+  gap: clamp(1rem, 2vw, 2.5rem);
   width: 100%;
   max-width: 1440px;
   margin-inline: auto;
@@ -2638,6 +2646,16 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   align-items: center;
   justify-content: center;
   min-width: 0;
+}
+
+/* Let the chart column extend visually toward the lottie — overflow:visible
+   lets the wide .accuracy card spill past the column boundary into the
+   neighboring lottie's empty padding, so they feel overlapped instead of
+   strictly partitioned. */
+.section-base_visual .visual-col--chart {
+  overflow: visible;
+  position: relative;
+  z-index: 2;
 }
 
 /* Right column stage: img-cover (lottie/image) on top, projects link below. */
@@ -2743,41 +2761,93 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   }
 }
 
-/* Accuracy chart card — flat editorial, Jaseci tokens (accent orange
-   primary, amber secondary), half-donut radial. Mirrors the shadcn
-   ChartRadialStacked structure (header / chart / footer) but uses the
-   project's palette and typography instead of shadcn defaults. */
+/* Accuracy benchmarks carousel — flat editorial, Jaseci tokens (accent
+   orange primary, amber secondary), half-donut radial. Sized larger
+   than the original ChartRadialStacked reference because in our two-
+   column layout the right column has lots of empty padding around the
+   centered icon lottie — claiming the chart-side breathing room here
+   keeps the visual centerline of the page balanced. */
 .accuracy {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 380px;
+  max-width: 560px;
   background: transparent;
   border: 0;
   padding: 1.5rem;
-  gap: 1rem;
+  gap: 0.75rem;
   font-family: var(--font-sans);
 }
 
+/* Header is now a 3-column flex row: prev arrow / title block / next
+   arrow. Title block stays vertically stacked and visually centered
+   between the two arrows. */
 .accuracy__head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.accuracy__head-text {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.25rem;
   text-align: center;
+  flex: 1;
+  min-width: 0;
 }
 
 .accuracy__title {
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   font-weight: 600;
   color: var(--text);
   margin: 0;
 }
 
 .accuracy__sub {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: var(--text-muted);
   margin: 0;
+}
+
+/* Carousel nav arrows — flat circular buttons in the design's token
+   palette. No drop shadows; just a thin border so they read as buttons
+   without competing with the chart. */
+.accuracy__nav {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  border: 1px solid var(--rule-soft);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.accuracy__nav:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.accuracy__nav:active {
+  transform: translateY(1px);
+}
+
+.accuracy__nav:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .accuracy__chart {
@@ -2792,13 +2862,13 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
 }
 
 .accuracy__total {
-  font-size: 1.5rem;
+  font-size: 2.25rem;
   font-weight: 700;
   fill: var(--text);
 }
 
 .accuracy__total-sub {
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   fill: var(--text-muted);
 }
 
@@ -2806,7 +2876,7 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   text-align: center;
   align-items: center;
 }
@@ -2827,6 +2897,42 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
 
 .accuracy__caption {
   color: var(--text-muted);
+}
+
+/* Slide indicator dots below the carousel — small accent pills that
+   double as click targets to jump to a specific benchmark. */
+.accuracy__dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.accuracy__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  border: 0;
+  padding: 0;
+  background: var(--rule-soft);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    width 0.2s ease;
+}
+
+.accuracy__dot:hover {
+  background: var(--text-muted);
+}
+
+.accuracy__dot--active {
+  background: var(--accent);
+  width: 22px;
+}
+
+.accuracy__dot:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .section-base_visual .img-cover > svg,
