@@ -1166,9 +1166,25 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   margin-left: -2.5rem;
   width: 78%;
   z-index: 1;
+  background: var(--paper);
+  color: var(--text);
+  border-color: var(--rule-soft);
   box-shadow:
-    0 16px 36px rgba(0, 0, 0, 0.28),
-    0 3px 8px rgba(0, 0, 0, 0.16);
+    0 16px 36px rgba(0, 0, 0, 0.18),
+    0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.interop__window--terminal .interop__titlebar {
+  background: rgba(10, 10, 10, 0.03);
+  border-bottom-color: rgba(10, 10, 10, 0.08);
+}
+
+.interop__window--terminal .interop__terminal-body {
+  color: var(--text);
+}
+
+.interop__window--terminal .interop__term-line--out {
+  color: var(--text-muted);
 }
 
 .interop__titlebar {
