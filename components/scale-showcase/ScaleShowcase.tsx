@@ -1,29 +1,25 @@
 import { highlight } from "@/lib/highlighter";
+import LearnMoreLink from "@/components/ui/LearnMoreLink";
 
 const APP_JAC = `# app.jac — same file, laptop or cluster
-
 node Note {
     has text: str,
         owner: str;
 }
-
 def:pub add_note(owner: str, text: str) -> Note {
     note = Note(owner=owner, text=text);
     root ++> note;
     return note;
 }
-
 def:pub list_notes(owner: str) -> list[Note] {
     return [n for n in [root-->][?:Note] if n.owner == owner];
 }
-
 def:pub mark_done(id: int) -> bool {
     note = jid(id)[?:Note];
     if not note { return False; }
     root del--> note;
     return True;
 }
-
 with entry {
     print("ready");
 }
@@ -154,6 +150,9 @@ export default async function ScaleShowcase() {
           Kubernetes cluster — Redis, MongoDB, secrets, volumes provisioned for
           you. No Dockerfile, no manifests, no DevOps.
         </p>
+        <LearnMoreLink href="https://docs.jaseci.org/tutorials/production/kubernetes/">
+          Learn more
+        </LearnMoreLink>
       </div>
     </div>
   );

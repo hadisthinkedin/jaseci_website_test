@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Lottie, { type LottieRefCurrentProps } from "lottie-react";
 import AccuracyChart from "./AccuracyChart";
+import LiquidGradient from "../code-compare/LiquidGradient";
 
 const LOTTIE_SRC = "/lotties/movemodels.json";
 const PROJECTS_HREF = "/projects";
@@ -27,6 +28,7 @@ function restoreLottieGlowLayers(svg: SVGSVGElement) {
 export default function VisualPanel() {
   const [data, setData] = useState<unknown>(null);
   const [done, setDone] = useState(false);
+  const [imgHover, setImgHover] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const lottieRef = useRef<LottieRefCurrentProps>(null);
 
@@ -83,13 +85,25 @@ export default function VisualPanel() {
         </div>
         <div className="visual-col visual-col--lottie">
           <div className="vp-stage">
-            <div className="img-cover">
+            <div
+              className="img-cover"
+              onMouseEnter={() => setImgHover(true)}
+              onMouseLeave={() => setImgHover(false)}
+            >
               {/* Always-on backdrop: IMG_4925.jpg sits behind the lottie
                   in the same rounded-square spot the old blue Tile.png
                   occupied. Decorative. */}
               <div className="vp-final vp-final--visible" aria-hidden="true">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/IMG_4925.jpg" alt="" />
+              </div>
+              {/* Hover-only gradient overlay clipped to the same rounded
+                  square the IMG_4925.jpg occupies. Sits above the image
+                  (covers it) but below the lottie icons. */}
+              <div className="vp-image-bg" aria-hidden="true">
+                <div className="vp-image-bg__inner">
+                  <LiquidGradient active={imgHover} />
+                </div>
               </div>
               <div className="vp-anim" aria-hidden="true">
                 {data ? (

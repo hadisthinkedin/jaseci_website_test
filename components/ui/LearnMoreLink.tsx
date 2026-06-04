@@ -1,27 +1,32 @@
 "use client";
 
+/* Pill-styled external link with the liquid gradient playing in its
+   border halo on hover. Used by the Scale + Stack showcases. */
+
 import { useState } from "react";
 import LiquidGradient from "../code-compare/LiquidGradient";
 
-export default function AnnouncementPill() {
+type Props = {
+  href: string;
+  children: React.ReactNode;
+};
+
+export default function LearnMoreLink({ href, children }: Props) {
   const [hover, setHover] = useState(false);
   return (
     <span
-      className="pill-wrap"
+      className="learn-more-wrap"
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
       <LiquidGradient active={hover} />
       <a
-        className="pill"
-        href="https://jac-builder.jaseci.org/"
+        className="cta-pill interop__cta"
+        href={href}
         target="_blank"
         rel="noopener noreferrer"
       >
-        Try Jac in your browser
-        <span className="pill__arrow" aria-hidden="true">
-          →
-        </span>
+        {children}
       </a>
     </span>
   );

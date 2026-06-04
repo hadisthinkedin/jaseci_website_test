@@ -549,24 +549,11 @@ h6 {
    ──────────────────────────────────────────────────────────────── */
 
 .install {
-  position: relative;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   /* No flex gap — tabs need to sit flush against the codeblock below.
      Spacing above the tabs is handled by .install__heading's margin. */
   gap: 0;
-  padding: 1.25rem;
-  border-radius: var(--radius-box);
-}
-
-/* Lift install widget content above the LiquidGradient canvas (z-index 0).
-   The codeblock is opaque on its own; the tablist sits in the gradient. */
-.install__heading,
-.install__tablist,
-.install [role="tabpanel"] {
-  position: relative;
-  z-index: 1;
 }
 
 .install__heading {
@@ -606,10 +593,17 @@ h6 {
   letter-spacing: 0;
   cursor: pointer;
   position: relative;
+  overflow: hidden;
   transition:
     background-color 0.15s ease,
     color 0.15s ease,
     border-color 0.15s ease;
+}
+
+/* Label sits above the LiquidGradient canvas hosted inside the button. */
+.install__tab-label {
+  position: relative;
+  z-index: 1;
 }
 
 /* Adjacent tabs share a single 2px border instead of stacking two. */
@@ -1369,6 +1363,25 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
 .interop__cta {
   align-self: flex-start;
   margin-top: 0.25rem;
+}
+
+/* Wrapper around "Learn more" pills — holds the LiquidGradient canvas
+   behind the pill so a small halo plays on hover while the pill itself
+   stays opaque. */
+.learn-more-wrap {
+  position: relative;
+  align-self: flex-start;
+  display: inline-block;
+  margin-top: 0.25rem;
+  padding: 6px;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.learn-more-wrap .cta-pill {
+  position: relative;
+  z-index: 1;
+  margin-top: 0;
 }
 
 @media (max-width: 960px) {

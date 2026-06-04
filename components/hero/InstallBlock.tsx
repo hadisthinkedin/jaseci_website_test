@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import LiquidGradient from "../code-compare/LiquidGradient";
 
 type CodeBlockData = {
   /** Command text — exactly what gets copied (no $ prompt). */
@@ -68,6 +69,7 @@ const INSTALL_SCRIPT_URL =
 export default function InstallBlock() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [announcement, setAnnouncement] = useState("");
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const announce = useCallback((msg: string) => {
@@ -113,8 +115,13 @@ export default function InstallBlock() {
               className="install__tab"
               onClick={() => setActiveIdx(idx)}
               onKeyDown={(e) => handleKeyDown(e, idx)}
+              onMouseEnter={() => setHoveredIdx(idx)}
+              onMouseLeave={() =>
+                setHoveredIdx((cur) => (cur === idx ? null : cur))
+              }
             >
-              {tab.label}
+              <LiquidGradient active={hoveredIdx === idx} />
+              <span className="install__tab-label">{tab.label}</span>
             </button>
           );
         })}

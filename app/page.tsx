@@ -8,18 +8,7 @@ import CaseStudies from "@/components/case-studies/CaseStudies";
 import Ecosystem from "@/components/ecosystem/Ecosystem";
 import Footer from "@/components/footer/Footer";
 import Navbar from "@/components/navbar/Navbar";
-
-const SECTIONS = [
-  { id: "home", label: "Home" },
-  { id: "visual", label: "Visual" },
-  { id: "code", label: "One file vs four" },
-  { id: "interop", label: "Import from any ecosystem" },
-  { id: "spotlight-1", label: "Spotlight 1" },
-  { id: "spotlight-2", label: "Spotlight 2" },
-  { id: "cases", label: "Case studies" },
-  { id: "ecosystem", label: "Build with the Jac family" },
-  { id: "contact", label: "Contact" },
-];
+import KeyboardNav from "@/components/keyboard-nav/KeyboardNav";
 
 export default function Home() {
   return (
@@ -27,6 +16,7 @@ export default function Home() {
       <a href="#home" className="skip-to-content">
         Skip to content
       </a>
+      <KeyboardNav />
       <Navbar />
       <main className="scroll-root">
         <section id="home" className="snap-section" aria-label="Home">
@@ -80,18 +70,6 @@ export default function Home() {
         >
           <Footer />
         </section>
-        <nav className="scroll-nav" aria-label="Section navigation">
-          {SECTIONS.map((s) => (
-            <a
-              key={s.id}
-              href={`#${s.id}`}
-              className="scroll-nav__dot"
-              aria-label={s.label}
-            >
-              <span className="sr-only">{s.label}</span>
-            </a>
-          ))}
-        </nav>
       </main>
     </>
   );

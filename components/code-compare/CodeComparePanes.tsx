@@ -5,6 +5,7 @@
 import { type KeyboardEvent, useEffect, useRef, useState } from "react";
 import { loadMonaco } from "@/lib/monaco-loader";
 import { defineJaseciTheme, registerJacLanguage } from "@/lib/jac-monarch";
+import LiquidGradient from "./LiquidGradient";
 
 export type SupportedLang =
   | "python"
@@ -76,6 +77,7 @@ export default function CodeComparePanes({
     poly.findIndex((f) => f.name === defaultActive),
   );
   const [activeIdx, setActiveIdx] = useState(initialIdx);
+  const [jacHover, setJacHover] = useState(false);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const activeFile = poly[activeIdx];
@@ -95,15 +97,21 @@ export default function CodeComparePanes({
   return (
     <section
       className="cc"
-      aria-label="Same app: a single Jac file vs a polyglot stack"
+      aria-label="Same app: a JS client calling Jac via jac-client vs a single Jac file with co-located UI"
     >
       <span className="sr-only">
-        The same mini-todo app: one Jac file on the left; four files across
-        Python, Next.js and CSS on the right.
+        The same mini-todo app: a four-file Next.js client using the
+        jac-client SDK on the left; one Jac file with co-located UI on the
+        right.
       </span>
 
+      <LiquidGradient active={jacHover} />
+
       <div className="cc__panes">
-        <JacPane file={jac} />
+        <JacPane
+          file={jac}
+          onHoverChange={setJacHover}
+        />
         <PolyPane
           files={poly}
           activeIdx={activeIdx}
@@ -232,7 +240,13 @@ function PolyPane({
   );
 }
 
-function JacPane({ file }: { file: FileBundle }) {
+function JacPane({
+  file,
+  onHoverChange,
+}: {
+  file: FileBundle;
+  onHoverChange: (hovering: boolean) => void;
+}) {
   const editorHostRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<any>(null);
   const modelRef = useRef<any>(null);
@@ -262,7 +276,11 @@ function JacPane({ file }: { file: FileBundle }) {
   }, [file.source, file.lang]);
 
   return (
-    <div className="cc__pane cc__pane--jac">
+    <div
+      className="cc__pane cc__pane--jac"
+      onMouseEnter={() => onHoverChange(true)}
+      onMouseLeave={() => onHoverChange(false)}
+    >
       <div className="cc__tabstrip">
         <span className="cc__traffic" aria-hidden="true">
           <span className="cc__traffic-dot" />

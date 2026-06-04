@@ -11,6 +11,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
+import LiquidGradient from "../code-compare/LiquidGradient";
 
 type BarVariant = "accent" | "gray";
 
@@ -29,11 +30,8 @@ type BarRow = {
 // proportional to wall time with the slowest row at 100%.
 // (C++ reference is intentionally omitted.)
 const ROWS: BarRow[] = [
-  { name: "Native binary",       version: "AOT, run only",   pct: 31,  time: "2.313 s",  variant: "accent" },
-  { name: "Jac --autonative",    version: "compile + run",   pct: 44,  time: "3.333 s",  variant: "accent" },
-  { name: "Jac chess.na.jac",    version: "compile + run",   pct: 49,  time: "3.661 s",  variant: "accent" },
-  { name: "Python",              version: "chess.py",        pct: 88,  time: "6.584 s",  variant: "gray"   },
-  { name: "Jac default backend", version: "jac run",         pct: 100, time: "7.522 s",  variant: "gray"   },
+  { name: "Jac",    version: "AOT, run only", pct: 35,  time: "2.313 s", variant: "accent" },
+  { name: "Python", version: "chess.py",      pct: 100, time: "6.584 s", variant: "gray"   },
 ];
 
 const BENCHMARK_URL =
@@ -41,6 +39,7 @@ const BENCHMARK_URL =
 
 export default function BenchmarkWidget() {
   const [inView, setInView] = useState(false);
+  const [hover, setHover] = useState(false);
   const cardRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -71,26 +70,31 @@ export default function BenchmarkWidget() {
 
   return (
     <section className="benchmark">
+      <LiquidGradient active={hover} />
       <h3 className="benchmark__title">End-to-End Wall-Clock Metrics</h3>
 
-      <figure ref={cardRef} className="benchmark__card">
+      <figure
+        ref={cardRef}
+        className="benchmark__card"
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+      >
         <div className="benchmark__chart">
           {ROWS.map((row, idx) => (
             <Row key={row.name} row={row} idx={idx} inView={inView} />
           ))}
         </div>
+        <div className="mt-4 text-center text-sm text-gray-400">
+          <a
+            href={BENCHMARK_URL}
+            className="hover:text-gray-300"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View benchmark →
+          </a>
+        </div>
       </figure>
-
-      <div className="mt-4 text-center text-sm text-gray-400">
-        <a
-          href={BENCHMARK_URL}
-          className="hover:text-gray-300"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          View benchmark →
-        </a>
-      </div>
     </section>
   );
 }

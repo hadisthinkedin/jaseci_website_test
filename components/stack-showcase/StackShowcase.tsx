@@ -1,4 +1,5 @@
 import { highlight } from "@/lib/highlighter";
+import LearnMoreLink from "@/components/ui/LearnMoreLink";
 
 const MAIN_JAC = `# main.jac — full-stack todo, one file
 node Todo { has text: str, done: bool = False; }   # graph node, persisted
@@ -165,14 +166,9 @@ export default async function StackShowcase() {
           all in Jac. Types check across the seam, state auto-manages, hot
           reload included.
         </p>
-        <a
-          className="cta-pill interop__cta"
-          href="https://docs.jaseci.org/tutorials/client/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <LearnMoreLink href="https://docs.jaseci.org/tutorials/client/">
           Learn more
-        </a>
+        </LearnMoreLink>
       </div>
     </div>
   );

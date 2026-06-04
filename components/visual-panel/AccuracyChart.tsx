@@ -9,6 +9,7 @@ import {
   RadialBarChart,
   ResponsiveContainer,
 } from "recharts";
+import LiquidGradient from "../code-compare/LiquidGradient";
 
 // Placeholder benchmarks — swap for real numbers later. Each carousel
 // slide is its own accuracy benchmark on a different dataset; total is
@@ -60,7 +61,10 @@ export default function AccuracyChart() {
   // the tween between the two states.
   const [inView, setInView] = useState(false);
   const [idx, setIdx] = useState(0);
+  const [hover, setHover] = useState(false);
+  const [amberClip, setAmberClip] = useState<string | undefined>(undefined);
   const cardRef = useRef<HTMLElement>(null);
+  const chartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = cardRef.current;
@@ -79,6 +83,64 @@ export default function AccuracyChart() {
     return () => io.disconnect();
   }, []);
 
+  // Track the amber bar's SVG path so the LiquidGradient canvas (overlaid
+  // exactly on the recharts SVG) can be clipped to that bar's shape. The
+  // bar's `d` attribute is recomputed by recharts on data change and during
+  // its ~1.2s tween — MutationObserver catches each frame, plus we poll
+  // for a short window so the initial mount (recharts renders async, may
+  // miss the first attribute set) reliably locks onto the final path.
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (!chart) return;
+
+    let lastD = "";
+    const updateClip = () => {
+      const bars = chart.querySelectorAll<SVGPathElement>(
+        "path.recharts-radial-bar-sector",
+      );
+      // seriesA is rendered first (orange), seriesB second (amber).
+      const amber = bars[1];
+      const d = amber?.getAttribute("d");
+      if (!d || d === lastD) return;
+      lastD = d;
+      // recharts emits `d` with embedded newlines/tabs which CSS path()
+      // rejects — collapse to single spaces.
+      setAmberClip(`path("${d.replace(/\s+/g, " ").trim()}")`);
+    };
+
+    let rafId = 0;
+    let pollUntil = performance.now() + 1500;
+    const poll = () => {
+      updateClip();
+      if (performance.now() < pollUntil) {
+        rafId = requestAnimationFrame(poll);
+      } else {
+        rafId = 0;
+      }
+    };
+    const kick = () => {
+      pollUntil = performance.now() + 200;
+      if (!rafId) rafId = requestAnimationFrame(poll);
+    };
+    rafId = requestAnimationFrame(poll);
+
+    const mo = new MutationObserver(kick);
+    mo.observe(chart, {
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["d"],
+      childList: true,
+    });
+    const ro = new ResizeObserver(kick);
+    ro.observe(chart);
+
+    return () => {
+      mo.disconnect();
+      ro.disconnect();
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [idx, inView]);
+
   const current = BENCHMARKS[idx];
   const total = current.seriesA + current.seriesB;
   const data = [
@@ -95,7 +157,13 @@ export default function AccuracyChart() {
   const next = () => setIdx((i) => (i + 1) % BENCHMARKS.length);
 
   return (
-    <article ref={cardRef} className="accuracy" aria-label="Accuracy benchmarks">
+    <article
+      ref={cardRef}
+      className="accuracy"
+      aria-label="Accuracy benchmarks"
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
       <header className="accuracy__head">
         <button
           type="button"
@@ -119,14 +187,15 @@ export default function AccuracyChart() {
         </button>
       </header>
 
-      <div className="accuracy__chart">
-        <ResponsiveContainer width="100%" height={320}>
+      <div className="accuracy__chart" ref={chartRef}>
+        <ResponsiveContainer width="100%" height={360}>
           <RadialBarChart
             data={data}
             startAngle={180}
             endAngle={0}
             innerRadius={125}
             outerRadius={175}
+            cy="60%"
           >
             <RadialBar
               dataKey="seriesA"
@@ -136,7 +205,7 @@ export default function AccuracyChart() {
               stroke="transparent"
               strokeWidth={2}
               isAnimationActive
-              animationDuration={1200}
+              animationDuration={45}
               animationEasing="ease-out"
             />
             <RadialBar
@@ -147,7 +216,7 @@ export default function AccuracyChart() {
               stroke="transparent"
               strokeWidth={2}
               isAnimationActive
-              animationDuration={1200}
+              animationDuration={45}
               animationEasing="ease-out"
             />
             <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
@@ -181,6 +250,7 @@ export default function AccuracyChart() {
             </PolarRadiusAxis>
           </RadialBarChart>
         </ResponsiveContainer>
+        <LiquidGradient active={hover} clipPath={amberClip} />
       </div>
 
       <footer className="accuracy__foot">
