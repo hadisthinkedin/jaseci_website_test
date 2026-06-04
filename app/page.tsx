@@ -2,6 +2,7 @@ import Hero from "@/components/hero/Hero";
 import VisualPanel from "@/components/visual-panel/VisualPanel";
 import CodeCompare from "@/components/code-compare/CodeCompare";
 import Interop from "@/components/interop/Interop";
+import ScaleShowcase from "@/components/scale-showcase/ScaleShowcase";
 import CaseStudies from "@/components/case-studies/CaseStudies";
 import Ecosystem from "@/components/ecosystem/Ecosystem";
 import Footer from "@/components/footer/Footer";
@@ -49,12 +50,7 @@ export default function Home() {
           className="snap-section"
           aria-label="Zero to infinite scale"
         >
-          <FeatureSpotlight
-            headingMain="Zero to infinite scale."
-            headingMuted="The same jac file runs locally with hot reload, or auto-deploys to a Kubernetes cluster — Redis, MongoDB, secrets, volumes provisioned for you. No Dockerfile, no manifests, no DevOps."
-            ctaLabel="Read the deploy guide"
-            ctaHref="https://github.com/jaseci-labs/jaseci"
-          />
+          <ScaleShowcase />
         </section>
         <section
           id="spotlight-2"
