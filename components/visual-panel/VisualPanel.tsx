@@ -8,6 +8,24 @@ import LiquidGradient from "../code-compare/LiquidGradient";
 const LOTTIE_SRC = "/lotties/movemodels.json";
 const PROJECTS_HREF = "/projects";
 
+// 9 flip cards positioned to match the lottie's frame-60 grid. Coordinates
+// are percentages of the img-cover canvas (which has the same 780x680
+// aspect as the lottie viewBox). Image layers in the lottie render at
+// scale=20% of a 512px source, so each tile is 512*0.2 / 780 = 13.13%
+// wide in canvas coords — keep the HTML cards the same width so they sit
+// pixel-aligned over the lottie tiles when the fade swap happens.
+const TILES = [
+  { id: "python",     name: "Python",     x: 35.62, y: 34.09 },
+  { id: "typescript", name: "TypeScript", x: 50.00, y: 34.04 },
+  { id: "zig",        name: "Zig",        x: 64.36, y: 34.02 },
+  { id: "react",      name: "React",      x: 35.61, y: 50.56 },
+  { id: "openai",     name: "OpenAI",     x: 50.00, y: 50.54 },
+  { id: "node",       name: "Node",       x: 64.36, y: 50.54 },
+  { id: "docker",     name: "Docker",     x: 35.61, y: 67.02 },
+  { id: "sqlalchemy", name: "SQLAlchemy", x: 50.00, y: 66.99 },
+  { id: "flask",      name: "Flask",      x: 64.35, y: 66.99 },
+];
+
 // Each shadow layer renders as a `<g filter="url(#…)">` Gaussian-blur group.
 // On animation complete, hide those so the icons sit cleanly on the backdrop
 // without the dark blurred halos.
@@ -105,7 +123,10 @@ export default function VisualPanel() {
                   <LiquidGradient active={imgHover} />
                 </div>
               </div>
-              <div className="vp-anim" aria-hidden="true">
+              <div
+                className={`vp-anim${done ? " vp-anim--faded" : ""}`}
+                aria-hidden="true"
+              >
                 {data ? (
                   <Lottie
                     lottieRef={lottieRef}
@@ -124,6 +145,29 @@ export default function VisualPanel() {
                     style={{ width: "100%", height: "100%" }}
                   />
                 ) : null}
+              </div>
+              {/* Flip-card overlay. Hidden during fly-in; fades in when the
+                  lottie completes and takes over for hover interactivity.
+                  Each card flips on hover to reveal a blank white back. */}
+              <div
+                className={`vp-tiles${done ? " vp-tiles--visible" : ""}`}
+                aria-hidden={!done}
+              >
+                {TILES.map((t) => (
+                  <div
+                    key={t.id}
+                    className="vp-tile"
+                    style={{ left: `${t.x}%`, top: `${t.y}%` }}
+                  >
+                    <div className="vp-tile__inner">
+                      <div className="vp-tile__face vp-tile__face--front">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={`/lotties/tiles/${t.id}.png`} alt={t.name} />
+                      </div>
+                      <div className="vp-tile__face vp-tile__face--back" />
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
             <a
