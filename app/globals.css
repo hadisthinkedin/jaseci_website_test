@@ -868,9 +868,7 @@ h6 {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  background: var(--bg);
-  background-image: var(--bg-image);
-  background-size: var(--bg-size);
+  background: transparent;
   padding: clamp(1rem, 2vw, 1.5rem);
   /* Extra top padding so the fixed navbar (~60px + its 1rem wrap padding
      once scrolled = ~76px tall) doesn't overlay the editor tab strip.
@@ -2427,25 +2425,23 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
    centered against the card. Arrows live OUTSIDE the viewport (their own
    component) so they never get clipped by the viewport's overflow:hidden
    and don't compete with the drag handler. */
+/* .cs__main is a transparent position:relative wrapper — viewport keeps
+   its original full-page-width layout (cards do NOT shrink), and the
+   chevron buttons absolute-pin to the viewport's left/right shoulders. */
 .cs__main {
-  display: flex;
-  align-items: center;
-  gap: clamp(0.5rem, 1.5vw, 1.25rem);
+  position: relative;
   width: 100%;
-  max-width: var(--max-width);
-  margin-inline: auto;
-  padding-inline: clamp(0.5rem, 2vw, 1.5rem);
-}
-.cs__main .cs__viewport {
-  flex: 1;
-  min-width: 0;
 }
 
-/* Chunky orange chevron buttons. No background fill — just the bold
-   accent-colored chevron between the page bg and the carousel. */
+/* Chunky orange chevron buttons. No background — just the bold accent-
+   colored chevron at the shoulder of the card, vertically centered.
+   Sits above the track (z 10) so the card swipe area below is uncovered
+   except under the arrows themselves. */
 .cs__edge {
   appearance: none;
-  flex: 0 0 auto;
+  position: absolute;
+  top: 50%;
+  z-index: 10;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2456,10 +2452,17 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   border: 0;
   color: var(--accent);
   cursor: pointer;
+  transform: translateY(-50%);
   transition:
     color 0.15s ease,
     transform 0.15s ease,
     opacity 0.15s ease;
+}
+.cs__edge--prev {
+  left: clamp(0.5rem, 2vw, 2rem);
+}
+.cs__edge--next {
+  right: clamp(0.5rem, 2vw, 2rem);
 }
 .cs__edge svg {
   width: 100%;
@@ -2467,7 +2470,9 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
 }
 .cs__edge:hover:not(:disabled) {
   color: var(--accent-hover, var(--accent));
-  transform: scale(1.08);
+  /* `transform` isn't additive — repeat translateY so the button keeps
+     its vertical centering while scaling on hover. */
+  transform: translateY(-50%) scale(1.08);
 }
 .cs__edge:focus-visible {
   outline: 2px solid var(--accent);
