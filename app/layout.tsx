@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Cascadia_Mono } from "next/font/google";
+import { DM_Sans, JetBrains_Mono, Cascadia_Mono } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
   display: "swap",
   axes: ["opsz"],
@@ -53,7 +53,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable} ${cascadiaMono.variable} h-full`}
+      className={`${dmSans.variable} ${jetbrainsMono.variable} ${cascadiaMono.variable} h-full`}
     >
       <body
         className="min-h-full flex flex-col"

@@ -36,9 +36,9 @@
   --radius-box: 10px;
   --radius-pill: 999px;
 
-  /* type — Inter for everything; next/font supplies the variable family */
+  /* type — DM Sans for everything; next/font supplies the variable family */
   --font-sans:
-    var(--font-inter), -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+    var(--font-dm-sans), -apple-system, BlinkMacSystemFont, "Helvetica Neue",
     Arial, sans-serif;
   --font-mono:
     var(--font-jetbrains-mono), "Fira Code", Menlo, Monaco, Consolas, monospace;
@@ -113,8 +113,6 @@ body {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Inter's single-storey 'g' (ss01) and single-storey 'a' (cv11) */
-  font-feature-settings: "ss01", "cv11";
 }
 
 a {
@@ -390,6 +388,7 @@ h6 {
 
 .hero__right {
   min-width: 0;
+  align-self: center;
 }
 
 @media (max-width: 960px) {
@@ -409,8 +408,24 @@ h6 {
    Announcement pill — small link above the headline
    ──────────────────────────────────────────────────────────────── */
 
-.pill {
+/* Pill wrap — holds the LiquidGradient canvas behind the pill so the
+   hover halo can extend slightly beyond the pill bounds while the pill
+   itself stays opaque. */
+.pill-wrap {
+  position: relative;
   align-self: start;
+  display: inline-block;
+  padding: 6px;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.pill-wrap .pill {
+  position: relative;
+  z-index: 1;
+}
+
+.pill {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
@@ -534,11 +549,24 @@ h6 {
    ──────────────────────────────────────────────────────────────── */
 
 .install {
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   /* No flex gap — tabs need to sit flush against the codeblock below.
      Spacing above the tabs is handled by .install__heading's margin. */
   gap: 0;
+  padding: 1.25rem;
+  border-radius: var(--radius-box);
+}
+
+/* Lift install widget content above the LiquidGradient canvas (z-index 0).
+   The codeblock is opaque on its own; the tablist sits in the gradient. */
+.install__heading,
+.install__tablist,
+.install [role="tabpanel"] {
+  position: relative;
+  z-index: 1;
 }
 
 .install__heading {
@@ -702,12 +730,18 @@ h6 {
    ──────────────────────────────────────────────────────────────── */
 
 .benchmark {
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  padding: 1.25rem;
+  border-radius: var(--radius-box);
 }
 
 .benchmark__title {
+  position: relative;
+  z-index: 1;
   margin: 0;
   font-family: var(--font-sans);
   font-weight: 600;
@@ -719,8 +753,10 @@ h6 {
 }
 
 .benchmark__card {
+  position: relative;
+  z-index: 1;
   margin: 0;
-  padding: 1.5rem 1.5rem 1.75rem;
+  padding: 1.5rem 1.5rem 1.25rem;
   background: var(--paper);
   border: 1px solid var(--rule-soft);
   border-radius: var(--radius-box);
@@ -733,6 +769,7 @@ h6 {
   row-gap: 1rem;
   align-items: center;
 }
+
 
 .benchmark__row-label {
   font-family: var(--font-mono);
@@ -823,12 +860,10 @@ h6 {
 }
 
 /* Pane-hover background fx layer.
-   Sits behind .cc__panes / .cc__repobar (panes have solid dark backgrounds
-   so the effect only shows in the cream margins surrounding the editors).
-   Two hover states, routed via :has():
-   - jac pane hover → soft, blurred orange halo (Jac-brand tones only, no
-     mouse tracking, no shape — just a warm glow on the surround).
-   - poly pane hover → flat gray wash that desaturates the surround. */
+   Two hover routes, both behind .cc__panes / .cc__repobar:
+   - jac pane hover → WebGL liquid gradient canvas (.cc__liquid), animated
+     by a synthetic drifting cursor. The shader self-fades via opacity.
+   - poly pane hover → flat gray wash via the ::before pseudo-element. */
 .cc::before {
   content: "";
   position: absolute;
@@ -842,20 +877,23 @@ h6 {
     filter 0.5s ease;
 }
 
-.cc:has(.cc__pane--jac:hover)::before {
-  opacity: 1;
-  background:
-    radial-gradient(55% 45% at 18% 28%, rgba(238, 90, 36, 0.6), transparent 70%),
-    radial-gradient(45% 40% at 82% 18%, rgba(244, 169, 60, 0.55), transparent 70%),
-    radial-gradient(50% 50% at 72% 78%, rgba(255, 122, 41, 0.45), transparent 70%),
-    radial-gradient(48% 45% at 12% 86%, rgba(217, 65, 20, 0.45), transparent 70%);
-  filter: blur(80px) saturate(140%);
-}
-
 .cc:has(.cc__pane--poly:hover)::before {
   opacity: 1;
   background: #6e6e6e;
   filter: blur(0);
+}
+
+/* Liquid-gradient canvas — drop into any position:relative parent to
+   show the animated WebGL background. Opacity is animated by the
+   component's RAF loop. */
+.liquid-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  display: block;
 }
 
 /* When the polyglot pane is hovered, desaturate the surrounding chrome:
@@ -1776,7 +1814,6 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: clamp(1.5rem, 3vw, 2.25rem);
   font-family: var(--font-mono);
   font-size: 0.9rem;
   font-weight: 500;
@@ -1788,6 +1825,53 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
 
 .eco__all:hover {
   color: var(--accent);
+}
+
+/* Row holding "Show more / Show less" and the "All packs on github" link.
+   Stacks vertically and centers both items. Both use the same mono font
+   so they read as a matched pair, with .eco__showmore framed in a pill
+   border and .eco__all sitting underneath as a quieter secondary action. */
+.eco__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.eco__showmore {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.4rem;
+  background: transparent;
+  border: 1px solid var(--text);
+  border-radius: var(--radius-pill);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.eco__showmore:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.eco__lede-code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  padding: 0.05em 0.35em;
+  background: var(--bg-soft);
+  border-radius: 4px;
 }
 
 /* ────────────────────────────────────────────────────────────────
@@ -2718,6 +2802,31 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   border-radius: 18%;
 }
 
+/* Hover gradient overlay sized + shaped to match the IMG_4925.jpg tile.
+   Sits above .vp-final (image, z-index 1) so the gradient paints on top
+   of it, but below .vp-anim (lottie icons, z-index 2) so icons stay
+   readable. The inner div carries the clip via border-radius +
+   overflow:hidden so the LiquidGradient canvas inside takes the same
+   rounded square as the photo. */
+.vp-image-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.vp-image-bg__inner {
+  position: relative;
+  height: 78%;
+  aspect-ratio: 1;
+  max-width: 78%;
+  border-radius: 18%;
+  overflow: hidden;
+}
+
 /* Projects link below the image — fades in after the animation completes. */
 .vp-link {
   display: inline-flex;
@@ -2768,6 +2877,8 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
    centered icon lottie — claiming the chart-side breathing room here
    keeps the visual centerline of the page balanced. */
 .accuracy {
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -2777,6 +2888,16 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   padding: 1.5rem;
   gap: 0.75rem;
   font-family: var(--font-sans);
+  border-radius: var(--radius-box);
+}
+
+/* Lift accuracy chart content above the LiquidGradient canvas. */
+.accuracy__head,
+.accuracy__chart,
+.accuracy__foot,
+.accuracy__dots {
+  position: relative;
+  z-index: 1;
 }
 
 /* Header is now a 3-column flex row: prev arrow / title block / next
@@ -2851,10 +2972,20 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
 }
 
 .accuracy__chart {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
+}
+
+/* The LiquidGradient canvas lives inside .accuracy__chart, sized to the
+   recharts SVG. AccuracyChart applies a clip-path matching the amber bar's
+   `d` so on hover the gradient appears only inside that bar. Sits above
+   the SVG so the gradient replaces the bar's solid fill where they
+   overlap. */
+.accuracy__chart > .liquid-bg {
+  z-index: 2;
 }
 
 .accuracy__chart .recharts-wrapper {
