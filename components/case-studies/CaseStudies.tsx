@@ -259,6 +259,24 @@ export default function CaseStudies() {
         onPointerUp={finishDrag}
         onPointerCancel={finishDrag}
       >
+        <button
+          type="button"
+          className="cs__arrow cs__edge cs__edge--prev"
+          onClick={prev}
+          onPointerDown={(e) => e.stopPropagation()}
+          aria-label="Previous case study"
+        >
+          <ArrowLeft />
+        </button>
+        <button
+          type="button"
+          className="cs__arrow cs__edge cs__edge--next"
+          onClick={next}
+          onPointerDown={(e) => e.stopPropagation()}
+          aria-label="Next case study"
+        >
+          <ArrowRight />
+        </button>
         <div
           className={`cs__track${
             !transitionOn || isDragging ? " cs__track--instant" : ""

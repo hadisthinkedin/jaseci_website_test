@@ -2410,6 +2410,25 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   outline-offset: -2px;
 }
 
+/* Edge arrows: same look as the header .cs__arrow buttons, absolute-positioned
+   at the left/right ends of the viewport and vertically centered. They sit
+   above the track for clicks; the onPointerDown stopPropagation on the JSX
+   side keeps the viewport's drag handler from engaging when the user just
+   wants to click an arrow. */
+.cs__edge {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  background: var(--bg);
+}
+.cs__edge--prev {
+  left: 1rem;
+}
+.cs__edge--next {
+  right: 1rem;
+}
+
 .cs__track {
   display: flex;
   align-items: stretch;
