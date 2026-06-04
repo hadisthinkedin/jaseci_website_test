@@ -854,7 +854,7 @@ h6 {
 
 .cc:has(.cc__pane--poly:hover)::before {
   opacity: 1;
-  background: #9a9a9a;
+  background: #6e6e6e;
   filter: blur(0);
 }
 
@@ -877,13 +877,13 @@ h6 {
 body:has(.cc__pane--poly:hover) .nav-wrap,
 body:has(.cc__pane--poly:hover) .cc__pane--jac,
 body:has(.cc__pane--poly:hover) .cc__repobar {
-  filter: grayscale(1);
+  filter: grayscale(1) brightness(0.78);
 }
 body:has(.cc__pane--poly:hover) .nav,
 body:has(.cc__pane--poly:hover) .cc__repobar {
-  background-color: #b8b8b8;
-  border-color: #8a8a8a;
-  color: #2a2a2a;
+  background-color: #8e8e8e;
+  border-color: #5e5e5e;
+  color: #1a1a1a;
 }
 
 /* Keep editor surfaces + repobar above the fx layer. */
@@ -1033,7 +1033,7 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
   margin-bottom: -1px;
   background: transparent;
   border: 0;
-  border-top: 2px solid transparent;
+  border-top: 1px solid transparent;
   border-radius: 0;
   color: rgba(243, 239, 230, 0.55);
   font-family: var(--font-vscode-ui);
@@ -1055,7 +1055,7 @@ body:has(.cc__pane--poly:hover) .cc__repobar {
 .cc__tab[aria-selected="true"] {
   color: var(--code-text);
   background: rgba(243, 239, 230, 0.04);
-  border-top-color: var(--accent);
+  border-top-color: #007acc;
 }
 
 .cc__tab--static {
