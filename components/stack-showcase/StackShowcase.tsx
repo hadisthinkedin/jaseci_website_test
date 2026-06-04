@@ -1,36 +1,42 @@
 import { highlight } from "@/lib/highlighter";
 
-const MAIN_JAC = `# main.jac — backend + frontend, one file
-
-node Todo { has text: str; }
-
-walker:pub add_todo {
+const MAIN_JAC = `# main.jac — full-stack todo, one file
+node Todo { has text: str, done: bool = False; }   # graph node, persisted
+walker:pub add_todo {                              # auto-exposed as a POST route
     has text: str;
-    can with \`root entry {
-        here ++> Todo(text=self.text);
-    }
+    can with \`root entry { here ++> Todo(text=self.text); }
 }
-
+walker:pub toggle_todo {
+    can with Todo entry { here.done = not here.done; }
+}
 walker:pub get_todos {
     can with \`root entry { report [-->(\`?Todo)]; }
 }
-
-# Frontend — compiles to React
+# Below this block runs in the browser
 cl {
+    import lodash;                                 # npm package, bundled at build
     def:pub app() -> JsxElement {
-        has todos: list = [],
+        has todos: list = [],                      # has  →  useState
             text: str = "";
-
+        async def refresh() -> None {
+            result = get_todos() spawn root;       # direct walker call, no fetch
+            todos = lodash.sortBy(result.reports[0], "text");
+        }
         async def add() -> None {
             add_todo(text=text) spawn root;
-            todos = (get_todos() spawn root).reports[0];
+            text = "";
+            await refresh();
         }
-
         return <div>
             <input value={text}
-                onChange={lambda e: any -> None { text = e.target.value; }} />
+                onChange={lambda e: any -> None { text = e.target.value; }}
+                placeholder="What needs doing?" />
             <button onClick={add}>Add</button>
-            <ul>{todos.map(lambda t: any -> any { return <li>{t.text}</li>; })}</ul>
+            <ul>{todos.map(lambda t: any -> any {
+                return <li onClick={lambda { toggle_todo() spawn t; }}>
+                    {t.done ? "✓ " : "· "}{t.text}
+                </li>;
+            })}</ul>
         </div>;
     }
 }
@@ -48,9 +54,10 @@ const TERMINAL: TermLine[] = [
   { kind: "check", text: "vite dev server :8000" },
   { kind: "check", text: "api server :8001" },
   { kind: "check", text: "walker rpc generated — no http boilerplate" },
-  { kind: "check", text: "hot reload: client + server" },
   { kind: "check", text: "types: client ↔ server checked" },
   { kind: "arrow", text: "http://localhost:8000/cl/app" },
+  { kind: "spacer" },
+  { kind: "out", text: "[hmr] main.jac changed → reload in 84ms" },
 ];
 
 export default async function StackShowcase() {
