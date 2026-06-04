@@ -1,23 +1,17 @@
 import { highlight } from "@/lib/highlighter";
 import LearnMoreLink from "@/components/ui/LearnMoreLink";
 
-const MAIN_JAC = `# main.jac — full-stack todo in one file
-node Todo { has text: str, done: bool = False; }
-
-walker:pub add_todo {  has text: str;     # auto-exposed POST
+const MAIN_JAC = `# main.jac — server + client in one file
+node Todo { has text: str; }
+walker:pub add_todo { has text: str;        # auto-exposed POST
     can with \`root entry { here ++> Todo(text=self.text); } }
-walker:pub toggle_todo {
-    can with Todo entry { here.done = not here.done; } }
 walker:pub get_todos {
     can with \`root entry { report [-->(\`?Todo)]; } }
-
-cl {                                      # runs in the browser
-    import from "lodash-es" { sortBy };   # npm, bundled
-
+cl {                                        # runs in the browser
+    import from "lodash-es" { sortBy };     # npm, bundled
     def:pub app() -> JsxElement {
         has todos: list = [], text: str = "";
-
-        async def refresh {               # walker call, no fetch
+        async def refresh {                 # walker call, no HTTP
             r = get_todos() spawn root;
             todos = sortBy(r.reports[0], "text");
         }
@@ -25,18 +19,12 @@ cl {                                      # runs in the browser
             add_todo(text=text) spawn root;
             text = ""; await refresh();
         }
-
         return <div>
             <input value={text}
-                placeholder="What needs doing?"
                 onChange={lambda e { text = e.target.value; }} />
             <button onClick={add}>Add</button>
-            <ul>{todos.map(lambda t {
-                return <li onClick={
-                        lambda { toggle_todo() spawn t; }}>
-                    {t.done ? "✓ " : "· "}{t.text}
-                </li>;
-            })}</ul>
+            <ul>{todos.map(
+                lambda t { return <li>{t.text}</li>; })}</ul>
         </div>;
     }
 }
@@ -49,23 +37,20 @@ type TermLine =
   | { kind: "arrow"; text: string }
   | { kind: "spacer" };
 
-// Two-pane story: serve the file, then drive it from the jac client CLI.
-// Same walkers the React UI calls — but here we're hitting them straight
-// from the shell to show the walker → JSON contract in action.
+// Two-pane story: serve the file, then drive its walkers from the
+// jac client CLI — the same walkers the cl{} UI calls — so the walker
+// → JSON contract that jac-client speaks is visible from the shell.
 const TERMINAL: TermLine[] = [
   { kind: "cmd", text: "jac serve main.jac" },
   { kind: "check", text: "api server :8000" },
-  { kind: "check", text: "walker rpc — add_todo, toggle_todo, get_todos" },
+  { kind: "check", text: "walker rpc — add_todo, get_todos" },
   { kind: "arrow", text: "http://localhost:8000/cl/app" },
   { kind: "spacer" },
   { kind: "cmd", text: 'jac client call add_todo --text "buy milk"' },
-  { kind: "out", text: '{ "jid": "n:Todo:1", "text": "buy milk", "done": false }' },
+  { kind: "out", text: '{ "jid": "n:Todo:1", "text": "buy milk" }' },
   { kind: "spacer" },
   { kind: "cmd", text: "jac client call get_todos" },
-  { kind: "out", text: '[ { "jid": "n:Todo:1", "text": "buy milk", "done": false } ]' },
-  { kind: "spacer" },
-  { kind: "cmd", text: "jac client call toggle_todo --on n:Todo:1" },
-  { kind: "out", text: '{ "jid": "n:Todo:1", "text": "buy milk", "done": true }' },
+  { kind: "out", text: '[ { "jid": "n:Todo:1", "text": "buy milk" } ]' },
 ];
 
 export default async function StackShowcase() {

@@ -226,24 +226,6 @@ export default function CaseStudies() {
     <section className="cs" aria-label="Case studies">
       <header className="cs__header">
         <h2 className="cs__title">Case Studies</h2>
-        <div className="cs__nav">
-          <button
-            type="button"
-            className="cs__arrow"
-            onClick={prev}
-            aria-label="Previous case study"
-          >
-            <ArrowLeft />
-          </button>
-          <button
-            type="button"
-            className="cs__arrow"
-            onClick={next}
-            aria-label="Next case study"
-          >
-            <ArrowRight />
-          </button>
-        </div>
       </header>
 
       <div className="cs__main">
@@ -349,38 +331,6 @@ export default function CaseStudies() {
         </button>
       </div>
     </section>
-  );
-}
-
-function ArrowLeft() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M14 6l-6 6 6 6" />
-    </svg>
-  );
-}
-
-function ArrowRight() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M10 6l6 6-6 6" />
-    </svg>
   );
 }
 
