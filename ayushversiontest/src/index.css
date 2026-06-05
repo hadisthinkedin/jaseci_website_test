@@ -13,3 +13,12 @@ html {
 body {
   @apply bg-white text-black antialiased;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-blink {
+    animation: none !important;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}

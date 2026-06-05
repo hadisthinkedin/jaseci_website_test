@@ -12,7 +12,7 @@ export default function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/about-us" element={<About />} />
         <Route path="/community" element={<Community />} />
         <Route path="/built-with-jaseci" element={<BuiltWith />} />
         <Route path="/blog" element={<Blog />} />
