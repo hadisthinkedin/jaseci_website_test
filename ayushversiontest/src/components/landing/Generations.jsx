@@ -113,6 +113,25 @@ export default function Generations() {
     };
   }, [isReduced, beats.length, version]);
 
+  // Scroll the window so a given beat becomes active (drives the pinned stage).
+  const scrollToBeat = (b) => {
+    const el = ref.current;
+    if (!el) return;
+    const total = el.offsetHeight - window.innerHeight;
+    const top = el.getBoundingClientRect().top + window.scrollY;
+    const target = clamp(b, 0, beats.length - 1);
+    const p = (target + 0.5) / beats.length;
+    window.scrollTo({ top: top + p * total, behavior: "smooth" });
+  };
+
+  // Jump straight past the whole section to what comes next.
+  const scrollPast = () => {
+    const el = ref.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({ top: top + el.offsetHeight, behavior: "smooth" });
+  };
+
   // Tags appear on the Gen 2 beat (index 2); collapse on Gen 3 (index 3+).
   const showTags = active >= 2;
   const collapsed = active >= 3;
@@ -170,17 +189,41 @@ export default function Generations() {
           <CollapseVisual tags={tags} showTags={showTags} collapsed={collapsed} />
         </div>
 
-        {/* Dot rail */}
-        <div className="absolute right-6 top-1/2 hidden -translate-y-1/2 flex-col gap-3 md:flex">
+        {/* Vertical beat nav */}
+        <div className="absolute right-6 top-1/2 hidden -translate-y-1/2 flex-col items-center gap-3 md:flex">
+          <button
+            onClick={() => scrollToBeat(active - 1)}
+            aria-label="Previous beat"
+            className="flex h-8 w-8 items-center justify-center border border-black text-xs hover:bg-black hover:text-white"
+          >
+            ▲
+          </button>
           {beats.map((_, i) => (
-            <span
+            <button
               key={i}
+              onClick={() => scrollToBeat(i)}
+              aria-label={`Go to beat ${i + 1}`}
               className={`h-2.5 w-2.5 rounded-full border border-black transition-colors ${
-                i === active ? "bg-black" : "bg-white"
+                i === active ? "bg-black" : "bg-white hover:bg-neutral-300"
               }`}
             />
           ))}
+          <button
+            onClick={() => scrollToBeat(active + 1)}
+            aria-label="Next beat"
+            className="flex h-8 w-8 items-center justify-center border border-black text-xs hover:bg-black hover:text-white"
+          >
+            ▼
+          </button>
         </div>
+
+        {/* Skip */}
+        <button
+          onClick={scrollPast}
+          className="absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-1.5 border border-black bg-white px-3 py-1.5 text-xs font-medium hover:bg-black hover:text-white"
+        >
+          Skip ↓
+        </button>
       </div>
     </section>
   );

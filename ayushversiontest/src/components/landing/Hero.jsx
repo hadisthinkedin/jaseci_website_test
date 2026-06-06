@@ -1,6 +1,6 @@
 import { useState } from "react";
 import CodeBlock from "../CodeBlock.jsx";
-import ImageBox from "../ImageBox.jsx";
+import BenchmarkWidget from "./BenchmarkWidget.jsx";
 import { hero } from "../../lib/links.js";
 import { pillars } from "../../lib/pillars.js";
 import useTypewriter from "../../hooks/useTypewriter.js";
@@ -78,9 +78,9 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Preview — iPad / desktop only */}
+          {/* Benchmark — iPad / desktop only */}
           <div className="hidden md:block">
-            <ImageBox label="Product preview / demo" aspect="square" />
+            <BenchmarkWidget />
           </div>
         </div>
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { hero, social, docs } from "../lib/links.js";
-import { GithubIcon } from "./icons.jsx";
+import { GithubIcon, DiscordIcon, LinkedinIcon, XIcon } from "./icons.jsx";
 
 const products = [
   { name: "JacCoder", desc: "AI coding agent for Jac.", url: hero.jacCoder },
@@ -22,11 +22,10 @@ const resources = [
 ];
 
 const community = [
-  { name: "Community hub", desc: "Where everyone hangs out.", url: "/community", internal: true },
-  { name: "GitHub", desc: "Source, issues, and contributions.", url: social.github },
-  { name: "Discord", desc: "Chat with us in real time.", url: social.discord },
-  { name: "LinkedIn", desc: "Company updates and news.", url: social.linkedin },
-  { name: "X / Twitter", desc: "Announcements and highlights.", url: social.x },
+  { name: "GitHub", desc: "Source, issues, and contributions.", url: social.github, Icon: GithubIcon },
+  { name: "Discord", desc: "Chat with us in real time.", url: social.discord, Icon: DiscordIcon },
+  { name: "LinkedIn", desc: "Company updates and news.", url: social.linkedin, Icon: LinkedinIcon },
+  { name: "X / Twitter", desc: "Announcements and highlights.", url: social.x, Icon: XIcon },
 ];
 
 const pages = [
@@ -45,30 +44,41 @@ function Dropdown({ label, items }) {
       </button>
       <div className="invisible absolute left-0 top-full z-20 pt-2 opacity-0 transition-opacity duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
         <ul className="w-72 divide-y divide-neutral-200 border border-black bg-white">
-          {items.map((it) => (
-            <li key={it.name}>
-              {it.internal ? (
-                <Link to={it.url} className="block px-4 py-3 hover:bg-neutral-100">
-                  <span className="text-sm font-medium">{it.name}</span>
+          {items.map((it) => {
+            const Icon = it.Icon;
+            const body = (
+              <span className="flex items-start gap-3">
+                {Icon && <Icon className="mt-0.5 h-4 w-4 shrink-0" />}
+                <span>
+                  <span className="block text-sm font-medium">
+                    {it.name}
+                    {!it.internal && " ↗"}
+                  </span>
                   {it.desc && (
                     <span className="mt-0.5 block text-xs text-neutral-600">{it.desc}</span>
                   )}
-                </Link>
-              ) : (
-                <a
-                  href={it.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block px-4 py-3 hover:bg-neutral-100"
-                >
-                  <span className="text-sm font-medium">{it.name} ↗</span>
-                  {it.desc && (
-                    <span className="mt-0.5 block text-xs text-neutral-600">{it.desc}</span>
-                  )}
-                </a>
-              )}
-            </li>
-          ))}
+                </span>
+              </span>
+            );
+            return (
+              <li key={it.name}>
+                {it.internal ? (
+                  <Link to={it.url} className="block px-4 py-3 hover:bg-neutral-100">
+                    {body}
+                  </Link>
+                ) : (
+                  <a
+                    href={it.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block px-4 py-3 hover:bg-neutral-100"
+                  >
+                    {body}
+                  </a>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </div>
     </li>
@@ -180,19 +190,29 @@ function MobileSection({ title, items, onNavigate }) {
     <div className="mb-6">
       <p className="text-xs font-bold uppercase tracking-widest text-neutral-500">{title}</p>
       <ul className="mt-2 space-y-2">
-        {items.map((it) => (
-          <li key={it.name}>
-            {it.internal ? (
-              <Link to={it.url} onClick={onNavigate} className="hover:underline">
-                {it.name}
-              </Link>
-            ) : (
-              <a href={it.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                {it.name} ↗
-              </a>
-            )}
-          </li>
-        ))}
+        {items.map((it) => {
+          const Icon = it.Icon;
+          return (
+            <li key={it.name}>
+              {it.internal ? (
+                <Link to={it.url} onClick={onNavigate} className="flex items-center gap-2 hover:underline">
+                  {Icon && <Icon className="h-4 w-4" />}
+                  {it.name}
+                </Link>
+              ) : (
+                <a
+                  href={it.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 hover:underline"
+                >
+                  {Icon && <Icon className="h-4 w-4" />}
+                  {it.name} ↗
+                </a>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
