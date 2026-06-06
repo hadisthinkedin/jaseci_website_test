@@ -40,7 +40,9 @@ export default function Hero() {
             <h1 className="text-5xl font-bold leading-[0.98] tracking-tight md:text-7xl">
               One language.
               <br />
-              <span className="block min-h-[1.1em]">
+              {/* Reserve 2 lines so longer phrases wrapping mid-type never
+                  grow the headline and shift the layout. */}
+              <span className="block min-h-[2.05em]">
                 {text}
                 {motion && (
                   <span className="animate-blink font-normal text-black" aria-hidden>
@@ -50,7 +52,7 @@ export default function Hero() {
               </span>
             </h1>
 
-            <p className="mt-6 min-h-[3.5rem] max-w-xl text-lg text-neutral-700">
+            <p className="mt-6 min-h-[4rem] max-w-xl text-lg text-neutral-700">
               {pillars[index].sub}
             </p>
 
