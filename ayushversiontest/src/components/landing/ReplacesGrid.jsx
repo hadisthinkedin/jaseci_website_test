@@ -6,7 +6,7 @@ const TILES = [
   { key: "ts", label: "TypeScript", src: ICON("typescript") },
   { key: "c", label: "C", src: ICON("c") },
   { key: "react", label: "React", src: ICON("react") },
-  { key: "ai", label: "OpenAI", src: ICON("openai") },
+  { key: "ai", label: "OpenAI", src: "https://icons.duckduckgo.com/ip3/openai.com.ico" },
   { key: "node", label: "Node.js", src: ICON("nodedotjs") },
   { key: "docker", label: "Docker", src: ICON("docker") },
   { key: "db", label: "MongoDB", src: ICON("mongodb") },
@@ -48,7 +48,7 @@ export default function ReplacesGrid() {
                   x2="84"
                   y2="84"
                   stroke="black"
-                  strokeWidth="6"
+                  strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeDasharray="100"
                   className="slash-loop"
