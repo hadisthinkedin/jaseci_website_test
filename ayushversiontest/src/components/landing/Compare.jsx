@@ -1,4 +1,5 @@
 import { useState } from "react";
+import BenchmarkWidget from "./BenchmarkWidget.jsx";
 
 const APP_TSX = `"use client";
 import { useEffect, useState } from "react";
@@ -251,6 +252,19 @@ export default function Compare() {
           <span>One Jac file vs a stack of polyglot files. See the repo yourself.</span>
           <span aria-hidden>→</span>
         </a>
+
+        {/* And it runs faster */}
+        <div className="mt-12 border-t border-black pt-12 text-center">
+          <p className="text-xs font-bold uppercase tracking-widest text-neutral-500">
+            And it runs faster
+          </p>
+          <p className="mx-auto mt-3 max-w-2xl text-lg text-neutral-700">
+            Fewer files, and the compiled code is quicker too.
+          </p>
+          <div className="mx-auto mt-6 max-w-2xl text-left">
+            <BenchmarkWidget />
+          </div>
+        </div>
       </div>
     </section>
   );

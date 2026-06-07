@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { hero, social, docs } from "../lib/links.js";
 import { GithubIcon, DiscordIcon, LinkedinIcon, XIcon } from "./icons.jsx";
+import GetStartedModal from "./landing/GetStartedModal.jsx";
 
 const products = [
   { name: "JacCoder", desc: "AI coding agent for Jac.", url: hero.jacCoder },
@@ -87,6 +88,7 @@ function Dropdown({ label, items }) {
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [gsOpen, setGsOpen] = useState(false);
   const close = () => setOpen(false);
 
   return (
@@ -121,14 +123,12 @@ export default function Navbar() {
           >
             <GithubIcon />
           </a>
-          <a
-            href={hero.docs}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={() => setGsOpen(true)}
             className="border border-black bg-black px-4 py-2 text-sm font-medium text-white hover:bg-white hover:text-black"
           >
             Get started
-          </a>
+          </button>
         </div>
 
         {/* Mobile toggle */}
@@ -169,18 +169,21 @@ export default function Navbar() {
               >
                 GitHub ↗
               </a>
-              <a
-                href={hero.docs}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={() => {
+                  close();
+                  setGsOpen(true);
+                }}
                 className="border border-black bg-black px-4 py-2 text-sm font-medium text-white hover:bg-white hover:text-black"
               >
                 Get started
-              </a>
+              </button>
             </div>
           </div>
         </div>
       )}
+
+      {gsOpen && <GetStartedModal onClose={() => setGsOpen(false)} />}
     </header>
   );
 }

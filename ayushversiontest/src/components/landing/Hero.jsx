@@ -1,38 +1,36 @@
 import { useState } from "react";
-import CodeBlock from "../CodeBlock.jsx";
-import BenchmarkWidget from "./BenchmarkWidget.jsx";
-import { hero } from "../../lib/links.js";
+import ReplacesGrid from "./ReplacesGrid.jsx";
+import GetStartedModal from "./GetStartedModal.jsx";
 import { pillars } from "../../lib/pillars.js";
 import useTypewriter from "../../hooks/useTypewriter.js";
 
 const affiliations = [
   {
     name: "Nvidia",
+    logo: "https://icons.duckduckgo.com/ip3/nvidia.com.ico",
     text: "Backed by Nvidia's Inception program for AI startups.",
   },
   {
     name: "University of Michigan",
+    logo: "https://icons.duckduckgo.com/ip3/umich.edu.ico",
     text: "Born from research at the University of Michigan.",
   },
   {
     name: "NSF",
-    text: "Funded by the NSF to keep it open and free.",
+    logo: "https://icons.duckduckgo.com/ip3/nsf.gov.ico",
+    text: "Funded by NSF to keep it open sourced and free.",
   },
 ];
 
-const commands = [
-  { label: "Install", code: hero.install },
-  { label: "Launch full stack app", code: hero.launch },
-  { label: "Download the MCP", code: hero.mcp },
-];
-
 export default function Hero() {
-  const { text, index, motion } = useTypewriter(pillars.map((p) => p.title));
-  const [cmd, setCmd] = useState(0);
+  const { text, index, motion } = useTypewriter(
+    pillars.map((p) => p.title),
+    { holdMs: 3200 }
+  );
+  const [open, setOpen] = useState(false);
 
   return (
-    // Fills the first viewport (minus the sticky navbar) so everything up to
-    // the affiliations always sits on the first screen.
+    // Fills the first viewport (minus the sticky navbar).
     <section className="flex min-h-[calc(100svh-4rem)] flex-col border-b border-black">
       <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-6 py-8">
         <div className="grid items-center gap-12 md:grid-cols-2">
@@ -40,8 +38,7 @@ export default function Hero() {
             <h1 className="text-5xl font-bold leading-[0.98] tracking-tight md:text-7xl">
               One language.
               <br />
-              {/* Reserve 2 lines so longer phrases wrapping mid-type never
-                  grow the headline and shift the layout. */}
+              {/* Reserve 2 lines so phrases wrapping mid-type don't shift layout. */}
               <span className="block min-h-[2.05em]">
                 {text}
                 {motion && (
@@ -56,33 +53,19 @@ export default function Hero() {
               {pillars[index].sub}
             </p>
 
-            {/* Command tabs — iPad / desktop only */}
-            <div className="mt-8 hidden max-w-xl md:block">
-              <p className="mb-2 text-xs font-medium uppercase tracking-widest text-neutral-600">
-                Get started in one command
-              </p>
-              <div className="flex flex-wrap gap-px border border-black bg-black">
-                {commands.map((c, i) => (
-                  <button
-                    key={c.label}
-                    onClick={() => setCmd(i)}
-                    className={`flex-1 whitespace-nowrap px-3 py-2 text-xs font-medium ${
-                      cmd === i ? "bg-black text-white" : "bg-white hover:bg-neutral-100"
-                    }`}
-                  >
-                    {c.label}
-                  </button>
-                ))}
-              </div>
-              <div className="mt-3">
-                <CodeBlock code={commands[cmd].code} filename="bash" />
-              </div>
+            <div className="mt-8">
+              <button
+                onClick={() => setOpen(true)}
+                className="border border-black bg-black px-6 py-3 text-sm font-medium text-white hover:bg-white hover:text-black"
+              >
+                Get started
+              </button>
             </div>
           </div>
 
-          {/* Benchmark — iPad / desktop only */}
+          {/* Replaces grid — iPad / desktop only */}
           <div className="hidden md:block">
-            <BenchmarkWidget />
+            <ReplacesGrid />
           </div>
         </div>
 
@@ -90,7 +73,14 @@ export default function Hero() {
         <div className="mt-10 grid gap-px border border-black bg-black md:grid-cols-3">
           {affiliations.map((a) => (
             <div key={a.name} className="flex gap-4 bg-white p-6">
-              <div className="h-12 w-12 shrink-0 border border-black bg-neutral-100" />
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-black bg-white">
+                <img
+                  src={a.logo}
+                  alt={a.name}
+                  loading="lazy"
+                  className="h-8 w-8 object-contain"
+                />
+              </div>
               <div>
                 <p className="font-bold tracking-tight">{a.name}</p>
                 <p className="mt-1 text-sm text-neutral-600">{a.text}</p>
@@ -99,6 +89,8 @@ export default function Hero() {
           ))}
         </div>
       </div>
+
+      {open && <GetStartedModal onClose={() => setOpen(false)} />}
     </section>
   );
 }
