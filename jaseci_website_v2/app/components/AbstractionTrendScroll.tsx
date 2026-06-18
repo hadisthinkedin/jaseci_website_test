@@ -27,8 +27,8 @@ const NODES = [
 ];
 
 const JASECI = { x: 510, y: 32 };
-const LEGACY = "M95 400 L180 355 L265 305 L350 240"; // asm → c → java → py
-const LEAP = "M350 240 L435 150"; // py → jac (the leap)
+const LEGACY = "M95 400 H180 V355 H265 V305 H350 V240"; // asm → c → java → py (steps)
+const LEAP = "M350 240 H435 V150"; // py → jac (the leap, a tall step)
 const SKYROCKET = "M435 150 C 490 150 512 104 510 32"; // jac → jaseci (hockey-stick)
 
 export default function AbstractionTrendScroll() {
@@ -37,10 +37,6 @@ export default function AbstractionTrendScroll() {
   useEffect(() => {
     const wrap = wrapRef.current;
     if (!wrap) return;
-    // wrap → askVisual (the sticky element) → askLayout (its containing block).
-    const visualEl = wrap.parentElement; // askVisual
-    const trackEl = visualEl?.parentElement; // askLayout
-    const STICKY_TOP = 100; // must match .askVisual { top } in page.module.css
 
     const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
     const smooth = (t: number) => t * t * (3 - 2 * t);
@@ -48,24 +44,28 @@ export default function AbstractionTrendScroll() {
     const reduce = window.matchMedia?.(
       "(prefers-reduced-motion: reduce)"
     ).matches;
-    if (reduce || !visualEl || !trackEl) {
+    if (reduce) {
       wrap.style.setProperty("--reveal", "1");
       return;
     }
 
-    // Drive the reveal by how far the graph has travelled while pinned: 0 the
-    // moment it pins (track top reaches STICKY_TOP), 1 when it reaches the
-    // bottom of its column and is about to release. This ties the skyrocket
-    // exactly to the time the graph is held on screen.
+    // The graph is pinned (sticky) while the whole act scrolls past it; the
+    // Jaseci skyrocket is timed to the "So I built Jaseci." heading. The trend
+    // hits Jaseci exactly as that heading rises into view.
+    const anchor = document.querySelector("[data-jaseci-anchor]");
+
     const compute = () => {
-      const r = trackEl.getBoundingClientRect();
-      const travel = r.height - visualEl.offsetHeight;
-      const p =
-        travel > 8
-          ? clamp01((STICKY_TOP - r.top) / travel)
-          : r.top <= STICKY_TOP
-            ? 1
-            : 0;
+      // Below 900px the layout stacks and the graph isn't pinned — just show
+      // the finished trend so the skyrocket isn't stranded off-screen.
+      if (window.innerWidth <= 900 || !anchor) {
+        wrap.style.setProperty("--reveal", "1");
+        return;
+      }
+      const vh = window.innerHeight;
+      const r = anchor.getBoundingClientRect();
+      // 0 when the heading sits low (~88% down the viewport), 1 by the time it
+      // rises to ~32% down — i.e. as you arrive at "So I built Jaseci."
+      const p = clamp01((0.88 * vh - r.top) / (0.56 * vh));
       wrap.style.setProperty("--reveal", smooth(p).toFixed(4));
     };
 

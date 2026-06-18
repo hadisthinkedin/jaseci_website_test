@@ -1,41 +1,18 @@
 import styles from "./page.module.css";
-import FallingText from "./components/FallingText";
+import FallingImages from "./components/FallingImages";
 import AbstractionTrend from "./components/AbstractionTrend";
 import AbstractionTrendScroll from "./components/AbstractionTrendScroll";
 import ProofGrid from "./components/ProofGrid";
 
-const TRASH_FRAMEWORKS = [
-  "langchain",
-  "langgraph",
-  "autogen",
-  "crewai",
-  "haystack",
-  "llamaindex",
-  "dspy",
-  "marvin",
-  "instructor",
-  "guidance",
-  "mirascope",
-  "magentic",
-  "baml",
-  "ell",
-  "swarm",
-  "agno",
-  "pydantic-ai",
-  "promptflow",
-  "smolagents",
-  "phidata",
-];
-
-const ORANGE_TONES = [
-  "#ee5a24",
-  "#ff7448",
-  "#f4a93c",
-  "#c8430f",
-  "#ff8c3f",
-  "#d94e1a",
-  "#ffaa70",
-  "#b8390c",
+// The frameworks to toss in the jar — each rendered as a falling SVG badge.
+const JAR_IMAGES = [
+  { src: "/jar/langchain.svg", alt: "LangChain", width: 96, height: 96 },
+  { src: "/jar/langgraph.svg", alt: "LangGraph", width: 96, height: 96 },
+  { src: "/jar/llamaindex.svg", alt: "LlamaIndex", width: 96, height: 96 },
+  { src: "/jar/crewai.svg", alt: "CrewAI", width: 96, height: 96 },
+  { src: "/jar/autogen.svg", alt: "AutoGen", width: 96, height: 96 },
+  { src: "/jar/dspy.svg", alt: "DSPy", width: 96, height: 96 },
+  { src: "/jar/haystack.svg", alt: "Haystack", width: 96, height: 96 },
 ];
 
 // 12 ecosystem modules — 2 rows of 6. Jac-Scale and Jac-Client are
@@ -164,14 +141,10 @@ export default function Home() {
           <div className={styles.jar}>
             <div className={styles.jarLabel}>F*CK</div>
             <div className={styles.jarBody}>
-              <FallingText
-                text={TRASH_FRAMEWORKS.join(" ")}
-                highlightWords={TRASH_FRAMEWORKS}
-                highlightColors={ORANGE_TONES}
-                highlightClass="ft-highlighted"
-                trigger="auto"
+              <FallingImages
+                images={JAR_IMAGES}
+                trigger="scroll"
                 gravity={1.1}
-                fontSize="1.75rem"
                 mouseConstraintStiffness={0.18}
                 backgroundColor="transparent"
               />
@@ -236,54 +209,55 @@ export default function Home() {
 
       <ProofGrid />
 
-      {/* ---------- THE ASK ---------- */}
+      {/* ---------- THE ASK → SO I BUILT JASECI (one pinned trend) ---------- */}
 
       <section className={styles.section}>
         <div className={styles.eyebrow}>The Ask</div>
-        <div className={styles.askLayout}>
+        <div className={styles.askEcoLayout}>
+          {/* LEFT — the trend, pinned, follows you down across the whole act */}
           <div className={styles.askVisual}>
             <AbstractionTrendScroll />
           </div>
-          <div className={styles.askCopy}>
-        <h2 className={styles.h2}>Developers needed more.</h2>
-        <p className={styles.body}>
-          They came to me for one thing — agentic AI. And Jac was good at it.
-          But an agent is just one corner of what they were really building: the
-          app around it, the data beneath it, the scale, the deploy. They
-          didn&rsquo;t want a tool for the workflow. They wanted all of it — and
-          a language I&rsquo;d built only for agents was never going to be
-          enough.
-        </p>
-        <p className={styles.body}>
-          And there was a harder problem underneath. In production Jac was still
-          slow, because for everything beyond the agent it leaned on other
-          tools. Every dependency it reached for dragged on it — the language
-          I&rsquo;d built was paying the price for what it couldn&rsquo;t do on
-          its own.
-        </p>
-        <p className={styles.body}>
-          So what was I supposed to do? Not hand developers a better tool among
-          tools. I had to make Jac itself the leap — the same one the world made
-          when it went from Assembly to C, where the new language doesn&rsquo;t
-          sit on top of the old one, it becomes the ground everything is built
-          on. How do you turn a language into the next evolutionary step?
-        </p>
-          </div>
-        </div>
-      </section>
 
-      {/* ---------- ECOSYSTEM ---------- */}
+          {/* RIGHT — copy scrolls past; the trend hits Jaseci at the turn */}
+          <div className={styles.askEcoContent}>
+            <p className={styles.body}>
+              They came to me for one thing — agentic AI. And Jac was good at it.
+              But an agent is just one corner of what they were really building:
+              the app around it, the data beneath it, the scale, the deploy.
+              They didn&rsquo;t want a tool for the workflow. They wanted all of
+              it — and a language I&rsquo;d built only for agents was never going
+              to be enough.
+            </p>
+            <p className={styles.body}>
+              And there was a harder problem underneath. In production Jac was
+              still slow, because for everything beyond the agent it leaned on
+              other tools. Every dependency it reached for dragged on it — the
+              language I&rsquo;d built was paying the price for what it
+              couldn&rsquo;t do on its own.
+            </p>
+            <p className={styles.body}>
+              So what was I supposed to do? Not hand developers a better tool
+              among tools. I had to make Jac itself the leap — the same one the
+              world made when it went from Assembly to C, where the new language
+              doesn&rsquo;t sit on top of the old one, it becomes the ground
+              everything is built on. How do you turn a language into the next
+              evolutionary step?
+            </p>
 
-      <section className={styles.section} id="ecosystem">
-        <div className={styles.ecoLayout}>
-          <div className={styles.ecoSpacer} aria-hidden="true" />
-          <div className={styles.ecoCol}>
-            <h2 className={styles.h2}>So I built Jaseci.</h2>
+            <h2
+              className={`${styles.h2} ${styles.askEcoHeading}`}
+              id="ecosystem"
+              data-jaseci-anchor
+            >
+              So I built Jaseci.
+            </h2>
             <p className={styles.body}>
               An ecosystem that fixes the problems developers have been shouting
               about for years — without asking them to give up what they already
               know.
             </p>
+
             <div className={styles.bento}>
               {ECOSYSTEM_MODULES.flat().map((mod) => (
                 <div key={mod.name} className={styles.bentoBox}>
@@ -300,6 +274,11 @@ export default function Home() {
                 </div>
               ))}
             </div>
+
+            <h2 className={`${styles.h2} ${styles.askEcoHeading}`}>
+              Developers needed more.
+            </h2>
+
             <a href="/ecosystem" className={styles.cta}>
               See the full ecosystem →
             </a>

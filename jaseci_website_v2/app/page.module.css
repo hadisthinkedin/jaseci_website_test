@@ -76,13 +76,23 @@
   margin-top: 24px;
 }
 
-/* ---------- the ask — graph beside the copy ---------- */
+/* ---------- the ask → so i built jaseci — one pinned trend ---------- */
 
-.askLayout {
+.askEcoLayout {
   display: grid;
-  grid-template-columns: minmax(360px, 1fr) 1.4fr;
+  grid-template-columns: minmax(340px, 1fr) 1.5fr;
   gap: 64px;
-  align-items: center;
+  align-items: start;
+}
+
+.askEcoContent {
+  min-width: 0;
+}
+
+/* the two headings that punctuate the scroll get extra breathing room above */
+.askEcoHeading {
+  margin-top: 88px;
+  scroll-margin-top: 96px;
 }
 
 .askVisual {
@@ -599,28 +609,18 @@
 
 /* ---------- ecosystem ---------- */
 
-/* ecosystem — content shifted into the right column, left intentionally blank */
-.ecoLayout {
-  display: grid;
-  grid-template-columns: 1fr 1.7fr;
-  gap: 64px;
-}
-
-.ecoCol {
-  min-width: 0;
-}
-
-/* bento — static 3 × 4 grid */
+/* bento — uniform flexbox grid (3 equal tiles per row, wraps to 4 rows) */
 .bento {
   margin-top: 48px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   border-top: 1px solid #000;
   border-left: 1px solid #000;
 }
 
 .bentoBox {
   position: relative;
+  flex: 0 0 calc(100% / 3);
   min-width: 0;
   min-height: 190px;
   padding: 20px;
@@ -662,26 +662,15 @@
   line-height: 1.45;
 }
 
-/* collapse the two-column split → single column; drop the blank left column */
-@media (max-width: 900px) {
-  .ecoLayout {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-  .ecoSpacer {
-    display: none;
-  }
-}
-
 @media (max-width: 600px) {
-  .bento {
-    grid-template-columns: repeat(2, 1fr);
+  .bentoBox {
+    flex: 0 0 50%;
   }
 }
 
 @media (max-width: 420px) {
-  .bento {
-    grid-template-columns: 1fr;
+  .bentoBox {
+    flex: 0 0 100%;
   }
 }
 
@@ -1044,13 +1033,14 @@
     min-height: auto;
   }
 
-  .askLayout {
+  .askEcoLayout {
     grid-template-columns: 1fr;
   }
 
+  /* stacked: the graph shows up top (static), copy flows beneath it */
   .askVisual {
-    order: 2;
     position: static;
+    margin-bottom: 24px;
   }
 
   .jar {
