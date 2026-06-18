@@ -1,0 +1,162 @@
+/* ───────────────────────────────────────────────
+   Abstraction trendline — draw-in animation.
+   The two trend paths use pathLength="1", so the
+   dash trick draws them regardless of real length.
+   Nodes / labels / guides stagger in via inline
+   animation-delay set per index in the component.
+   ─────────────────────────────────────────────── */
+
+.wrap {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+  font-family: var(--font-mono);
+}
+
+/* ── Axes ──────────────────────────────────────────────────────────────── */
+
+.axis {
+  stroke: #000;
+  stroke-width: 1;
+  opacity: 0;
+  animation: fade 0.5s ease forwards;
+}
+.axisLabel {
+  fill: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  opacity: 0;
+  animation: fade 0.6s ease 0.2s forwards;
+}
+
+/* ── Vertical guides ───────────────────────────────────────────────────── */
+
+.guide {
+  stroke: #000;
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+  opacity: 0;
+  animation: fadeGuide 0.5s ease forwards;
+}
+
+/* ── Trend lines ───────────────────────────────────────────────────────── */
+
+.legacy,
+.leap {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.legacy {
+  stroke: var(--foreground);
+  stroke-width: 2.5;
+  animation: draw 1.3s ease 0.2s forwards;
+}
+.leap {
+  stroke: var(--accent);
+  stroke-width: 3.5;
+  animation: draw 0.9s ease 1.2s forwards;
+}
+
+/* ── Nodes ─────────────────────────────────────────────────────────────── */
+
+.node {
+  fill: var(--background);
+  stroke: var(--foreground);
+  stroke-width: 2;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.nodeAccent {
+  fill: var(--accent);
+  stroke: var(--accent);
+}
+
+/* ── Labels ────────────────────────────────────────────────────────────── */
+
+.xlabel {
+  fill: var(--foreground);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fade 0.5s ease forwards;
+}
+.xlabelAccent {
+  fill: var(--accent);
+}
+
+.annotation {
+  fill: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  opacity: 0;
+  animation: fade 0.6s ease forwards;
+}
+
+/* ── Keyframes ─────────────────────────────────────────────────────────── */
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes fade {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeGuide {
+  to {
+    opacity: 0.22;
+  }
+}
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ── Respect reduced motion — render the final state, no draw ───────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .axis,
+  .axisLabel,
+  .xlabel,
+  .annotation {
+    opacity: 1;
+    animation: none;
+  }
+  .guide {
+    opacity: 0.22;
+    animation: none;
+  }
+  .legacy,
+  .leap {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+  .node {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
