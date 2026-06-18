@@ -273,15 +273,14 @@
 /* ---------- jar (moved below the hero) ---------- */
 
 .jarSection {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) 1fr;
+  gap: 64px;
   align-items: center;
-  gap: 48px;
 }
 
-.jarIntro {
-  text-align: center;
-  max-width: 760px;
+.jarCopy {
+  max-width: 620px;
 }
 
 .jarColumn {
@@ -611,53 +610,30 @@
 
 /* ---------- ecosystem ---------- */
 
-/* bento — a 2-D hover grid (3 × 4). Hover any tile and it expands in BOTH
-   axes while the tiles around it shrink; its description fades in. Pure CSS:
-   :has() reads which tile's row/column is hovered and re-weights the tracks. */
+/* bento — a non-uniform nested-flex accordion. At rest the rows and tiles are
+   deliberately uneven (no two the same size). Hover a tile and it blows up in
+   BOTH axes — the tile grows wide, its row grows tall — while every other tile
+   and row shrinks to make room; its description fades in. */
 .bento {
   margin-top: 48px;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: repeat(4, 1fr);
-  height: 600px;
+  display: flex;
+  flex-direction: column;
+  height: 660px;
   border-top: 1px solid #000;
   border-left: 1px solid #000;
 }
 
-/* the expand/shrink only makes sense with a pointer, and the 3×4 track math
-   only holds above the stacking breakpoint */
-@media (hover: hover) and (min-width: 601px) {
-  .bento {
-    transition: grid-template-columns 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-      grid-template-rows 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .bento:has([data-col="0"]:hover) {
-    grid-template-columns: 1.6fr 0.7fr 0.7fr;
-  }
-  .bento:has([data-col="1"]:hover) {
-    grid-template-columns: 0.7fr 1.6fr 0.7fr;
-  }
-  .bento:has([data-col="2"]:hover) {
-    grid-template-columns: 0.7fr 0.7fr 1.6fr;
-  }
-  .bento:has([data-row="0"]:hover) {
-    grid-template-rows: 1.6fr 0.8fr 0.8fr 0.8fr;
-  }
-  .bento:has([data-row="1"]:hover) {
-    grid-template-rows: 0.8fr 1.6fr 0.8fr 0.8fr;
-  }
-  .bento:has([data-row="2"]:hover) {
-    grid-template-rows: 0.8fr 0.8fr 1.6fr 0.8fr;
-  }
-  .bento:has([data-row="3"]:hover) {
-    grid-template-rows: 0.8fr 0.8fr 0.8fr 1.6fr;
-  }
+.bentoRow {
+  display: flex;
+  flex: 1 1 0;
+  min-height: 0;
+  transition: flex-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .bentoBox {
   position: relative;
+  flex: 1 1 0;
   min-width: 0;
-  min-height: 0;
   padding: 18px;
   border-right: 1px solid #000;
   border-bottom: 1px solid #000;
@@ -666,12 +642,48 @@
   justify-content: space-between;
   gap: 10px;
   overflow: hidden;
-  transition: background 0.3s ease, color 0.3s ease;
+  transition: flex-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.3s ease, color 0.3s ease;
 }
 
-.bentoBox:hover {
-  background: #000;
-  color: #fff;
+/* non-uniform at rest — uneven row heights, uneven tile widths, and the wide
+   tile alternates sides so the columns never line up into a plain grid */
+.bentoRow:nth-child(1) {
+  flex-grow: 1.25;
+}
+.bentoRow:nth-child(2) {
+  flex-grow: 0.9;
+}
+.bentoRow:nth-child(3) {
+  flex-grow: 1.12;
+}
+.bentoRow:nth-child(4) {
+  flex-grow: 0.78;
+}
+.bentoRow:nth-child(even) {
+  flex-direction: row-reverse;
+}
+.bentoBox:nth-child(1) {
+  flex-grow: 1.5;
+}
+.bentoBox:nth-child(2) {
+  flex-grow: 0.8;
+}
+.bentoBox:nth-child(3) {
+  flex-grow: 1.1;
+}
+
+/* the accordion only with a pointer (placed after the base rules so the
+   :hover flex-grow wins the tie on specificity) */
+@media (hover: hover) and (min-width: 601px) {
+  .bentoRow:has(.bentoBox:hover) {
+    flex-grow: 2.4;
+  }
+  .bentoBox:hover {
+    flex-grow: 5;
+    background: #000;
+    color: #fff;
+  }
 }
 
 .bentoStat {
@@ -700,31 +712,27 @@
   font-size: 13px;
   line-height: 1.4;
   opacity: 0;
-  transition: opacity 0.3s ease 0.12s;
+  transition: opacity 0.35s ease 0.12s;
 }
 
 .bentoBox:hover .bentoDesc {
   opacity: 1;
 }
 
-/* stacked: a plain grid with everything visible, no hover choreography */
+/* stacked: one column, everything visible, no accordion */
 @media (max-width: 600px) {
   .bento {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: none;
     height: auto;
   }
+  .bentoRow,
+  .bentoRow:nth-child(even) {
+    flex-direction: column;
+  }
   .bentoBox {
-    min-height: 170px;
+    min-height: 150px;
   }
   .bentoDesc {
     opacity: 1;
-  }
-}
-
-@media (max-width: 420px) {
-  .bento {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -1096,6 +1104,11 @@
     position: static;
     height: auto;
     margin-bottom: 24px;
+  }
+
+  .jarSection {
+    grid-template-columns: 1fr;
+    gap: 36px;
   }
 
   .jar {

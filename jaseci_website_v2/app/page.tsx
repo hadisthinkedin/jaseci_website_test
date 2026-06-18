@@ -4,15 +4,17 @@ import AbstractionTrend from "./components/AbstractionTrend";
 import AbstractionTrendScroll from "./components/AbstractionTrendScroll";
 import ProofGrid from "./components/ProofGrid";
 
-// The frameworks to toss in the jar — each rendered as a falling SVG badge.
+// The frameworks to toss in the jar. These point at /public/jar/*.svg —
+// currently placeholder marks. Drop each project's OFFICIAL logo SVG in at the
+// same path (bump ?v= to force a refetch) and it auto-sizes to its real shape.
 const JAR_IMAGES = [
-  { src: "/jar/langchain.svg", alt: "LangChain", width: 96, height: 96 },
-  { src: "/jar/langgraph.svg", alt: "LangGraph", width: 96, height: 96 },
-  { src: "/jar/llamaindex.svg", alt: "LlamaIndex", width: 96, height: 96 },
-  { src: "/jar/crewai.svg", alt: "CrewAI", width: 96, height: 96 },
-  { src: "/jar/autogen.svg", alt: "AutoGen", width: 96, height: 96 },
-  { src: "/jar/dspy.svg", alt: "DSPy", width: 96, height: 96 },
-  { src: "/jar/haystack.svg", alt: "Haystack", width: 96, height: 96 },
+  { src: "/jar/langchain.svg?v=2", alt: "LangChain" },
+  { src: "/jar/langgraph.svg?v=2", alt: "LangGraph" },
+  { src: "/jar/llamaindex.svg?v=2", alt: "LlamaIndex" },
+  { src: "/jar/crewai.svg?v=2", alt: "CrewAI" },
+  { src: "/jar/autogen.svg?v=2", alt: "AutoGen" },
+  { src: "/jar/dspy.svg?v=2", alt: "DSPy" },
+  { src: "/jar/haystack.svg?v=2", alt: "Haystack" },
 ];
 
 // 12 ecosystem modules — 2 rows of 6. Jac-Scale and Jac-Client are
@@ -94,6 +96,14 @@ const ECOSYSTEM_MODULES = [
   ],
 ];
 
+// the 12 modules, re-chunked into 4 rows of 3 for the nested-flex accordion
+const ECOSYSTEM_ROWS = (() => {
+  const flat = ECOSYSTEM_MODULES.flat();
+  const rows: (typeof flat)[] = [];
+  for (let i = 0; i < flat.length; i += 3) rows.push(flat.slice(i, i + 3));
+  return rows;
+})();
+
 export default function Home() {
   return (
     <div className={styles.page}>
@@ -131,18 +141,13 @@ export default function Home() {
       {/* ---------- JAR — the frameworks to toss ---------- */}
 
       <section className={`${styles.section} ${styles.jarSection}`}>
-        <div className={styles.jarIntro}>
-          <div className={styles.eyebrow}>The old toolbox</div>
-          <h2 className={styles.h2}>
-            Everything you&rsquo;ve been forced to glue together.
-          </h2>
-        </div>
         <div className={styles.jarColumn}>
           <div className={styles.jar}>
             <div className={styles.jarLabel}>F*CK</div>
             <div className={styles.jarBody}>
               <FallingImages
                 images={JAR_IMAGES}
+                maxSize={126}
                 trigger="scroll"
                 gravity={1.1}
                 mouseConstraintStiffness={0.18}
@@ -151,24 +156,25 @@ export default function Home() {
             </div>
           </div>
         </div>
+        <div className={styles.jarCopy}>
+          <h2 className={styles.h2}>The old ways are broken.</h2>
+          <p className={styles.lead}>
+            The rest of the industry won&rsquo;t say it, so we will: Python was
+            built for machine learning, not for agents — and every framework
+            piled on top of it is just abstraction papering over a language
+            never designed for this work. Which is exactly why it collapses
+            into a debugging nightmare the moment you look closely.
+          </p>
+          <p className={styles.leadPunch}>
+            We didn&rsquo;t paper over the seams. <span>We tore them out.</span>
+          </p>
+        </div>
       </section>
 
       {/* ---------- WHY ---------- */}
 
       <section className={`${styles.section} ${styles.why}`}>
         <div className={styles.eyebrow}>The Conviction</div>
-        <h2 className={styles.h2}>The old ways are broken.</h2>
-
-        <p className={styles.lead}>
-          The rest of the industry won&rsquo;t say it, so we will: Python was
-          built for machine learning, not for agents — and every framework
-          piled on top of it is just abstraction papering over a language never
-          designed for this work. Which is exactly why it collapses into a
-          debugging nightmare the moment you look closely.
-        </p>
-        <p className={styles.leadPunch}>
-          We didn&rsquo;t paper over the seams. <span>We tore them out.</span>
-        </p>
 
         <div className={styles.pillars}>
           <div className={styles.pillar}>
@@ -260,23 +266,22 @@ export default function Home() {
             </p>
 
             <div className={styles.bento}>
-              {ECOSYSTEM_MODULES.flat().map((mod, i) => (
-                <div
-                  key={mod.name}
-                  className={styles.bentoBox}
-                  data-col={i % 3}
-                  data-row={Math.floor(i / 3)}
-                >
-                  <div className={styles.bentoStat}>
-                    {mod.stat}
-                    {mod.statAccent ? (
-                      <span className={styles.accent}>{mod.statAccent}</span>
-                    ) : null}
-                  </div>
-                  <div className={styles.bentoContent}>
-                    <div className={styles.bentoName}>{mod.name}</div>
-                    <p className={styles.bentoDesc}>{mod.desc}</p>
-                  </div>
+              {ECOSYSTEM_ROWS.map((row, r) => (
+                <div className={styles.bentoRow} key={r}>
+                  {row.map((mod) => (
+                    <div key={mod.name} className={styles.bentoBox}>
+                      <div className={styles.bentoStat}>
+                        {mod.stat}
+                        {mod.statAccent ? (
+                          <span className={styles.accent}>{mod.statAccent}</span>
+                        ) : null}
+                      </div>
+                      <div className={styles.bentoContent}>
+                        <div className={styles.bentoName}>{mod.name}</div>
+                        <p className={styles.bentoDesc}>{mod.desc}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>
