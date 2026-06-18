@@ -673,6 +673,16 @@
   flex-grow: 1.1;
 }
 
+/* Jac-Scale and Jac-Client ship expanded by default (active flag in the data):
+   wider than their neighbours and their description already showing. Placed
+   after the nth-child base rules so it wins the specificity tie. */
+.bentoBox.bentoBoxActive {
+  flex-grow: 2.7;
+}
+.bentoBoxActive .bentoDesc {
+  opacity: 1;
+}
+
 /* the accordion only with a pointer (placed after the base rules so the
    :hover flex-grow wins the tie on specificity) */
 @media (hover: hover) and (min-width: 601px) {

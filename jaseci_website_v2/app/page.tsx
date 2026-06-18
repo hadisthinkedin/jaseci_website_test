@@ -171,46 +171,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ---------- WHY ---------- */}
-
-      <section className={`${styles.section} ${styles.why}`}>
-        <div className={styles.eyebrow}>The Conviction</div>
-
-        <div className={styles.pillars}>
-          <div className={styles.pillar}>
-            <div className={styles.pillarTag}>byLLM</div>
-            <h3 className={styles.pillarTitle}>
-              We made the model a <span className={styles.accent}>native type</span>.
-            </h3>
-            <p className={styles.pillarBody}>
-              An agent&rsquo;s reasoning becomes a function body the language
-              fills in — not a prompt you assemble and pray over.
-            </p>
-          </div>
-          <div className={styles.pillar}>
-            <div className={styles.pillarTag}>Object-Spatial Programming</div>
-            <h3 className={styles.pillarTitle}>
-              We made the world a <span className={styles.accent}>graph</span>.
-            </h3>
-            <p className={styles.pillarBody}>
-              An agent&rsquo;s memory, and the relationships it reasons across,
-              are first-class — not bolted on.
-            </p>
-          </div>
-        </div>
-
-        <blockquote className={styles.conviction}>
-          An agent isn&rsquo;t a model with extra steps. It&rsquo;s a new kind
-          of program with its own shape — and a language built for that shape
-          will always beat one talked into pretending.
-        </blockquote>
-
-        <p className={styles.carry}>
-          And no, you don&rsquo;t start over with Python.{" "}
-          <strong>We carry it forward with you.</strong>
-        </p>
-      </section>
-
       {/* ---------- PROOF ---------- */}
 
       <ProofGrid />
@@ -269,7 +229,12 @@ export default function Home() {
               {ECOSYSTEM_ROWS.map((row, r) => (
                 <div className={styles.bentoRow} key={r}>
                   {row.map((mod) => (
-                    <div key={mod.name} className={styles.bentoBox}>
+                    <div
+                      key={mod.name}
+                      className={`${styles.bentoBox} ${
+                        mod.active ? styles.bentoBoxActive : ""
+                      }`}
+                    >
                       <div className={styles.bentoStat}>
                         {mod.stat}
                         {mod.statAccent ? (
