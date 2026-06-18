@@ -124,8 +124,8 @@ export default function Home() {
           <div className={styles.heroCopy}>
             <h1 className={styles.heroHeadline}>
               Jac is the solution to the last{" "}
-              <span className={styles.accent}>50 years</span> of
-              developer&rsquo;s hell.
+              <span className={styles.accent}>50 years</span>{" "}
+              of developer&rsquo;s hell.
             </h1>
             <p className={styles.heroLede}>
               The programming language that is built to program AI.
