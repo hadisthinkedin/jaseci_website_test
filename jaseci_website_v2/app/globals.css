@@ -3,6 +3,13 @@
   --foreground: #000000;
   --border: #000000;
   --muted: #595959;
+  --accent: #ee5a24;
+  --accent-hover: #c8430f;
+
+  --font-sans:
+    var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-mono:
+    var(--font-jetbrains-mono), "Fira Code", Menlo, Monaco, Consolas, monospace;
 }
 
 html {
@@ -10,17 +17,26 @@ html {
   color-scheme: light;
 }
 
+/* smooth in-page anchor jumps (CTA → bento grid, nav links), motion-safe */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 html,
 body {
   max-width: 100vw;
-  overflow-x: hidden;
+  /* `clip` (not `hidden`) prevents horizontal scroll WITHOUT turning html/body
+     into a scroll container — which would break `position: sticky` pinning. */
+  overflow-x: clip;
 }
 
 body {
   min-height: 100%;
   color: var(--foreground);
   background: var(--background);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
@@ -38,6 +54,46 @@ a {
 }
 
 ::selection {
-  background: #000;
+  background: var(--accent);
   color: #fff;
+}
+
+/* ─────────────────────────────────────────────
+   FallingText — physics-driven jar contents
+   Classes are global so they survive innerHTML.
+   ───────────────────────────────────────────── */
+
+.ft-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  cursor: default;
+  overflow: hidden;
+}
+
+.ft-target {
+  display: inline-block;
+  padding: 12px;
+  font-family: var(--font-mono);
+}
+
+.ft-word {
+  display: inline-block;
+  margin: 0 4px;
+  user-select: none;
+  color: var(--foreground);
+  white-space: nowrap;
+}
+
+.ft-highlighted {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.ft-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
 }

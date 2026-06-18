@@ -8,9 +8,10 @@ import ProofGrid from "./components/ProofGrid";
 // currently placeholder marks. Drop each project's OFFICIAL logo SVG in at the
 // same path (bump ?v= to force a refetch) and it auto-sizes to its real shape.
 const JAR_IMAGES = [
-  { src: "/jar/langchain.svg?v=2", alt: "LangChain" },
+  { src: "/jar/langchain.svg?v=5", alt: "LangChain" },
   { src: "/jar/langgraph.svg?v=2", alt: "LangGraph" },
   { src: "/jar/llamaindex.svg?v=2", alt: "LlamaIndex" },
+  { src: "/jar/pydanticai.svg?v=1", alt: "Pydantic AI" },
   { src: "/jar/crewai.svg?v=2", alt: "CrewAI" },
   { src: "/jar/autogen.svg?v=2", alt: "AutoGen" },
   { src: "/jar/dspy.svg?v=2", alt: "DSPy" },
@@ -225,7 +226,7 @@ export default function Home() {
               know.
             </p>
 
-            <div className={styles.bento}>
+            <div className={styles.bento} id="ecosystem-grid">
               {ECOSYSTEM_ROWS.map((row, r) => (
                 <div className={styles.bentoRow} key={r}>
                   {row.map((mod) => (
@@ -251,7 +252,7 @@ export default function Home() {
               ))}
             </div>
 
-            <a href="/ecosystem" className={styles.cta}>
+            <a href="#ecosystem-grid" className={styles.cta}>
               See the full ecosystem →
             </a>
           </div>
@@ -397,6 +398,18 @@ export default function Home() {
               aria-label="See more JacPacks"
             >
               <div className={styles.jacpacksTrack} aria-hidden="true">
+                <span className={styles.jacpacksPhrase}>
+                  See more JacPacks →
+                </span>
+                <span className={styles.jacpacksPhrase}>
+                  See more JacPacks →
+                </span>
+                <span className={styles.jacpacksPhrase}>
+                  See more JacPacks →
+                </span>
+                <span className={styles.jacpacksPhrase}>
+                  See more JacPacks →
+                </span>
                 <span className={styles.jacpacksPhrase}>
                   See more JacPacks →
                 </span>

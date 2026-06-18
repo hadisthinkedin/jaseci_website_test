@@ -620,6 +620,8 @@
   height: 660px;
   border-top: 1px solid #000;
   border-left: 1px solid #000;
+  /* when the CTA jumps here, clear the sticky nav */
+  scroll-margin-top: 96px;
 }
 
 .bentoRow {
@@ -792,9 +794,10 @@
 .projectsLayout {
   display: flex;
   gap: 48px;
-  /* start (not stretch) so the cards size to their content instead of being
-     stretched tall to match the big heading column */
-  align-items: flex-start;
+  /* stretch so the right column (cards + banner) matches the height of the
+     left intro column — cards run from the top of the heading to the bottom
+     of the body paragraph */
+  align-items: stretch;
 }
 
 .projectsIntro {
@@ -818,6 +821,8 @@
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  /* two equal rows that fill the stretched height so cards reach top-to-bottom */
+  grid-auto-rows: 1fr;
   gap: 16px;
 }
 
@@ -976,13 +981,14 @@
   text-transform: uppercase;
 }
 
-/* 4 identical phrases, gap 0 → -25% advances exactly one phrase: seamless loop */
+/* 8 identical phrases, gap 0 → -12.5% advances exactly one phrase: seamless loop.
+   8 copies keep the strip filled even when it spans the full column height. */
 @keyframes jacpacksScroll {
   from {
     transform: translateY(0);
   }
   to {
-    transform: translateY(-25%);
+    transform: translateY(-12.5%);
   }
 }
 
