@@ -1,5 +1,5 @@
 .page {
-  font-family: var(--font-geist-sans);
+  font-family: var(--font-sans);
 }
 
 /* ---------- nav ---------- */
@@ -7,7 +7,7 @@
 .nav {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 20;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -17,7 +17,7 @@
 }
 
 .brand {
-  font-family: var(--font-geist-mono);
+  font-family: var(--font-mono);
   font-weight: 700;
   font-size: 18px;
   letter-spacing: -0.02em;
@@ -35,7 +35,8 @@
 }
 
 .navLinks a:hover {
-  border-bottom-color: #000;
+  border-bottom-color: var(--accent);
+  color: var(--accent);
 }
 
 /* ---------- section base ---------- */
@@ -49,7 +50,7 @@
 }
 
 .eyebrow {
-  font-family: var(--font-geist-mono);
+  font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -75,86 +76,613 @@
   margin-top: 24px;
 }
 
-.muted {
+/* ---------- the ask — graph beside the copy ---------- */
+
+.askLayout {
+  display: grid;
+  grid-template-columns: minmax(360px, 1fr) 1.4fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.askVisual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* pin the graph so it follows you down while the copy scrolls past;
+     align-self:start keeps it its natural height so it has room to travel.
+     top here must match STICKY_TOP in AbstractionTrendScroll.tsx. */
+  position: sticky;
+  top: 100px;
+  align-self: start;
+}
+
+.accent {
+  color: var(--accent);
+}
+
+/* ---------- why / conviction ---------- */
+
+.why {
+  overflow: hidden;
+}
+
+.lead {
+  font-size: clamp(20px, 2.2vw, 26px);
+  max-width: 860px;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: #111;
+}
+
+.leadPunch {
+  margin-top: 20px;
+  font-size: clamp(22px, 2.6vw, 30px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
   color: var(--muted);
+}
+
+.leadPunch span {
+  color: #000;
+  border-bottom: 3px solid var(--accent);
+  padding-bottom: 2px;
+}
+
+.pillars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 72px;
+  border: 1px solid #000;
+}
+
+.pillar {
+  padding: 40px;
+  border-right: 1px solid #000;
+  position: relative;
+}
+
+.pillar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    #ee5a24,
+    #ff4d9d 45%,
+    #a855f7 70%,
+    #22d3ee
+  );
+}
+
+.pillar:last-child {
+  border-right: none;
+}
+
+.pillarTag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border: 1px solid #000;
+  border-radius: 999px;
+  margin-bottom: 24px;
+}
+
+.pillarTitle {
+  font-size: clamp(24px, 2.6vw, 32px);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  margin-bottom: 16px;
+}
+
+.pillarBody {
+  font-size: 17px;
+  line-height: 1.55;
+  color: #1a1a1a;
+  max-width: 440px;
+}
+
+.conviction {
+  margin-top: 72px;
+  font-size: clamp(28px, 3.6vw, 46px);
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: -0.03em;
+  max-width: 960px;
+  padding-left: 28px;
+  border-left: 4px solid #000;
+}
+
+.carry {
+  margin-top: 40px;
+  font-size: clamp(20px, 2.2vw, 26px);
+  line-height: 1.4;
+  color: var(--muted);
+  max-width: 720px;
+}
+
+.carry strong {
+  color: #000;
 }
 
 /* ---------- hero ---------- */
 
-.hero h1 {
-  font-size: clamp(56px, 10vw, 144px);
-  font-weight: 700;
-  line-height: 0.95;
-  letter-spacing: -0.04em;
-  margin-bottom: 40px;
+.hero {
+  padding-top: 80px;
+  padding-bottom: 80px;
 }
 
-.hero p {
-  font-size: 24px;
-  max-width: 720px;
-  line-height: 1.4;
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1.4fr minmax(320px, 1fr);
+  gap: 64px;
+  align-items: stretch;
+  min-height: 620px;
+}
+
+.heroCopy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.heroHeadline {
+  font-size: clamp(40px, 5.8vw, 88px);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  margin-bottom: 32px;
+}
+
+.heroLede {
+  font-size: 22px;
+  max-width: 560px;
+  line-height: 1.45;
+  color: #1a1a1a;
+}
+
+/* hero visual — the abstraction trendline */
+
+.heroVisual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- jar (moved below the hero) ---------- */
+
+.jarSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+}
+
+.jarIntro {
+  text-align: center;
+  max-width: 760px;
+}
+
+.jarColumn {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.jar {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  border: 2px solid #000;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.jarLabel {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(48px, 5vw, 72px);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-align: center;
+  padding: 24px 0;
+  background: #000;
+  color: #fff;
+  border-radius: 0;
+  position: relative;
+  margin: 0 -2px;
+}
+
+/* small "rim" detail above the lid */
+.jar::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -8px;
+  right: -8px;
+  height: 10px;
+  background: #000;
+  border-radius: 4px 4px 0 0;
+}
+
+.jarBody {
+  position: relative;
+  flex: 1;
+  min-height: 520px;
+  overflow: hidden;
 }
 
 /* ---------- proof ---------- */
 
-.proofGrid {
+.proofTriad {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.proofTriad span {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 8px 14px;
+  border: 1px solid #000;
+}
+
+.proofTriad span:nth-child(2) {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.proofBlocks {
+  margin-top: 8px;
+}
+
+.proofBlock {
+  margin-top: 72px;
+  padding-top: 72px;
+  border-top: 1px solid #000;
+}
+
+.proofTag {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.proofTagNum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #000;
+  color: #fff;
+  font-size: 11px;
+}
+
+.proofBlockTitle {
+  font-size: clamp(28px, 3.4vw, 44px);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+  margin-bottom: 18px;
+  max-width: 760px;
+}
+
+.proofBlockLede {
+  font-size: 19px;
+  line-height: 1.55;
+  max-width: 660px;
+}
+
+/* proof › case studies — stat grid */
+
+.statGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   border-top: 1px solid #000;
-  margin-top: 64px;
+  margin-top: 40px;
 }
 
-.proofCell {
-  padding: 48px 24px;
+.statCell {
+  padding: 36px 28px;
   border-right: 1px solid #000;
-  text-align: center;
-  font-family: var(--font-geist-mono);
-  font-size: 16px;
+}
+
+.statCell:first-child {
+  padding-left: 0;
+}
+
+.statCell:last-child {
+  padding-right: 0;
+  border-right: none;
+}
+
+.statNum {
+  font-size: clamp(40px, 4.6vw, 60px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 14px;
+}
+
+.statLabel {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.proofQuote {
+  margin-top: 40px;
+  max-width: 680px;
+  font-size: 20px;
+  line-height: 1.5;
+  border-left: 2px solid var(--accent);
+  padding-left: 24px;
+}
+
+.proofQuote cite {
+  display: block;
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--muted);
+}
+
+.proofLink {
+  display: inline-block;
+  margin-top: 32px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  border-bottom: 1px solid #000;
+  padding-bottom: 4px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.proofLink:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* proof › institutions — logo wall (inverted) */
+
+.logoWall {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 40px;
+  background: #000;
+  border: 1px solid #000;
+}
+
+.logoCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 52px 32px;
+  border-right: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.logoCell:last-child {
+  border-right: none;
+}
+
+.logoImgWrap {
+  position: relative;
+  width: 100%;
+  height: 54px;
+}
+
+.logoCaption {
+  font-family: var(--font-mono);
+  font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
 }
 
-.proofCell:last-child {
-  border-right: none;
+/* proof › research — paper list */
+
+.paperList {
+  margin-top: 40px;
+  border-top: 1px solid #000;
+}
+
+.paperRow {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 26px 8px 26px 0;
+  border-bottom: 1px solid #000;
+  transition: padding-left 0.15s ease;
+}
+
+.paperRow:hover {
+  padding-left: 16px;
+}
+
+.paperKey {
+  flex-shrink: 0;
+  min-width: 92px;
+  padding: 9px 14px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #000;
+  transition: background 0.15s ease;
+}
+
+.paperRow:hover .paperKey {
+  background: var(--accent);
+}
+
+.paperMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.paperTitle {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  transition: color 0.15s ease;
+}
+
+.paperRow:hover .paperTitle {
+  color: var(--accent);
+}
+
+.paperVenue {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.paperArrow {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 20px;
+  line-height: 1;
+  color: #000;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.paperRow:hover .paperArrow {
+  color: var(--accent);
+  transform: translate(3px, -3px);
 }
 
 /* ---------- ecosystem ---------- */
 
-.ecosystemGrid {
+/* ecosystem — content shifted into the right column, left intentionally blank */
+.ecoLayout {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1.7fr;
+  gap: 64px;
+}
+
+.ecoCol {
+  min-width: 0;
+}
+
+/* bento — static 3 × 4 grid */
+.bento {
+  margin-top: 48px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   border-top: 1px solid #000;
-  margin-top: 64px;
+  border-left: 1px solid #000;
 }
 
-.ecosystemCell {
-  padding: 64px 48px;
+.bentoBox {
+  position: relative;
+  min-width: 0;
+  min-height: 190px;
+  padding: 20px;
   border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: background 0.25s ease, color 0.25s ease;
 }
 
-.ecosystemCell:last-child {
-  border-right: none;
+.bentoBox:hover {
+  background: #000;
+  color: #fff;
 }
 
-.ecosystemNumber {
-  font-size: 96px;
+.bentoStat {
+  font-size: 40px;
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.04em;
-  margin-bottom: 24px;
+  white-space: nowrap;
 }
 
-.ecosystemLabel {
-  font-family: var(--font-geist-mono);
-  font-size: 14px;
+.bentoContent {
+  min-width: 0;
+}
+
+.bentoName {
+  font-family: var(--font-mono);
+  font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-bottom: 16px;
 }
 
-.ecosystemBody {
-  font-size: 18px;
-  line-height: 1.5;
+.bentoDesc {
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+/* collapse the two-column split → single column; drop the blank left column */
+@media (max-width: 900px) {
+  .ecoLayout {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .ecoSpacer {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .bento {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 420px) {
+  .bento {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ---------- projects + case studies ---------- */
@@ -188,10 +716,255 @@
 }
 
 .cardMeta {
-  font-family: var(--font-geist-mono);
+  font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+/* ---------- projects (JacPacks showcase) ---------- */
+
+/* widen the projects block beyond the standard 1200 section cap */
+.projectsSection {
+  max-width: 1440px;
+}
+
+.projectsLayout {
+  display: flex;
+  gap: 48px;
+  /* start (not stretch) so the cards size to their content instead of being
+     stretched tall to match the big heading column */
+  align-items: flex-start;
+}
+
+.projectsIntro {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.projectsIntro .h2 {
+  margin-bottom: 24px;
+}
+
+.projectsShowcase {
+  flex: 2.2 1 560px;
+  min-width: 0;
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.projectsCards {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.projectCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 26px 20px;
+  border: 1px solid #000;
+  background: var(--background);
+  color: var(--foreground);
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.projectCard:hover {
+  background: #000;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.projectCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.projectCardMeta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.projectCardArrow {
+  font-size: 18px;
+  line-height: 1;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.projectCard:hover .projectCardArrow {
+  color: var(--accent);
+  transform: translate(2px, -2px);
+}
+
+.projectCardTitle {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+
+.projectCardDesc {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--muted);
+  transition: color 0.15s ease;
+}
+
+.projectCard:hover .projectCardDesc {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* FPS card — gameplay gif plays on hover */
+.projectCardFps {
+  position: relative;
+  overflow: hidden;
+}
+
+/* keep meta + title above the media and scrim */
+.projectCardFps > div {
+  position: relative;
+  z-index: 2;
+}
+
+.fpsMedia {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  z-index: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* dark scrim under the text so the title stays legible over gameplay */
+.projectCardFps::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0.25) 55%,
+    rgba(0, 0, 0, 0.45)
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.projectCardFps:hover .fpsMedia,
+.projectCardFps:hover::after {
+  opacity: 1;
+}
+
+/* let the gameplay take over: hide the long description on hover */
+.projectCardFps:hover .projectCardDesc {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* vertical scrolling "See more JacPacks" banner */
+.jacpacksBanner {
+  flex: 0 0 56px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #000;
+  background: #000;
+  color: #fff;
+  transition: background 0.15s ease;
+}
+
+.jacpacksBanner:hover {
+  background: var(--accent);
+}
+
+.jacpacksTrack {
+  /* absolute so the (very tall) vertical text doesn't dictate the banner's
+     height — the banner instead stretches to match the cards beside it */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: jacpacksScroll 22s linear infinite;
+}
+
+.jacpacksPhrase {
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+  padding-inline: 1.6em;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* 4 identical phrases, gap 0 → -25% advances exactly one phrase: seamless loop */
+@keyframes jacpacksScroll {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-25%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jacpacksTrack {
+    animation: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .projectsLayout {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .projectsShowcase {
+    flex-direction: column;
+  }
+
+  .jacpacksBanner {
+    flex: 0 0 auto;
+    min-height: 60px;
+  }
+
+  .jacpacksTrack {
+    flex-direction: row;
+    animation: none;
+  }
+
+  .jacpacksPhrase {
+    writing-mode: horizontal-tb;
+  }
+
+  .jacpacksPhrase:not(:first-child) {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .projectsCards {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ---------- ctas ---------- */
@@ -201,17 +974,18 @@
   margin-top: 48px;
   padding: 20px 40px;
   border: 2px solid #000;
-  font-family: var(--font-geist-mono);
+  font-family: var(--font-mono);
   font-size: 14px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   font-weight: 600;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 
 .cta:hover {
-  background: #000;
+  background: var(--accent);
   color: #fff;
+  border-color: var(--accent);
 }
 
 .ctaSecondary {
@@ -221,8 +995,9 @@
 }
 
 .ctaSecondary:hover {
-  background: #fff;
-  color: #000;
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
 }
 
 /* ---------- final + footer ---------- */
@@ -231,10 +1006,6 @@
   padding: 160px 48px;
   text-align: center;
   border-bottom: 1px solid #000;
-}
-
-.finalSection .eyebrow {
-  margin-bottom: 32px;
 }
 
 .finalSection h2 {
@@ -258,13 +1029,38 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: var(--font-geist-mono);
+  font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 /* ---------- responsive ---------- */
+
+@media (max-width: 900px) {
+  .heroGrid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    min-height: auto;
+  }
+
+  .askLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .askVisual {
+    order: 2;
+    position: static;
+  }
+
+  .jar {
+    max-width: 100%;
+  }
+
+  .jarBody {
+    min-height: 340px;
+  }
+}
 
 @media (max-width: 768px) {
   .nav {
@@ -279,27 +1075,54 @@
     padding: 80px 24px;
   }
 
-  .proofGrid,
-  .ecosystemGrid,
-  .cardGrid {
+  .statGrid,
+  .logoWall,
+  .cardGrid,
+  .pillars {
     grid-template-columns: 1fr;
   }
 
-  .proofCell,
-  .ecosystemCell,
-  .card {
+  .statCell,
+  .card,
+  .pillar {
     border-right: none;
     border-bottom: 1px solid #000;
   }
 
-  .proofCell:last-child,
-  .ecosystemCell:last-child,
-  .card:last-child {
+  .statCell:last-child,
+  .card:last-child,
+  .pillar:last-child {
     border-bottom: none;
   }
 
-  .ecosystemNumber {
-    font-size: 72px;
+  .conviction {
+    padding-left: 20px;
+  }
+
+  .statCell {
+    padding: 28px 0;
+  }
+
+  .logoCell {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .logoCell:last-child {
+    border-bottom: none;
+  }
+
+  .proofBlock {
+    margin-top: 56px;
+    padding-top: 56px;
+  }
+
+  .paperRow {
+    gap: 16px;
+  }
+
+  .paperKey {
+    min-width: 0;
   }
 
   .ctaSecondary {
@@ -316,5 +1139,9 @@
     flex-direction: column;
     gap: 16px;
     text-align: center;
+  }
+
+  .jarLabel {
+    font-size: clamp(36px, 10vw, 56px);
   }
 }

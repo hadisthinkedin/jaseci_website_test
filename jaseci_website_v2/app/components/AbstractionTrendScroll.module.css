@@ -1,0 +1,238 @@
+/* ───────────────────────────────────────────────
+   Scroll-driven abstraction trendline.
+   Base lineage (Assembly→…→Jac) draws in on mount,
+   exactly like the static trend. The Jaseci skyrocket
+   is gated entirely by --reveal (0→1), set from scroll
+   progress in the component — nothing about it animates
+   until you scroll the section into view.
+   ─────────────────────────────────────────────── */
+
+.wrap {
+  --reveal: 0;
+  width: 100%;
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+.svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+  font-family: var(--font-mono);
+}
+
+/* ── Axes ──────────────────────────────────────────────────────────────── */
+
+.axis {
+  stroke: #000;
+  stroke-width: 1;
+  opacity: 0;
+  animation: fade 0.5s ease forwards;
+}
+.axisLabel {
+  fill: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  opacity: 0;
+  animation: fade 0.6s ease 0.2s forwards;
+}
+
+/* ── Vertical guides ───────────────────────────────────────────────────── */
+
+.guide {
+  stroke: #000;
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+  opacity: 0;
+  animation: fadeGuide 0.5s ease forwards;
+}
+
+/* ── Trend lines ───────────────────────────────────────────────────────── */
+
+.legacy,
+.leap {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.legacy {
+  stroke: var(--foreground);
+  stroke-width: 2.5;
+  animation: draw 1.3s ease 0.2s forwards;
+}
+.leap {
+  stroke: var(--accent);
+  stroke-width: 3.5;
+  animation: draw 0.9s ease 1.2s forwards;
+}
+
+/* ── Nodes ─────────────────────────────────────────────────────────────── */
+
+.node {
+  fill: var(--background);
+  stroke: var(--foreground);
+  stroke-width: 2;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.nodeAccent {
+  fill: var(--accent);
+  stroke: var(--accent);
+}
+
+/* ── Labels ────────────────────────────────────────────────────────────── */
+
+.xlabel {
+  fill: var(--foreground);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fade 0.5s ease forwards;
+}
+.xlabelAccent {
+  fill: var(--accent);
+}
+
+.annotation {
+  fill: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  opacity: 0;
+  animation: fade 0.6s ease forwards;
+}
+
+/* ── The Jaseci skyrocket — driven by --reveal (no mount animation) ──────── */
+
+.skyrocket {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--reveal));
+}
+
+.jaseciGuide {
+  stroke: #8b3bff;
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+  opacity: calc(var(--reveal) * 0.3);
+}
+
+/* whole peak fades/scales in over the back half of the reveal */
+.jaseci {
+  opacity: clamp(0, calc((var(--reveal) - 0.45) / 0.35), 1);
+}
+
+.jaseciCore {
+  fill: #8b3bff;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(clamp(0.2, calc((var(--reveal) - 0.45) / 0.35), 1));
+}
+
+.jaseciRing {
+  fill: none;
+  stroke: #8b3bff;
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ripple 2.6s ease-out infinite;
+}
+
+.jaseciLabel {
+  fill: #8b3bff;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  opacity: clamp(0, calc((var(--reveal) - 0.7) / 0.25), 1);
+}
+
+.jaseciSub {
+  fill: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: clamp(0, calc((var(--reveal) - 0.78) / 0.2), 1);
+}
+
+.jaseciXLabel {
+  fill: #8b3bff;
+  animation: none;
+  opacity: clamp(0, calc((var(--reveal) - 0.7) / 0.25), 1);
+}
+
+/* ── Keyframes ─────────────────────────────────────────────────────────── */
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes fade {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeGuide {
+  to {
+    opacity: 0.22;
+  }
+}
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes ripple {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+/* ── Reduced motion — final state, no draw / no ripple ──────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .axis,
+  .axisLabel,
+  .xlabel,
+  .annotation {
+    opacity: 1;
+    animation: none;
+  }
+  .guide {
+    opacity: 0.22;
+    animation: none;
+  }
+  .legacy,
+  .leap {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+  .node {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+  .jaseciRing {
+    animation: none;
+    opacity: 0.3;
+  }
+}
