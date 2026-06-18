@@ -221,6 +221,7 @@ export default function Home() {
 
           {/* RIGHT — copy scrolls past; the trend hits Jaseci at the turn */}
           <div className={styles.askEcoContent}>
+            <h2 className={styles.h2}>Developers needed more.</h2>
             <p className={styles.body}>
               They came to me for one thing — agentic AI. And Jac was good at it.
               But an agent is just one corner of what they were really building:
@@ -259,8 +260,13 @@ export default function Home() {
             </p>
 
             <div className={styles.bento}>
-              {ECOSYSTEM_MODULES.flat().map((mod) => (
-                <div key={mod.name} className={styles.bentoBox}>
+              {ECOSYSTEM_MODULES.flat().map((mod, i) => (
+                <div
+                  key={mod.name}
+                  className={styles.bentoBox}
+                  data-col={i % 3}
+                  data-row={Math.floor(i / 3)}
+                >
                   <div className={styles.bentoStat}>
                     {mod.stat}
                     {mod.statAccent ? (
@@ -274,10 +280,6 @@ export default function Home() {
                 </div>
               ))}
             </div>
-
-            <h2 className={`${styles.h2} ${styles.askEcoHeading}`}>
-              Developers needed more.
-            </h2>
 
             <a href="/ecosystem" className={styles.cta}>
               See the full ecosystem →

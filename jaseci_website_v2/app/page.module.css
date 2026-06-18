@@ -80,8 +80,8 @@
 
 .askEcoLayout {
   display: grid;
-  grid-template-columns: minmax(340px, 1fr) 1.5fr;
-  gap: 64px;
+  grid-template-columns: minmax(460px, 1.25fr) 1fr;
+  gap: 56px;
   align-items: start;
 }
 
@@ -96,15 +96,17 @@
 }
 
 .askVisual {
+  /* pin the graph and centre it in the viewport so it stays big and centred,
+     following you down the whole act while the copy scrolls past. The reveal
+     is anchor-driven (the "So I built Jaseci." heading), so this sticky offset
+     is free to be whatever centres the graph. */
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* pin the graph so it follows you down while the copy scrolls past;
-     align-self:start keeps it its natural height so it has room to travel.
-     top here must match STICKY_TOP in AbstractionTrendScroll.tsx. */
-  position: sticky;
-  top: 100px;
-  align-self: start;
 }
 
 .accent {
@@ -609,27 +611,62 @@
 
 /* ---------- ecosystem ---------- */
 
-/* bento — uniform flexbox grid (3 equal tiles per row, wraps to 4 rows) */
+/* bento — a 2-D hover grid (3 × 4). Hover any tile and it expands in BOTH
+   axes while the tiles around it shrink; its description fades in. Pure CSS:
+   :has() reads which tile's row/column is hovered and re-weights the tracks. */
 .bento {
   margin-top: 48px;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: repeat(4, 1fr);
+  height: 600px;
   border-top: 1px solid #000;
   border-left: 1px solid #000;
 }
 
+/* the expand/shrink only makes sense with a pointer, and the 3×4 track math
+   only holds above the stacking breakpoint */
+@media (hover: hover) and (min-width: 601px) {
+  .bento {
+    transition: grid-template-columns 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+      grid-template-rows 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .bento:has([data-col="0"]:hover) {
+    grid-template-columns: 1.6fr 0.7fr 0.7fr;
+  }
+  .bento:has([data-col="1"]:hover) {
+    grid-template-columns: 0.7fr 1.6fr 0.7fr;
+  }
+  .bento:has([data-col="2"]:hover) {
+    grid-template-columns: 0.7fr 0.7fr 1.6fr;
+  }
+  .bento:has([data-row="0"]:hover) {
+    grid-template-rows: 1.6fr 0.8fr 0.8fr 0.8fr;
+  }
+  .bento:has([data-row="1"]:hover) {
+    grid-template-rows: 0.8fr 1.6fr 0.8fr 0.8fr;
+  }
+  .bento:has([data-row="2"]:hover) {
+    grid-template-rows: 0.8fr 0.8fr 1.6fr 0.8fr;
+  }
+  .bento:has([data-row="3"]:hover) {
+    grid-template-rows: 0.8fr 0.8fr 0.8fr 1.6fr;
+  }
+}
+
 .bentoBox {
   position: relative;
-  flex: 0 0 calc(100% / 3);
   min-width: 0;
-  min-height: 190px;
-  padding: 20px;
+  min-height: 0;
+  padding: 18px;
   border-right: 1px solid #000;
   border-bottom: 1px solid #000;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  transition: background 0.25s ease, color 0.25s ease;
+  justify-content: space-between;
+  gap: 10px;
+  overflow: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .bentoBox:hover {
@@ -638,7 +675,7 @@
 }
 
 .bentoStat {
-  font-size: 40px;
+  font-size: 30px;
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.04em;
@@ -651,26 +688,43 @@
 
 .bentoName {
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
+/* hidden until the tile is hovered (and roomy enough to read it) */
 .bentoDesc {
-  margin-top: 10px;
-  font-size: 14px;
-  line-height: 1.45;
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.12s;
 }
 
+.bentoBox:hover .bentoDesc {
+  opacity: 1;
+}
+
+/* stacked: a plain grid with everything visible, no hover choreography */
 @media (max-width: 600px) {
+  .bento {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: none;
+    height: auto;
+  }
   .bentoBox {
-    flex: 0 0 50%;
+    min-height: 170px;
+  }
+  .bentoDesc {
+    opacity: 1;
   }
 }
 
 @media (max-width: 420px) {
-  .bentoBox {
-    flex: 0 0 100%;
+  .bento {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1040,6 +1094,7 @@
   /* stacked: the graph shows up top (static), copy flows beneath it */
   .askVisual {
     position: static;
+    height: auto;
     margin-bottom: 24px;
   }
 
