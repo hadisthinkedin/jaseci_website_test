@@ -1,30 +1,9 @@
 /* ───────────────────────────────────────────────
-   Abstraction trendline — draw-in + "Dolly-to-Launch" loop.
-
-   INTRO (one-shot, `forwards`): the two trend paths use
-   pathLength="1", so the dash trick draws them regardless
-   of real length. Nodes / labels / guides stagger in via
-   inline animation-delay set per index in the component.
-
-   LOOP (infinite, period T=9s, starts after the ~2.85s
-   draw-in via animation-delay): a camera dolly pushes the
-   scene in about the fixed Jac peak (500,96); the legacy
-   ladder recedes + fades while the Jac rocket cluster
-   blooms forward and lifts. Only transform + opacity are
-   animated. Every loop keyframe returns each property to
-   its exact 0% value at 100% ⇒ seamless wrap.
-
-   PHASE-LOCK CONTRACT: .dolly / .graphLayer / .rocketRig /
-   .rocket ALL share 9s duration, 2.85s delay and the same
-   cubic-bezier(.45,0,.55,1) timing-function. If you edit
-   one, edit all — otherwise the rocket nose drifts off the
-   node mid-loop. The .flame flicker (.42s) is intentionally
-   independent and self-seamless (0% == 100%).
-
-   BROWSER FLOOR: the shared (500,96) vanishing point relies
-   on `transform-box: view-box` (Safari 15.4+, Chrome 64+,
-   Firefox 55+). The Next 16 modern-engine target is well
-   inside that; pre-2022 Safari is not supported.
+   Abstraction trendline — draw-in animation.
+   The two trend paths use pathLength="1", so the
+   dash trick draws them regardless of real length.
+   Nodes / labels / guides stagger in via inline
+   animation-delay set per index in the component.
    ─────────────────────────────────────────────── */
 
 .wrap {
@@ -39,31 +18,6 @@
   display: block;
   overflow: visible;
   font-family: var(--font-mono);
-}
-
-/* ── Camera / group rigs (the loop) ────────────────────────────────────────
-   Shared pivot for all three groups = the Jac node in viewBox user space.
-   transform-box: view-box resolves transform-origin in fixed viewBox units
-   (NOT each group's wandering bbox) so the vanishing point is shared. */
-
-.dolly,
-.graphLayer,
-.rocketRig {
-  transform-box: view-box;
-  transform-origin: 500px 96px;
-}
-
-.dolly {
-  will-change: transform;
-  animation: dolly 9s cubic-bezier(0.45, 0, 0.55, 1) 2.85s infinite;
-}
-.graphLayer {
-  will-change: transform, opacity;
-  animation: recede 9s cubic-bezier(0.45, 0, 0.55, 1) 2.85s infinite;
-}
-.rocketRig {
-  will-change: transform;
-  animation: rocketGrow 9s cubic-bezier(0.45, 0, 0.55, 1) 2.85s infinite;
 }
 
 /* ── Axes ──────────────────────────────────────────────────────────────── */
@@ -153,61 +107,7 @@
   animation: fade 0.6s ease forwards;
 }
 
-/* ── Rocket glyph (B&W body + single orange accent) ─────────────────────── */
-
-.rocket {
-  transform-box: view-box;
-  transform-origin: 500px 96px;
-  will-change: transform;
-  /* STATIC WELD (GOTCHA #1): the rocket geometry is authored in local coords
-     around (0,0), so it MUST carry a base transform that places it on the Jac
-     peak. rocketLift has a 2.85s delay + default fill-mode:none, so during the
-     intro draw-in the keyframe value is NOT applied — without this base the
-     rocket would render at the viewBox origin (top-left) then snap to (500,96)
-     when the loop starts. This base matches rocketLift's 0%/100% translate, so
-     it composes cleanly and there is no jump at handoff. */
-  transform: translate(500px, 96px);
-  /* keyframe transform always begins with translate(500px,96px) so the
-     nozzle stays welded to the Jac peak. Shares the loop's 9s/2.85s/easing. */
-  animation: rocketLift 9s cubic-bezier(0.45, 0, 0.55, 1) 2.85s infinite;
-}
-
-.rocketBody {
-  fill: var(--background);
-  stroke: var(--foreground);
-  stroke-width: 2;
-  stroke-linejoin: round;
-}
-.rocketWindow {
-  fill: var(--accent);
-}
-.fin,
-.nozzle {
-  fill: var(--foreground);
-}
-
-.flame {
-  fill: var(--accent);
-}
-.flameCore {
-  fill: var(--background);
-}
-.flame,
-.flameCore {
-  /* top of the flame = the nozzle, so flicker scales away from the craft */
-  transform-box: fill-box;
-  transform-origin: 50% 0%;
-  opacity: 0;
-  /* macro ignite over the 9s loop + fast independent self-seamless flicker.
-     The flame is a child of the now statically-welded .rocket group, so during
-     the 2.85s intro delay it inherits the correct (500,96) base and simply
-     stays invisible via this opacity:0 until ignite begins — no flash at the
-     viewBox origin. */
-  animation: ignite 9s cubic-bezier(0.45, 0, 0.55, 1) 2.85s infinite,
-    flicker 0.42s ease-in-out 2.85s infinite;
-}
-
-/* ── Intro keyframes (one-shot) ────────────────────────────────────────── */
+/* ── Keyframes ─────────────────────────────────────────────────────────── */
 
 @keyframes draw {
   to {
@@ -235,82 +135,7 @@
   }
 }
 
-/* ── Loop keyframes (infinite, seamless 0% == 100%) ────────────────────── */
-
-@keyframes dolly {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  45%,
-  55% {
-    transform: scale(1.22);
-  }
-}
-@keyframes recede {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  45%,
-  55% {
-    /* deep recede so it WINS against the dolly zoom: net on-screen size of the
-       legacy ladder at peak = dolly(1.22) x 0.6 = 0.73x, a clear ~27% shrink
-       (not the ~5% you'd get with 0.78), so the ladder visibly recedes rather
-       than only fading. */
-    transform: scale(0.6);
-    opacity: 0.12;
-  }
-}
-@keyframes rocketGrow {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  45%,
-  55% {
-    transform: scale(1.1);
-  }
-}
-/* rocket vertical lift — kept small so it stays welded + in-frame.
-   Every stop begins with translate(500px,96px) (GOTCHA #1). */
-@keyframes rocketLift {
-  0%,
-  100% {
-    transform: translate(500px, 96px) scale(1) translateY(0);
-  }
-  45%,
-  55% {
-    transform: translate(500px, 96px) scale(1) translateY(-10px);
-  }
-}
-@keyframes ignite {
-  0%,
-  8% {
-    opacity: 0;
-  }
-  14%,
-  90% {
-    opacity: 1;
-  }
-  96%,
-  100% {
-    opacity: 0;
-  }
-}
-/* independent fast flicker — its own short self-seamless loop */
-@keyframes flicker {
-  0%,
-  100% {
-    transform: scaleY(0.8);
-  }
-  50% {
-    transform: scaleY(1.15);
-  }
-}
-
-/* ── Respect reduced motion — static assembled graph, parked rocket ─────── */
+/* ── Respect reduced motion — render the final state, no draw ───────────── */
 
 @media (prefers-reduced-motion: reduce) {
   .axis,
@@ -332,25 +157,6 @@
   .node {
     opacity: 1;
     transform: none;
-    animation: none;
-  }
-  /* freeze the camera/loop rigs at rest */
-  .dolly,
-  .graphLayer,
-  .rocketRig,
-  .rocket {
-    animation: none;
-    transform: none;
-    opacity: 1;
-  }
-  /* park the rocket welded on the Jac peak, scale 1 */
-  .rocket {
-    transform: translate(500px, 96px);
-  }
-  /* flame implies motion ⇒ hide it entirely (not just freeze) */
-  .flame,
-  .flameCore {
-    opacity: 0;
     animation: none;
   }
 }
