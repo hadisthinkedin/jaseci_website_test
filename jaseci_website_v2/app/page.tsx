@@ -127,19 +127,27 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
   ],
 ];
 
-// Re-grouped into climbing columns for the staircase. Each number is how many
-// boxes stack in that column (left→right) and sums to 12 — some columns are a
-// single tall box, others two stacked, for the varied bento rhythm.
-const STACK_PATTERN = [1, 2, 1, 2, 1, 2, 1, 2];
+// The ecosystem skyline is hand-tuned, not generated: each column declares how
+// many boxes stack in it (1–4) and how tall it stands (% of the row). Both are
+// deliberately irregular — the box counts vary and the heights jump and dip
+// rather than climbing evenly — so it reads as a skyline, not a clean staircase.
+// Box counts sum to 12.
+const ECOSYSTEM_LAYOUT = [
+  { boxes: 1, h: 44 },
+  { boxes: 2, h: 64 },
+  { boxes: 1, h: 52 },
+  { boxes: 4, h: 90 },
+  { boxes: 1, h: 68 },
+  { boxes: 3, h: 100 },
+];
 const ECOSYSTEM_COLUMNS = (() => {
   const flat = ECOSYSTEM_MODULES.flat();
-  const cols: (typeof flat)[] = [];
   let idx = 0;
-  for (const size of STACK_PATTERN) {
-    cols.push(flat.slice(idx, idx + size));
-    idx += size;
-  }
-  return cols;
+  return ECOSYSTEM_LAYOUT.map(({ boxes, h }) => {
+    const modules = flat.slice(idx, idx + boxes);
+    idx += boxes;
+    return { h, modules };
+  });
 })();
 
 export default function Home() {
@@ -160,8 +168,8 @@ export default function Home() {
         <div className={styles.heroGrid}>
           <div className={styles.heroCopy}>
             <h1 className={styles.heroHeadline}>
-              Jac: the language built to program AI. AI Applications. AI
-              Agents. AI Workflows.{" "}
+              Jac: the language built to program  <br /> AI Applications.  <br />AI
+              Agents.  <br />AI Workflows.{" "}  <br />
               <span className={styles.accent}>AI Everything.</span>
             </h1>
             <p className={styles.heroLede}>
@@ -223,7 +231,6 @@ export default function Home() {
       {/* ---------- THE ASK → SO I BUILT JASECI (one pinned trend) ---------- */}
 
       <section className={styles.section}>
-        <div className={styles.eyebrow}>The Ask</div>
         <div className={styles.askEcoLayout}>
           {/* LEFT — the trend, pinned, follows you down across the whole act */}
           <div className={styles.askVisual}>
@@ -242,10 +249,6 @@ export default function Home() {
               those potholes. We designed Jac to be that evolutionary leap; how do
               you turn a language into the next evolutionary step?
             </p>
-
-            <a href="#ecosystem-grid" className={styles.cta}>
-              See the full ecosystem →
-            </a>
           </div>
         </div>
       </section>
@@ -263,9 +266,9 @@ export default function Home() {
               <div
                 className={styles.stairCol}
                 key={c}
-                style={{ "--c": c } as CSSProperties}
+                style={{ "--h": col.h } as CSSProperties}
               >
-                {col.map((mod) => (
+                {col.modules.map((mod) => (
                   <div
                     key={mod.name}
                     className={`${styles.bentoBox} ${
@@ -298,6 +301,10 @@ export default function Home() {
               </div>
             ))}
           </div>
+
+          <a href="#ecosystem-grid" className={styles.ecoCta}>
+            See the full ecosystem →
+          </a>
         </div>
       </section>
 

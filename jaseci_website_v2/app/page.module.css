@@ -627,6 +627,8 @@
 
 .ecoStage {
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 /* the bottom-left landing, sitting in the open space above the short left steps */
@@ -653,14 +655,54 @@
   scroll-margin-top: 96px;
 }
 
+/* a column in the skyline — its height comes straight from the layout config
+   (--h, a %), so the row rises and dips irregularly. Holds 1–4 stacked boxes. */
+.stairCol {
+  flex: 1 1 0;
+  min-width: 0;
+  height: calc(var(--h) * 1%);
+  /* connect columns — overlap the shared vertical hairline */
+  margin-left: -1px;
+  display: flex;
+  flex-direction: column;
+  transition: flex-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.stairCol:first-child {
+  margin-left: 0;
+}
+
+/* the CTA hangs off the bottom of the two rightmost columns (the rightmost third
+   of the six), connected to the baseline by an overlapped hairline */
+.ecoCta {
+  align-self: flex-end;
+  width: calc(100% / 3);
+  box-sizing: border-box;
+  margin-top: -1px;
+  padding: 22px 28px;
+  border: 1px solid #000;
+  background: #000;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.ecoCta:hover {
+  background: #fff;
+  color: #000;
+}
+
 .bentoBox {
   position: relative;
   flex: 1 1 0;
-  min-width: 0;
-  /* the step: each box is taller than the one on its left (i = 0…11) */
-  height: calc(38% + var(--i) * 5.63%);
-  /* connect the boxes — overlap the 1px borders into one shared hairline */
-  margin-left: -1px;
+  min-height: 0;
+  /* connect stacked boxes — overlap the shared horizontal hairline */
+  margin-top: -1px;
   padding: 14px 16px;
   border: 1px solid #000;
   background: #fff;
@@ -672,20 +714,25 @@
   transition: flex-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
     background 0.3s ease, color 0.3s ease;
 }
-.bentoBox:first-child {
-  margin-left: 0;
+.stairCol > .bentoBox:first-child {
+  margin-top: 0;
 }
 
-/* Jac-Scale and Jac-Client ship expanded (wider, description already showing) */
+/* Jac-Scale and Jac-Client ship expanded — the bigger half of their column,
+   description already showing */
 .bentoBox.bentoBoxActive {
-  flex-grow: 2;
+  flex-grow: 1.8;
 }
 .bentoBoxActive .bentoDesc {
   opacity: 1;
 }
 
-/* the accordion — pointer only, above the stacked breakpoint */
+/* the accordion — pointer only, above the stacked breakpoint. Hovering a box
+   widens its whole column AND grows the box within it (its stackmate shrinks). */
 @media (hover: hover) and (min-width: 901px) {
+  .stairCol:has(.bentoBox:hover) {
+    flex-grow: 2.6;
+  }
   .bentoBox:hover {
     flex-grow: 4;
     background: #000;
@@ -758,14 +805,16 @@
     height: auto;
     margin-top: 24px;
   }
-  .bentoBox {
+  .stairCol {
     height: auto;
-    min-height: 110px;
     margin-left: 0;
     margin-top: -1px;
   }
-  .bentoBox:first-child {
+  .stairCol:first-child {
     margin-top: 0;
+  }
+  .bentoBox {
+    min-height: 110px;
   }
   .bentoDesc,
   .bentoStatWord {
@@ -773,6 +822,10 @@
   }
   .bentoAccentSwap {
     display: none;
+  }
+  .ecoCta {
+    width: auto;
+    align-self: stretch;
   }
 }
 
