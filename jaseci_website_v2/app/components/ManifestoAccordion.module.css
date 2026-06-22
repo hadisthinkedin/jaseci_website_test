@@ -10,10 +10,19 @@
 .box {
   border: 1px solid #000;
   background: var(--background);
-  transition: border-color 0.18s ease;
+  transition: background 0.18s ease, border-color 0.18s ease;
 }
+/* hover → fill the box orange and flip its text to white */
 .box:hover {
+  background: var(--accent);
   border-color: var(--accent);
+}
+.box:hover .headline {
+  color: #fff;
+}
+.box:hover .body {
+  color: #fff;
+  border-top-color: rgba(255, 255, 255, 0.5);
 }
 
 /* clickable header row */
@@ -70,19 +79,20 @@
 .box[data-open="true"] .icon::after {
   transform: translate(-50%, -50%) scaleY(0);
 }
-/* hover feedback on the button */
-.head:hover .icon {
-  border-color: var(--accent);
-}
-.head:hover .icon::before,
-.head:hover .icon::after {
-  background: var(--accent);
-}
 /* open state — invert the button so it reads as "active" */
 .box[data-open="true"] .icon {
   background: #000;
 }
 .box[data-open="true"] .icon::before {
+  background: #fff;
+}
+/* hover → box fills orange, so the button goes white to stay visible */
+.box:hover .icon {
+  background: transparent;
+  border-color: #fff;
+}
+.box:hover .icon::before,
+.box:hover .icon::after {
   background: #fff;
 }
 

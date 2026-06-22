@@ -341,12 +341,10 @@ export default function Home() {
             </h2>
             <p className={styles.body}>
               Let me give you a small history lesson: Dennis Ritchie, the
-              creator of C, and this is his philosophy of why he built, in my
-              opinion, the greatest language (don&rsquo;t kill me): people
-              should spend their time coding something they believe is
-              important, nothing else. He had that instinct to take away the
+              creator of C, and this is his philosophy: people should code
+              what&rsquo;s important, that&rsquo;s it. In 1989, he took away the
               boilerplate that stood between us and the human purpose to ideate
-              and create. Let Jaseci remove the tooling bottleneck.
+              and create. Let Jaseci remove the tooling bottleneck in 2026.
             </p>
           </div>
 
