@@ -108,15 +108,6 @@
   justify-content: center;
 }
 
-/* the trend graph, relocated out of the (former) pinned column to the bottom of
-   the ask section and right-aligned, so it lands just above the ecosystem
-   heading in the next section */
-.askGraph {
-  margin-top: clamp(56px, 7vw, 104px);
-  margin-left: auto;
-  max-width: 720px;
-}
-
 .accent {
   color: var(--accent);
 }
@@ -285,18 +276,13 @@
 
 .jarSection {
   display: grid;
-  /* mirror the hero grid (text-left/visual-right) as visual-left/text-right,
-     in the same 1440px frame, so the manifesto copy lands at the same ~806px
-     width as the hero "Jac, the language built to program…" headline. */
-  grid-template-columns: minmax(300px, 1fr) 1.7fr;
+  grid-template-columns: minmax(280px, 360px) 1fr;
   gap: 64px;
   align-items: center;
-  max-width: 1440px;
 }
 
 .jarCopy {
-  /* fills the 1.7fr column — matches the hero copy width (no narrower cap) */
-  max-width: none;
+  max-width: 620px;
 }
 
 .jarColumn {
@@ -641,14 +627,18 @@
 
 .ecoStage {
   position: relative;
-  --cta-h: 110px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* the section heading sits in normal flow above the skyline so it never overlaps
-   the boxes (same as the stacked/mobile behaviour, just kept on desktop too) */
+/* the bottom-left landing, sitting in the open space above the short left steps */
 .stairHeader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
   margin: 0;
-  max-width: 900px;
+  width: clamp(240px, 28%, 420px);
   font-size: clamp(30px, 3.4vw, 50px);
   line-height: 1.04;
   letter-spacing: -0.02em;
@@ -681,22 +671,13 @@
   margin-left: 0;
 }
 
-/* the two rightmost columns sit on top of the CTA — lift them by its height so
-   the CTA fills the bottom-right corner at the baseline (the same row as the 1ms
-   box to its left), overlapping the shared hairline */
-.stairCol:nth-last-child(-n + 2) {
-  margin-bottom: calc(var(--cta-h) - 1px);
-}
-
-/* the CTA fills the bottom-right corner at the baseline (height = --cta-h,
-   matching the short 1ms column beside it), spanning the two rightmost columns */
+/* the CTA hangs off the bottom of the two rightmost columns (the rightmost third
+   of the six), connected to the baseline by an overlapped hairline */
 .ecoCta {
-  position: absolute;
-  right: 0;
-  bottom: 0;
+  align-self: flex-end;
   width: calc(100% / 3);
-  height: var(--cta-h);
   box-sizing: border-box;
+  margin-top: -1px;
   padding: 22px 28px;
   border: 1px solid #000;
   background: #000;
@@ -842,14 +823,9 @@
   .bentoAccentSwap {
     display: none;
   }
-  .stairCol:nth-last-child(-n + 2) {
-    margin-bottom: 0;
-  }
   .ecoCta {
-    position: static;
     width: auto;
-    height: auto;
-    padding: 20px 24px;
+    align-self: stretch;
   }
 }
 
@@ -1205,18 +1181,6 @@
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-}
-
-.madeWith {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.heart {
-  width: 11px;
-  height: 11px;
-  display: inline-block;
 }
 
 /* ---------- responsive ---------- */
