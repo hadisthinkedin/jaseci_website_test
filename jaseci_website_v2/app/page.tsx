@@ -128,17 +128,20 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
 ];
 
 // The ecosystem skyline is hand-tuned, not generated: each column declares how
-// many boxes stack in it (1–4) and how tall it stands (% of the row). Both are
-// deliberately irregular — the box counts vary and the heights jump and dip
-// rather than climbing evenly — so it reads as a skyline, not a clean staircase.
-// Box counts sum to 12.
+// many boxes stack in it and how tall it stands (% of the row). Both are
+// deliberately irregular — box counts jump around (1–4, no fixed cadence) and
+// heights rise and dip rather than climbing evenly — so it reads as a jagged
+// skyline. The short single-box column (h: 24 — the "1ms" Jac-Serve box, 4th
+// column) lands on the baseline right beside the CTA, which fills the bottom of
+// the two rightmost columns at that same height. Counts total 12 today (the
+// modules), but nothing forces that — add columns/boxes freely.
 const ECOSYSTEM_LAYOUT = [
   { boxes: 1, h: 44 },
-  { boxes: 2, h: 64 },
-  { boxes: 1, h: 52 },
-  { boxes: 4, h: 90 },
-  { boxes: 1, h: 68 },
-  { boxes: 3, h: 100 },
+  { boxes: 4, h: 100 },
+  { boxes: 2, h: 60 },
+  { boxes: 1, h: 24 },
+  { boxes: 2, h: 72 },
+  { boxes: 2, h: 58 },
 ];
 const ECOSYSTEM_COLUMNS = (() => {
   const flat = ECOSYSTEM_MODULES.flat();
@@ -168,7 +171,7 @@ export default function Home() {
         <div className={styles.heroGrid}>
           <div className={styles.heroCopy}>
             <h1 className={styles.heroHeadline}>
-              Jac: the language built to program  <br /> AI Applications.  <br />AI
+              Jac, the language built to program  <br /> AI Applications.  <br />AI
               Agents.  <br />AI Workflows.{" "}  <br />
               <span className={styles.accent}>AI Everything.</span>
             </h1>
@@ -228,28 +231,26 @@ export default function Home() {
 
       <ProofGrid />
 
-      {/* ---------- THE ASK → SO I BUILT JASECI (one pinned trend) ---------- */}
+      {/* ---------- THE ASK → SO I BUILT JASECI ---------- */}
 
       <section className={styles.section}>
-        <div className={styles.askEcoLayout}>
-          {/* LEFT — the trend, pinned, follows you down across the whole act */}
-          <div className={styles.askVisual}>
-            <AbstractionTrendScroll />
-          </div>
+        {/* copy leads; the trend graph now sits at the bottom-right, just above
+            the ecosystem heading */}
+        <div className={styles.askEcoContent}>
+          <h2 className={styles.h2}>Developers needed more.</h2>
+          <p className={styles.body} data-jaseci-anchor>
+            Jac was good at building an agentic AI, but developers weren&rsquo;t
+            just building AI alone. Developers were building applications,
+            including the data, the scale, and the deployment. This highlighted a
+            large problem: Jac was too slow in production, and after a lengthy
+            analysis, the problem was dependency on third-party tools to fill
+            those potholes. We designed Jac to be that evolutionary leap; how do
+            you turn a language into the next evolutionary step?
+          </p>
+        </div>
 
-          {/* RIGHT — copy scrolls past; the trend hits Jaseci at the turn */}
-          <div className={styles.askEcoContent}>
-            <h2 className={styles.h2}>Developers needed more.</h2>
-            <p className={styles.body} data-jaseci-anchor>
-              Jac was good at building an agentic AI, but developers weren&rsquo;t
-              just building AI alone. Developers were building applications,
-              including the data, the scale, and the deployment. This highlighted
-              a large problem: Jac was too slow in production, and after a lengthy
-              analysis, the problem was dependency on third-party tools to fill
-              those potholes. We designed Jac to be that evolutionary leap; how do
-              you turn a language into the next evolutionary step?
-            </p>
-          </div>
+        <div className={styles.askGraph}>
+          <AbstractionTrendScroll />
         </div>
       </section>
 
@@ -345,7 +346,7 @@ export default function Home() {
                   <span className={styles.projectCardArrow} aria-hidden="true">
                     ↗
                   </span>
-                </div>I 
+                </div>
                 <div>
                   <div className={styles.projectCardTitle}>Todo App</div>
                   <p className={styles.projectCardDesc}>
@@ -495,6 +496,17 @@ export default function Home() {
 
       <footer className={styles.footer}>
         <div>© Jaseci</div>
+        <div className={styles.madeWith} aria-label="Made with love">
+          made with{" "}
+          <svg
+            className={styles.heart}
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+          </svg>
+        </div>
         <div className={styles.navLinks}>
           <a href="/docs">Docs</a>
           <a href="https://github.com/jaseci-labs">GitHub</a>
