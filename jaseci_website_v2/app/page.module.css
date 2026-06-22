@@ -75,45 +75,24 @@
   margin-top: 24px;
 }
 
-/* ---------- the ask → so i built jaseci — one pinned trend ---------- */
+/* ---------- the ask → so i built jaseci ---------- */
 
-/* the ask section is a tall scroll track: the copy pins in view on the right
-   while the trend graph descends on the left, from the header level down to
-   just above the ecosystem heading */
-.askScroll {
-  /* tall scroll track that gives the pinned stage room to be scrolled through */
-  position: relative;
-  min-height: 220vh;
-}
-
-.askStage {
-  /* ONE sticky element pins the whole scene for the section's scroll, so the
-     copy and graph can't fight each other for stickiness */
-  position: sticky;
-  top: 0;
-  height: 100vh;
+/* simple side-by-side: graph on the left, copy on the right, at natural height.
+   (no tall scroll track — that left a big empty gap before the ecosystem) */
+.askEcoLayout {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 56px;
+  align-items: center;
 }
 
 .askVisual {
-  /* graph column (left); the graph inside translates from the top of the stage
-     down toward the bottom via --travel (set from scroll progress), so it
-     descends as you scroll while the copy stays put */
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 48%;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
 }
 
 .askEcoContent {
-  /* copy (right) holds a fixed position near the top, level with the header */
-  position: absolute;
-  right: 0;
-  top: 96px;
-  width: 46%;
   min-width: 0;
 }
 
@@ -1250,24 +1229,10 @@
     min-height: auto;
   }
 
-  /* stacked: a normal-flow section, graph up top (static, no travel),
-     copy beneath it */
-  .askScroll {
-    min-height: 0;
-  }
-  .askStage {
-    position: static;
-    height: auto;
-  }
-  .askVisual {
-    position: static;
-    width: auto;
-    margin-bottom: 24px;
-  }
-  .askEcoContent {
-    position: static;
-    width: auto;
-    top: auto;
+  /* stacked: graph on top, copy beneath */
+  .askEcoLayout {
+    grid-template-columns: 1fr;
+    gap: 32px;
   }
 
   .jarSection {

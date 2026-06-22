@@ -41,49 +41,32 @@ export default function AbstractionTrendScroll() {
     const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
     const smooth = (t: number) => t * t * (3 - 2 * t);
 
-    // NOTE: we intentionally do NOT early-return for prefers-reduced-motion —
-    // the descent is scroll-linked (not autoplay) and is the whole point of the
-    // section. Under reduced motion we just skip the skyrocket's draw-in.
-    const reduceMotion =
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    const reduce = window.matchMedia?.(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (reduce) {
+      wrap.style.setProperty("--reveal", "1");
+      return;
+    }
 
-    // The graph sits in a full-viewport sticky stage inside a tall section. As
-    // the section scrolls through, the graph descends the stage (from the top,
-    // level with the header, down to ~the bottom, just above the next section's
-    // heading) and the Jaseci skyrocket draws in (--reveal). Both are driven by
-    // one scroll progress p (0 at the section top, 1 at its bottom).
-    const section = wrap.closest("section");
-
-    // apply the descent as a DIRECT inline transform — no CSS-var indirection,
-    // so nothing in the cascade can override or fail to read it
-    const setTravel = (px: number) => {
-      wrap.style.transform = `translateY(${px.toFixed(1)}px)`;
-    };
+    // The graph is pinned (sticky) while the whole act scrolls past it; the
+    // Jaseci skyrocket is timed to the "So I built Jaseci." heading. The trend
+    // hits Jaseci exactly as that heading rises into view.
+    const anchor = document.querySelector("[data-jaseci-anchor]");
 
     const compute = () => {
-      // Below 900px the layout stacks and the graph isn't pinned — show the
-      // finished trend, no travel.
-      if (window.innerWidth <= 900 || !section) {
+      // Below 900px the layout stacks and the graph isn't pinned — just show
+      // the finished trend so the skyrocket isn't stranded off-screen.
+      if (window.innerWidth <= 900 || !anchor) {
         wrap.style.setProperty("--reveal", "1");
-        setTravel(0);
         return;
       }
       const vh = window.innerHeight;
-      const rect = section.getBoundingClientRect();
-      const range = section.offsetHeight - vh; // scroll distance through section
-      const p = range > 0 ? clamp01(-rect.top / range) : 0;
-
-      // descend from the top of the sticky stage to ~its bottom, leaving a small
-      // gap so the graph only NEARLY touches the next heading
-      const maxTravel = Math.max(0, vh - wrap.offsetHeight - 32);
-      setTravel(p * maxTravel);
-
-      // skyrocket: shown immediately under reduced motion, otherwise it draws in
-      // over the middle stretch of the descent
-      wrap.style.setProperty(
-        "--reveal",
-        reduceMotion ? "1" : smooth(clamp01((p - 0.1) / 0.6)).toFixed(4)
-      );
+      const r = anchor.getBoundingClientRect();
+      // 0 when the heading sits low (~88% down the viewport), 1 by the time it
+      // rises to ~32% down — i.e. as you arrive at "So I built Jaseci."
+      const p = clamp01((0.88 * vh - r.top) / (0.56 * vh));
+      wrap.style.setProperty("--reveal", smooth(p).toFixed(4));
     };
 
     let ticking = false;

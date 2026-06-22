@@ -9,13 +9,9 @@
 
 .wrap {
   --reveal: 0;
-  --travel: 0px;
   width: 100%;
   max-width: 720px;
   margin: 0 auto;
-  /* scroll-driven descent down the sticky stage (see component) */
-  transform: translateY(var(--travel));
-  will-change: transform;
 }
 
 .svg {

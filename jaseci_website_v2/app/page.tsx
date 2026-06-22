@@ -271,17 +271,14 @@ export default function Home() {
 
       {/* ---------- THE ASK → SO I BUILT JASECI ---------- */}
 
-      <section className={`${styles.section} ${styles.askScroll}`}>
-        {/* one sticky stage pins the whole scene; inside, the copy holds a fixed
-            position while the trend graph descends from the header level down to
-            just above the ecosystem heading */}
-        <div className={styles.askStage}>
-          {/* LEFT — the trend graph descends as you scroll (driven by --travel) */}
+      <section className={styles.section}>
+        <div className={styles.askEcoLayout}>
+          {/* LEFT — the trend graph */}
           <div className={styles.askVisual}>
             <AbstractionTrendScroll />
           </div>
 
-          {/* RIGHT — copy stays put near the top while the graph travels past */}
+          {/* RIGHT — the copy */}
           <div className={styles.askEcoContent}>
             <h2 className={styles.h2}>Developers needed more.</h2>
             <p className={styles.body} data-jaseci-anchor>
@@ -363,7 +360,7 @@ export default function Home() {
                   <span className={styles.projectCardArrow} aria-hidden="true">
                     ↗
                   </span>
-                </div>I 
+                </div>
                 <div>
                   <div className={styles.projectCardTitle}>Todo App</div>
                   <p className={styles.projectCardDesc}>
