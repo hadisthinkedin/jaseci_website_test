@@ -38,10 +38,13 @@
   margin-bottom: 16px;
 }
 
+/* matches the site's section heading (.h2 in page.module.css): same size,
+   weight, line-height and tracking so the Proof heading reads as a peer of
+   "Developers needed more.", "Why did you start coding anyway?", etc. */
 .headline {
   font-family: var(--font-sans);
-  font-weight: 400;
-  font-size: clamp(26px, 3.6vw, 46px);
+  font-weight: 700;
+  font-size: clamp(36px, 5vw, 64px);
   line-height: 1.05;
   letter-spacing: -0.03em;
   color: var(--foreground);
@@ -98,14 +101,43 @@
   align-items: center;
   justify-content: center;
   padding: 16px 20px;
+  transition: border-color 0.2s ease;
+}
+.logoCard:hover {
+  border-color: var(--accent);
 }
 .logoMark {
   width: 100%;
   max-width: 144px;
   height: 56px;
+}
+/* umich + nsf carry real colour: grayscale at rest, true colour on hover */
+.logoMarkImg {
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
+  filter: grayscale(1);
+  transition: filter 0.25s ease;
+}
+.logoCard:hover .logoMarkImg {
+  filter: none;
+}
+/* nvidia is a single black wordmark: draw it as a mask so it can be tinted —
+   black at rest, NVIDIA green (--brand) on hover */
+.logoMarkMask {
+  background-color: #000;
+  -webkit-mask-image: var(--logo);
+  mask-image: var(--logo);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  transition: background-color 0.25s ease;
+}
+.logoCard:hover .logoMarkMask {
+  background-color: var(--brand);
 }
 
 /* ── 01 — Enterprise: Pocketnest marquee ───────────────────────────────── */
@@ -115,14 +147,131 @@
   display: flex;
   flex-direction: column;
   padding: 36px 40px;
+  /* hold a stable height so the logo column beside it doesn't jump as you
+     move between case studies of slightly different length (tallest slide ≈492) */
+  min-height: 492px;
+  transition: border-color 0.2s ease;
 }
+.feature:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+/* fill orange → flip the copy to white so it stays legible */
+.feature:hover .featureEyebrow,
+.feature:hover .featureNum,
+.feature:hover .featureBrand,
+.feature:hover .featureLede,
+.feature:hover .statNum,
+.feature:hover .statLabel,
+.feature:hover .quote,
+.feature:hover .quote cite,
+.feature:hover .featureFoot {
+  color: #fff;
+}
+.feature:hover .quote {
+  border-left-color: rgba(255, 255, 255, 0.65);
+}
+.feature:hover .caseTab {
+  color: rgba(255, 255, 255, 0.7);
+}
+.feature:hover .caseTab:hover,
+.feature:hover .caseTabActive {
+  color: #fff;
+}
+.feature:hover .caseTabActive {
+  border-bottom-color: #fff;
+}
+.feature:hover .caseArrow {
+  border-color: rgba(255, 255, 255, 0.6);
+  background: transparent;
+  color: #fff;
+}
+.feature:hover .caseArrow:hover {
+  background: #fff;
+  color: var(--accent);
+}
+
+/* ── Carousel controls ── */
+.featureTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.caseNav {
+  display: flex;
+  gap: 6px;
+}
+.caseArrow {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid #000;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-mono);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.caseArrow:hover {
+  background: #000;
+  color: #fff;
+}
+.caseTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-bottom: 26px;
+}
+.caseTab {
+  padding: 0 0 4px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.caseTab:hover {
+  color: var(--foreground);
+}
+.caseTabActive {
+  color: var(--foreground);
+  border-bottom-color: var(--accent);
+}
+.caseSlide {
+  display: flex;
+  flex-direction: column;
+  animation: caseFade 0.28s ease;
+}
+@keyframes caseFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .featureEyebrow {
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 18px;
+  margin-bottom: 0;
 }
 .featureNum {
   color: var(--accent);
@@ -225,10 +374,18 @@
   gap: 16px;
   padding: 24px 26px;
   border: 1px solid #000;
-  transition: padding-left 0.15s ease;
+  transition: padding-left 0.15s ease, border-color 0.2s ease;
 }
 .paper:hover {
   padding-left: 34px;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.paper:hover .paperTitle {
+  color: #fff;
+}
+.paper:hover .paperVenue {
+  color: rgba(255, 255, 255, 0.8);
 }
 .paperKey {
   flex-shrink: 0;
@@ -244,8 +401,9 @@
   background: #000;
   transition: background 0.15s ease;
 }
+/* keep the key badge black so it reads on the orange fill */
 .paper:hover .paperKey {
-  background: var(--accent);
+  background: #000;
 }
 .paperMeta {
   display: flex;
@@ -277,7 +435,7 @@
   transition: transform 0.15s ease, color 0.15s ease;
 }
 .paper:hover .paperArrow {
-  color: var(--accent);
+  color: #fff;
   transform: translate(3px, -3px);
 }
 

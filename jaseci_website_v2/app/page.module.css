@@ -77,14 +77,43 @@
 
 /* ---------- the ask → so i built jaseci — one pinned trend ---------- */
 
-.askEcoLayout {
-  display: grid;
-  grid-template-columns: minmax(460px, 1.25fr) 1fr;
-  gap: 56px;
-  align-items: start;
+/* the ask section is a tall scroll track: the copy pins in view on the right
+   while the trend graph descends on the left, from the header level down to
+   just above the ecosystem heading */
+.askScroll {
+  /* tall scroll track that gives the pinned stage room to be scrolled through */
+  position: relative;
+  min-height: 220vh;
+}
+
+.askStage {
+  /* ONE sticky element pins the whole scene for the section's scroll, so the
+     copy and graph can't fight each other for stickiness */
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.askVisual {
+  /* graph column (left); the graph inside translates from the top of the stage
+     down toward the bottom via --travel (set from scroll progress), so it
+     descends as you scroll while the copy stays put */
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 48%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 .askEcoContent {
+  /* copy (right) holds a fixed position near the top, level with the header */
+  position: absolute;
+  right: 0;
+  top: 96px;
+  width: 46%;
   min-width: 0;
 }
 
@@ -92,20 +121,6 @@
 .askEcoHeading {
   margin-top: 88px;
   scroll-margin-top: 96px;
-}
-
-.askVisual {
-  /* pin the graph and centre it in the viewport so it stays big and centred,
-     following you down the whole act while the copy scrolls past. The reveal
-     is anchor-driven (the "So I built Jaseci." heading), so this sticky offset
-     is free to be whatever centres the graph. */
-  position: sticky;
-  top: 0;
-  align-self: start;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .accent {
@@ -119,9 +134,10 @@
 }
 
 .lead {
-  font-size: clamp(20px, 2.2vw, 26px);
+  /* matches the ask section's body copy (.body): flat 20px, same line-height */
+  font-size: 20px;
   max-width: 860px;
-  line-height: 1.5;
+  line-height: 1.55;
   letter-spacing: -0.01em;
   color: #111;
 }
@@ -627,8 +643,8 @@
 
 .ecoStage {
   position: relative;
-  display: flex;
-  flex-direction: column;
+  /* the CTA's resting height; the two rightmost columns leave this much room */
+  --cta-h: 110px;
 }
 
 /* the bottom-left landing, sitting in the open space above the short left steps */
@@ -671,14 +687,36 @@
   margin-left: 0;
 }
 
-/* the CTA hangs off the bottom of the two rightmost columns (the rightmost third
-   of the six), connected to the baseline by an overlapped hairline */
+/* the two rightmost columns + the CTA, grouped into one flex item (≈2 columns
+   wide) so the CTA joins the accordion: hovering it grows it (the towers above
+   shrink) and widens the group (the left columns shrink). */
+.ctaGroup {
+  flex: 2 1 0;
+  min-width: 0;
+  height: 100%;
+  margin-left: -1px;
+  display: flex;
+  flex-direction: column;
+  transition: flex-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* the two towers stand above the CTA, sharing the height left over above it */
+.ctaGroupTop {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  align-items: flex-end;
+}
+
+/* the CTA — a real box in the bottom-right that expands and shrinks with the
+   accordion (rests at --cta-h, grows tall on hover; sits on the baseline beside
+   the short 1ms column) */
 .ecoCta {
-  align-self: flex-end;
-  width: calc(100% / 3);
-  box-sizing: border-box;
+  flex: 0 1 var(--cta-h);
+  min-height: 0;
   margin-top: -1px;
-  padding: 22px 28px;
+  box-sizing: border-box;
+  padding: 0 24px;
   border: 1px solid #000;
   background: #000;
   color: #fff;
@@ -690,11 +728,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s ease, color 0.2s ease;
+  text-align: center;
+  overflow: hidden;
+  transition: flex-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    flex-basis 0.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease,
+    color 0.3s ease;
 }
+/* hovering the CTA keeps its shape — only the colour changes, black → orange */
 .ecoCta:hover {
-  background: #fff;
-  color: #000;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
 }
 
 .bentoBox {
@@ -738,6 +782,12 @@
     background: #000;
     color: #fff;
     z-index: 2;
+  }
+  /* the CTA group widens when one of its tower boxes is hovered (like any other
+     column). Hovering the CTA itself does NOT resize it — shape stays put, only
+     the colour changes (see .ecoCta:hover above). */
+  .ctaGroup:has(.bentoBox:hover) {
+    flex-grow: 4;
   }
 }
 
@@ -823,9 +873,17 @@
   .bentoAccentSwap {
     display: none;
   }
+  .ctaGroup {
+    height: auto;
+    margin-left: 0;
+    margin-top: -1px;
+  }
+  .ctaGroupTop {
+    flex-direction: column;
+  }
   .ecoCta {
-    width: auto;
-    align-self: stretch;
+    flex: none;
+    padding: 20px 24px;
   }
 }
 
@@ -1192,15 +1250,24 @@
     min-height: auto;
   }
 
-  .askEcoLayout {
-    grid-template-columns: 1fr;
+  /* stacked: a normal-flow section, graph up top (static, no travel),
+     copy beneath it */
+  .askScroll {
+    min-height: 0;
   }
-
-  /* stacked: the graph shows up top (static), copy flows beneath it */
-  .askVisual {
+  .askStage {
     position: static;
     height: auto;
+  }
+  .askVisual {
+    position: static;
+    width: auto;
     margin-bottom: 24px;
+  }
+  .askEcoContent {
+    position: static;
+    width: auto;
+    top: auto;
   }
 
   .jarSection {

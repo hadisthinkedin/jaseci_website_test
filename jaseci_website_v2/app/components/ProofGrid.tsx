@@ -1,4 +1,6 @@
+import type { CSSProperties } from "react";
 import styles from "./ProofGrid.module.css";
+import CaseStudyCarousel from "./CaseStudyCarousel";
 
 /* ───────────────────────────────────────────────
    PROOF — card grid (per layout sketch).
@@ -10,8 +12,12 @@ import styles from "./ProofGrid.module.css";
    Pure server component — no client JS.
    ─────────────────────────────────────────────── */
 
+// Logos render B&W and pop to their real brand colors on hover. umich + nsf
+// already carry real color, so a grayscale filter that lifts on hover does it.
+// nvidia.svg is a single black wordmark with no colour of its own, so it's drawn
+// as a CSS mask and tinted NVIDIA green (#76b900) on hover instead.
 const LOGOS = [
-  { src: "/logos/nvidia.svg", label: "NVIDIA" },
+  { src: "/logos/nvidia.svg", label: "NVIDIA", brand: "#76b900" },
   { src: "/logos/umich.svg", label: "University of Michigan" },
   { src: "/logos/nsf.svg", label: "U.S. National Science Foundation" },
 ];
@@ -50,10 +56,19 @@ export default function ProofGrid() {
                 {LOGOS.map((l) => (
                   <div className={styles.logoCard} key={l.src}>
                     <span
-                      className={styles.logoMark}
+                      className={`${styles.logoMark} ${
+                        l.brand ? styles.logoMarkMask : styles.logoMarkImg
+                      }`}
                       role="img"
                       aria-label={l.label}
-                      style={{ backgroundImage: `url(${l.src})` }}
+                      style={
+                        l.brand
+                          ? ({
+                              "--logo": `url(${l.src})`,
+                              "--brand": l.brand,
+                            } as CSSProperties)
+                          : { backgroundImage: `url(${l.src})` }
+                      }
                     />
                   </div>
                 ))}
@@ -63,47 +78,8 @@ export default function ProofGrid() {
               </div>
             </div>
 
-            {/* 01 — Enterprise-backed: Pocketnest case study */}
-            <article className={styles.feature}>
-              <div className={styles.featureEyebrow}>
-                <span className={styles.featureNum}>01</span> Enterprise-backed
-              </div>
-              <div className={styles.featureBrand}>Pocketnest</div>
-              <p className={styles.featureLede}>
-                Already shipping in production.
-              </p>
-
-              <div className={styles.stats}>
-                <div className={styles.stat}>
-                  <span className={styles.statNum}>73%</span>
-                  <span className={styles.statLabel}>
-                    More members completing a financial plan
-                  </span>
-                </div>
-                <div className={styles.stat}>
-                  <span className={styles.statNum}>3×</span>
-                  <span className={styles.statLabel}>
-                    Higher cross-sell conversion for partners
-                  </span>
-                </div>
-                <div className={styles.stat}>
-                  <span className={styles.statNum}>&lt;3 min</span>
-                  <span className={styles.statLabel}>
-                    To move a member&rsquo;s money forward
-                  </span>
-                </div>
-              </div>
-
-              <blockquote className={styles.quote}>
-                &ldquo;Pocketnest turned passive account-holders into engaged
-                members chasing real financial goals.&rdquo;
-                <cite>Jordan Avery — Pocketnest</cite>
-              </blockquote>
-
-              <a href="#cases" className={styles.featureFoot}>
-                Read the case study →
-              </a>
-            </article>
+            {/* 01 — Enterprise-backed: case-study carousel */}
+            <CaseStudyCarousel />
           </div>
 
           {/* ── Bottom zone: research papers ── */}

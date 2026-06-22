@@ -150,6 +150,47 @@ const ECOSYSTEM_COLUMNS = (() => {
   });
 })();
 
+// One skyline column: the bordered stat/name/desc boxes for its modules. Shared
+// by the left columns and the two that ride on top of the CTA.
+function EcoColumn({
+  col,
+}: {
+  col: { h: number; modules: EcosystemModule[] };
+}) {
+  return (
+    <div className={styles.stairCol} style={{ "--h": col.h } as CSSProperties}>
+      {col.modules.map((mod) => (
+        <div
+          key={mod.name}
+          className={`${styles.bentoBox} ${
+            mod.active ? styles.bentoBoxActive : ""
+          }`}
+        >
+          <div className={styles.bentoStat}>
+            {mod.stat}
+            {mod.statAccent ? (
+              <span
+                className={`${styles.accent} ${
+                  mod.accentExpands ? styles.bentoAccentSwap : ""
+                }`}
+              >
+                {mod.statAccent}
+              </span>
+            ) : null}
+            {mod.statWord ? (
+              <span className={styles.bentoStatWord}>{mod.statWord}</span>
+            ) : null}
+          </div>
+          <div className={styles.bentoContent}>
+            <div className={styles.bentoName}>{mod.name}</div>
+            <p className={styles.bentoDesc}>{mod.desc}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Home() {
   return (
     <div className={styles.page}>
@@ -228,16 +269,19 @@ export default function Home() {
 
       <ProofGrid />
 
-      {/* ---------- THE ASK → SO I BUILT JASECI (one pinned trend) ---------- */}
+      {/* ---------- THE ASK → SO I BUILT JASECI ---------- */}
 
-      <section className={styles.section}>
-        <div className={styles.askEcoLayout}>
-          {/* LEFT — the trend, pinned, follows you down across the whole act */}
+      <section className={`${styles.section} ${styles.askScroll}`}>
+        {/* one sticky stage pins the whole scene; inside, the copy holds a fixed
+            position while the trend graph descends from the header level down to
+            just above the ecosystem heading */}
+        <div className={styles.askStage}>
+          {/* LEFT — the trend graph descends as you scroll (driven by --travel) */}
           <div className={styles.askVisual}>
             <AbstractionTrendScroll />
           </div>
 
-          {/* RIGHT — copy scrolls past; the trend hits Jaseci at the turn */}
+          {/* RIGHT — copy stays put near the top while the graph travels past */}
           <div className={styles.askEcoContent}>
             <h2 className={styles.h2}>Developers needed more.</h2>
             <p className={styles.body} data-jaseci-anchor>
@@ -262,49 +306,23 @@ export default function Home() {
           </h2>
 
           <div className={styles.bento} id="ecosystem-grid">
-            {ECOSYSTEM_COLUMNS.map((col, c) => (
-              <div
-                className={styles.stairCol}
-                key={c}
-                style={{ "--h": col.h } as CSSProperties}
-              >
-                {col.modules.map((mod) => (
-                  <div
-                    key={mod.name}
-                    className={`${styles.bentoBox} ${
-                      mod.active ? styles.bentoBoxActive : ""
-                    }`}
-                  >
-                    <div className={styles.bentoStat}>
-                      {mod.stat}
-                      {mod.statAccent ? (
-                        <span
-                          className={`${styles.accent} ${
-                            mod.accentExpands ? styles.bentoAccentSwap : ""
-                          }`}
-                        >
-                          {mod.statAccent}
-                        </span>
-                      ) : null}
-                      {mod.statWord ? (
-                        <span className={styles.bentoStatWord}>
-                          {mod.statWord}
-                        </span>
-                      ) : null}
-                    </div>
-                    <div className={styles.bentoContent}>
-                      <div className={styles.bentoName}>{mod.name}</div>
-                      <p className={styles.bentoDesc}>{mod.desc}</p>
-                    </div>
-                  </div>
+            {ECOSYSTEM_COLUMNS.slice(0, -2).map((col, c) => (
+              <EcoColumn col={col} key={c} />
+            ))}
+
+            {/* the two rightmost columns ride on top of the CTA so it expands
+                and shrinks with the accordion too */}
+            <div className={styles.ctaGroup}>
+              <div className={styles.ctaGroupTop}>
+                {ECOSYSTEM_COLUMNS.slice(-2).map((col, c) => (
+                  <EcoColumn col={col} key={c} />
                 ))}
               </div>
-            ))}
+              <a href="#ecosystem-grid" className={styles.ecoCta}>
+                See the full ecosystem →
+              </a>
+            </div>
           </div>
-
-          <a href="#ecosystem-grid" className={styles.ecoCta}>
-            See the full ecosystem →
-          </a>
         </div>
       </section>
 
