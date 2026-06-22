@@ -71,6 +71,17 @@
   line-height: 1.55;
 }
 
+/* Running body copy / paragraphs use the body face (Mr Eaves XL — see
+   --font-body in globals.css). Headings & mono labels are untouched. */
+.body,
+.lead,
+.heroLede,
+.finalSection p,
+.projectCardDesc,
+.bentoDesc {
+  font-family: var(--font-body);
+}
+
 .body + .body {
   margin-top: 24px;
 }
@@ -119,6 +130,11 @@
   line-height: 1.55;
   letter-spacing: -0.01em;
   color: #111;
+}
+
+/* a clear empty line of space between the two manifesto paragraphs */
+.lead + .lead {
+  margin-top: 2.4em;
 }
 
 .leadPunch {

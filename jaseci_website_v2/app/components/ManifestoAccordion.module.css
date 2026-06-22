@@ -1,0 +1,116 @@
+/* Manifesto accordion — topic boxes with a +/− expand button.
+   Stark B&W, hairline borders, accent on hover, body height animated. */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.box {
+  border: 1px solid #000;
+  background: var(--background);
+  transition: border-color 0.18s ease;
+}
+.box:hover {
+  border-color: var(--accent);
+}
+
+/* clickable header row */
+.head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px 18px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.headline {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--foreground);
+}
+
+/* expand button — a plus that becomes a minus when open */
+.icon {
+  position: relative;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border: 1px solid #000;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+.icon::before,
+.icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: #000;
+  transform: translate(-50%, -50%);
+  transition: transform 0.25s ease, background 0.18s ease;
+}
+.icon::before {
+  width: 11px;
+  height: 2px;
+}
+.icon::after {
+  width: 2px;
+  height: 11px;
+}
+/* open → collapse the vertical bar so the plus reads as a minus */
+.box[data-open="true"] .icon::after {
+  transform: translate(-50%, -50%) scaleY(0);
+}
+/* hover feedback on the button */
+.head:hover .icon {
+  border-color: var(--accent);
+}
+.head:hover .icon::before,
+.head:hover .icon::after {
+  background: var(--accent);
+}
+/* open state — invert the button so it reads as "active" */
+.box[data-open="true"] .icon {
+  background: #000;
+}
+.box[data-open="true"] .icon::before {
+  background: #fff;
+}
+
+/* collapsible body (0fr → 1fr animates real height) */
+.bodyWrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+}
+.box[data-open="true"] .bodyWrap {
+  grid-template-rows: 1fr;
+}
+.bodyInner {
+  overflow: hidden;
+}
+.body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  color: #333;
+  border-top: 1px solid #000;
+  padding: 14px 18px 18px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bodyWrap,
+  .icon::before,
+  .icon::after {
+    transition: none;
+  }
+}

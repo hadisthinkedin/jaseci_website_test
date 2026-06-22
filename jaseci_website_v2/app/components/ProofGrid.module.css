@@ -441,6 +441,12 @@
   transform: translate(3px, -3px);
 }
 
+/* case-study prose (lede + quote) uses the body face too — see --font-body */
+.featureLede,
+.quote {
+  font-family: var(--font-body);
+}
+
 /* research caption row */
 .researchCap {
   display: flex;

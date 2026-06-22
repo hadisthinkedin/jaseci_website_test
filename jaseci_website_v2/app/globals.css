@@ -36,6 +36,14 @@
   --font-sans:
     "Circular", var(--font-geist), -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, Helvetica, Arial, sans-serif;
+  /* Paragraph / body face: Mr Eaves XL Sans via Adobe Fonts (Typekit). It loads
+     only through your Adobe web-project kit (wired in app/layout.tsx) — there's
+     no public CDN. Falls back to the same stack as --font-sans, so body copy is
+     unchanged until the kit is live. Confirm the exact family name in your kit
+     matches "mr-eaves-xl-sans". */
+  --font-body:
+    "mr-eaves-xl-sans", "Circular", var(--font-geist), -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono:
     var(--font-jetbrains-mono), "Fira Code", Menlo, Monaco, Consolas, monospace;
 }

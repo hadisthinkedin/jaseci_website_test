@@ -1,0 +1,46 @@
+/* Typewriter — the cycling word after "…to program AI".
+   The blinking caret is the word's right border so it auto-matches the
+   headline's size and line-height. Word is the accent colour (echoes the
+   original orange "AI Everything."). */
+
+.tw {
+  /* keep the word from breaking mid-token as it grows/shrinks */
+  white-space: nowrap;
+}
+
+.word {
+  color: var(--accent);
+  border-right: 0.06em solid currentColor;
+  padding-right: 0.03em;
+  animation: tw-caret 1.1s step-end infinite;
+}
+
+@keyframes tw-caret {
+  0%,
+  100% {
+    border-right-color: currentColor;
+  }
+  50% {
+    border-right-color: transparent;
+  }
+}
+
+/* visually hidden, but present for screen readers / SEO */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word {
+    animation: none;
+    border-right-color: transparent; /* steady, no caret distraction */
+  }
+}

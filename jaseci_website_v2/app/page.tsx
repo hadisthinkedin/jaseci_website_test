@@ -2,6 +2,8 @@ import type { CSSProperties } from "react";
 import styles from "./page.module.css";
 import FallingImages from "./components/FallingImages";
 import AbstractionTrend from "./components/AbstractionTrend";
+import Typewriter from "./components/Typewriter";
+import ManifestoAccordion from "./components/ManifestoAccordion";
 import AbstractionTrendScroll from "./components/AbstractionTrendScroll";
 import ProofGrid from "./components/ProofGrid";
 
@@ -191,6 +193,27 @@ function EcoColumn({
   );
 }
 
+// "Developers needed more." — the evolution story, as expandable claims
+const EVOLUTION_POINTS = [
+  {
+    headline:
+      "Developers weren’t building AI alone — they were building whole applications.",
+    body: "Jac was good at building an agentic AI, but developers weren’t just building AI alone. They were building applications — the data, the scale, and the deployment.",
+  },
+  {
+    headline: "That exposed a bigger problem: Jac was too slow in production.",
+    body: "Building real applications highlighted a large problem — Jac was too slow in production.",
+  },
+  {
+    headline: "The root cause was a dependency on third-party tools.",
+    body: "After a lengthy analysis, the problem came down to a dependency on third-party tools to fill those potholes.",
+  },
+  {
+    headline: "So we designed Jac to be the evolutionary leap.",
+    body: "We designed Jac to be that evolutionary leap. How do you turn a language into the next evolutionary step?",
+  },
+];
+
 export default function Home() {
   return (
     <div className={styles.page}>
@@ -209,9 +232,11 @@ export default function Home() {
         <div className={styles.heroGrid}>
           <div className={styles.heroCopy}>
             <h1 className={styles.heroHeadline}>
-              Jac: the language built to program  <br /> AI Applications.  <br />AI
-              Agents.  <br />AI Workflows.{" "}  <br />
-              <span className={styles.accent}>AI Everything.</span>
+              Jac, the language built to program <br />
+              AI{" "}
+              <Typewriter
+                words={["Applications.", "Agents.", "Workflows.", "Everything."]}
+              />
             </h1>
             <p className={styles.heroLede}>
               Jac is the solution to the last{" "}
@@ -246,22 +271,7 @@ export default function Home() {
         </div>
         <div className={styles.jarCopy}>
           <h2 className={styles.h2}>Python, LangChain, they&rsquo;re all broken.</h2>
-          <p className={styles.lead}>
-            Python became the home of Machine Learning, not Artificial
-            Intelligence. But companies pretend like it was born for it. They
-            pancake libraries and frameworks on top, constantly abstracting over
-            a language never designed to build agents. That&rsquo;s why no matter
-            how hard companies try, these tools are always sh*tty. 
-          </p>
-          <p className={styles.lead}>
-            Instead of abstraction, let&rsquo;s build a language that's aware of the advancements in the past year. So, instead of an
-            OOP agent wrangling its own state, an OSP walker collapses everything
-            into a single graph traversal, running 4.75x faster at runtime and
-            built 3.2x faster by developers. Instead of a 500-word prompt,
-            let&rsquo;s use byLLM in a single line (that&rsquo;s 
-            developer-friendly :D ). Jac is the language built for pro-AI
-            communities today.
-          </p>
+          <ManifestoAccordion />
         </div>
       </section>
 
@@ -281,15 +291,9 @@ export default function Home() {
           {/* RIGHT — the copy */}
           <div className={styles.askEcoContent}>
             <h2 className={styles.h2}>Developers needed more.</h2>
-            <p className={styles.body} data-jaseci-anchor>
-              Jac was good at building an agentic AI, but developers weren&rsquo;t
-              just building AI alone. Developers were building applications,
-              including the data, the scale, and the deployment. This highlighted
-              a large problem: Jac was too slow in production, and after a lengthy
-              analysis, the problem was dependency on third-party tools to fill
-              those potholes. We designed Jac to be that evolutionary leap; how do
-              you turn a language into the next evolutionary step?
-            </p>
+            <div data-jaseci-anchor>
+              <ManifestoAccordion items={EVOLUTION_POINTS} />
+            </div>
           </div>
         </div>
       </section>
