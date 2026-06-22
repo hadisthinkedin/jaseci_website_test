@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import styles from "./page.module.css";
 import FallingImages from "./components/FallingImages";
 import AbstractionTrend from "./components/AbstractionTrend";
@@ -126,12 +127,19 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
   ],
 ];
 
-// the 12 modules, re-chunked into 4 rows of 3 for the nested-flex accordion
-const ECOSYSTEM_ROWS = (() => {
+// Re-grouped into climbing columns for the staircase. Each number is how many
+// boxes stack in that column (left→right) and sums to 12 — some columns are a
+// single tall box, others two stacked, for the varied bento rhythm.
+const STACK_PATTERN = [1, 2, 1, 2, 1, 2, 1, 2];
+const ECOSYSTEM_COLUMNS = (() => {
   const flat = ECOSYSTEM_MODULES.flat();
-  const rows: (typeof flat)[] = [];
-  for (let i = 0; i < flat.length; i += 3) rows.push(flat.slice(i, i + 3));
-  return rows;
+  const cols: (typeof flat)[] = [];
+  let idx = 0;
+  for (const size of STACK_PATTERN) {
+    cols.push(flat.slice(idx, idx + size));
+    idx += size;
+  }
+  return cols;
 })();
 
 export default function Home() {
@@ -152,13 +160,14 @@ export default function Home() {
         <div className={styles.heroGrid}>
           <div className={styles.heroCopy}>
             <h1 className={styles.heroHeadline}>
+              Jac: the language built to program AI. AI Applications. AI
+              Agents. AI Workflows.{" "}
+              <span className={styles.accent}>AI Everything.</span>
+            </h1>
+            <p className={styles.heroLede}>
               Jac is the solution to the last{" "}
               <span className={styles.accent}>50 years</span>{" "}
               of developer&rsquo;s hell.
-            </h1>
-            <p className={styles.heroLede}>
-              The programming language that is built to program AI.
-              Applications. Agents. Workflows. Everything AI.
             </p>
           </div>
 
@@ -187,22 +196,21 @@ export default function Home() {
           </div>
         </div>
         <div className={styles.jarCopy}>
-          <h2 className={styles.h2}>The old ways are broken.</h2>
+          <h2 className={styles.h2}>Python, LangChain, they&rsquo;re all broken.</h2>
           <p className={styles.lead}>
             Python became the home of Machine Learning, not Artificial
             Intelligence. But companies pretend like it was born for it. They
             pancake libraries and frameworks on top, constantly abstracting over
             a language never designed to build agents. That&rsquo;s why no matter
-            how hard companies try, these tools are always sh*tty.
+            how hard companies try, these tools are always sh*tty. 
           </p>
           <p className={styles.lead}>
-            So instead of abstraction, let&rsquo;s look at the advancements of
-            the past year and design a language built for them. Instead of an
+            Instead of abstraction, let&rsquo;s build a language that's aware of the advancements in the past year. So, instead of an
             OOP agent wrangling its own state, an OSP walker collapses everything
             into a single graph traversal, running 4.75x faster at runtime and
             built 3.2x faster by developers. Instead of a 500-word prompt,
-            let&rsquo;s use byLLM in a single line (that&rsquo;s
-            developer-friendly 🙂). Jac is the language built for pro-AI
+            let&rsquo;s use byLLM in a single line (that&rsquo;s 
+            developer-friendly :D ). Jac is the language built for pro-AI
             communities today.
           </p>
         </div>
@@ -225,83 +233,70 @@ export default function Home() {
           {/* RIGHT — copy scrolls past; the trend hits Jaseci at the turn */}
           <div className={styles.askEcoContent}>
             <h2 className={styles.h2}>Developers needed more.</h2>
-            <p className={styles.body}>
-              They came to me for one thing — agentic AI. And Jac was good at it.
-              But an agent is just one corner of what they were really building:
-              the app around it, the data beneath it, the scale, the deploy.
-              They didn&rsquo;t want a tool for the workflow. They wanted all of
-              it — and a language I&rsquo;d built only for agents was never going
-              to be enough.
+            <p className={styles.body} data-jaseci-anchor>
+              Jac was good at building an agentic AI, but developers weren&rsquo;t
+              just building AI alone. Developers were building applications,
+              including the data, the scale, and the deployment. This highlighted
+              a large problem: Jac was too slow in production, and after a lengthy
+              analysis, the problem was dependency on third-party tools to fill
+              those potholes. We designed Jac to be that evolutionary leap; how do
+              you turn a language into the next evolutionary step?
             </p>
-            <p className={styles.body}>
-              And there was a harder problem underneath. In production Jac was
-              still slow, because for everything beyond the agent it leaned on
-              other tools. Every dependency it reached for dragged on it — the
-              language I&rsquo;d built was paying the price for what it
-              couldn&rsquo;t do on its own.
-            </p>
-            <p className={styles.body}>
-              So what was I supposed to do? Not hand developers a better tool
-              among tools. I had to make Jac itself the leap — the same one the
-              world made when it went from Assembly to C, where the new language
-              doesn&rsquo;t sit on top of the old one, it becomes the ground
-              everything is built on. How do you turn a language into the next
-              evolutionary step?
-            </p>
-
-            <h2
-              className={`${styles.h2} ${styles.askEcoHeading}`}
-              id="ecosystem"
-              data-jaseci-anchor
-            >
-              So I built Jaseci.
-            </h2>
-            <p className={styles.body}>
-              An ecosystem that fixes the problems developers have been shouting
-              about for years — without asking them to give up what they already
-              know.
-            </p>
-
-            <div className={styles.bento} id="ecosystem-grid">
-              {ECOSYSTEM_ROWS.map((row, r) => (
-                <div className={styles.bentoRow} key={r}>
-                  {row.map((mod) => (
-                    <div
-                      key={mod.name}
-                      className={`${styles.bentoBox} ${
-                        mod.active ? styles.bentoBoxActive : ""
-                      }`}
-                    >
-                      <div className={styles.bentoStat}>
-                        {mod.stat}
-                        {mod.statAccent ? (
-                          <span
-                            className={`${styles.accent} ${
-                              mod.accentExpands ? styles.bentoAccentSwap : ""
-                            }`}
-                          >
-                            {mod.statAccent}
-                          </span>
-                        ) : null}
-                        {mod.statWord ? (
-                          <span className={styles.bentoStatWord}>
-                            {mod.statWord}
-                          </span>
-                        ) : null}
-                      </div>
-                      <div className={styles.bentoContent}>
-                        <div className={styles.bentoName}>{mod.name}</div>
-                        <p className={styles.bentoDesc}>{mod.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
 
             <a href="#ecosystem-grid" className={styles.cta}>
               See the full ecosystem →
             </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- ECOSYSTEM — the full-width staircase ---------- */}
+
+      <section className={`${styles.section} ${styles.ecoSection}`}>
+        <div className={styles.ecoStage}>
+          <h2 className={`${styles.h2} ${styles.stairHeader}`} id="ecosystem">
+            We built the Jaseci Ecosystem.
+          </h2>
+
+          <div className={styles.bento} id="ecosystem-grid">
+            {ECOSYSTEM_COLUMNS.map((col, c) => (
+              <div
+                className={styles.stairCol}
+                key={c}
+                style={{ "--c": c } as CSSProperties}
+              >
+                {col.map((mod) => (
+                  <div
+                    key={mod.name}
+                    className={`${styles.bentoBox} ${
+                      mod.active ? styles.bentoBoxActive : ""
+                    }`}
+                  >
+                    <div className={styles.bentoStat}>
+                      {mod.stat}
+                      {mod.statAccent ? (
+                        <span
+                          className={`${styles.accent} ${
+                            mod.accentExpands ? styles.bentoAccentSwap : ""
+                          }`}
+                        >
+                          {mod.statAccent}
+                        </span>
+                      ) : null}
+                      {mod.statWord ? (
+                        <span className={styles.bentoStatWord}>
+                          {mod.statWord}
+                        </span>
+                      ) : null}
+                    </div>
+                    <div className={styles.bentoContent}>
+                      <div className={styles.bentoName}>{mod.name}</div>
+                      <p className={styles.bentoDesc}>{mod.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -316,19 +311,16 @@ export default function Home() {
           {/* LEFT — the why */}
           <div className={styles.projectsIntro}>
             <h2 className={styles.h2}>
-              Why did you start writing code in the first place?
+              Why did you start coding anyway?
             </h2>
             <p className={styles.body}>
-              We never started programming to allocate variables or stitch
-              middleware together — we started to drag an idea out of our heads
-              and make it real. That&rsquo;s the philosophy Dennis Ritchie built
-              C on, the one your story already invokes: spend your time doing
-              something useful, not storing integers in registers. Every leap
-              since — Assembly to C, C to Python, Python to Jac — has obeyed the
-              same instinct, clearing away the boilerplate that stands between a
-              developer and the thing they actually meant to make. We build
-              because creation was always the point; the tooling was only ever
-              supposed to get out of the way.
+              Let me give you a small history lesson: Dennis Ritchie, the
+              creator of C, and this is his philosophy of why he built, in my
+              opinion, the greatest language (don&rsquo;t kill me): people
+              should spend their time coding something they believe is
+              important, nothing else. He had that instinct to take away the
+              boilerplate that stood between us and the human purpose to ideate
+              and create. Let Jaseci remove the tooling bottleneck.
             </p>
           </div>
 
@@ -342,11 +334,11 @@ export default function Home() {
                 rel="noopener noreferrer"
               >
                 <div className={styles.projectCardTop}>
-                  <span className={styles.projectCardMeta}>Built in 4 days</span>
+                  <span className={styles.projectCardMeta}>Built in Jac</span>
                   <span className={styles.projectCardArrow} aria-hidden="true">
                     ↗
                   </span>
-                </div>
+                </div>I 
                 <div>
                   <div className={styles.projectCardTitle}>Todo App</div>
                   <p className={styles.projectCardDesc}>
@@ -395,7 +387,7 @@ export default function Home() {
               >
                 <div className={styles.projectCardTop}>
                   <span className={styles.projectCardMeta}>
-                    Built in 2 weeks
+                    Built in 4 Days
                   </span>
                   <span className={styles.projectCardArrow} aria-hidden="true">
                     ↗
@@ -481,10 +473,6 @@ export default function Home() {
         <h2>
           Stay with the old. Get <span className={styles.accent}>left behind</span>.
         </h2>
-        <p>
-          Join the community. Contribute to the OSS. Build the future before
-          it gets built around you.
-        </p>
         <div>
           <a href="/community" className={styles.cta}>
             Join the Community

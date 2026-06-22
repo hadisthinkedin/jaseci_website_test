@@ -1,3 +1,30 @@
+/* Circular — Supabase's brand typeface. It's licensed (not free) and is NOT
+   bundled here. Drop the .woff2 files into /public/fonts with the exact names
+   below and they take over automatically. Until then, text falls back to Geist
+   (next entry in --font-sans), so the site renders unchanged. See
+   /public/fonts/README.md. */
+@font-face {
+  font-family: "Circular";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/circular-book.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Circular";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/circular-medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Circular";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/circular-bold.woff2") format("woff2");
+}
+
 :root {
   --background: #ffffff;
   --foreground: #000000;
@@ -7,7 +34,8 @@
   --accent-hover: #c8430f;
 
   --font-sans:
-    var(--font-fraunces), Georgia, "Times New Roman", serif;
+    "Circular", var(--font-geist), -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
   --font-mono:
     var(--font-jetbrains-mono), "Fira Code", Menlo, Monaco, Consolas, monospace;
 }

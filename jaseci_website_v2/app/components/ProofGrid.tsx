@@ -74,7 +74,6 @@ export default function ProofGrid() {
           <article className={styles.col}>
             <div className={styles.colNum}>02</div>
             <div className={styles.colLabel}>Company-backed</div>
-            <h3 className={styles.colTitle}>NVIDIA. The NSF. Michigan.</h3>
 
             <div className={styles.logos}>
               {LOGOS.map((l) => (

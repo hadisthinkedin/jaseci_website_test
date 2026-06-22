@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { Fraunces, JetBrains_Mono } from "next/font/google";
+import { Geist, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const geist = Geist({
+  variable: "--font-geist",
   subsets: ["latin"],
   display: "swap",
-  axes: ["opsz"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -29,7 +28,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${jetbrainsMono.variable}`}
+      className={`${geist.variable} ${jetbrainsMono.variable}`}
     >
       <body>{children}</body>
     </html>

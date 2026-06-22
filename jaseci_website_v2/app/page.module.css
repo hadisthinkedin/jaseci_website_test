@@ -230,11 +230,14 @@
 .hero {
   padding-top: 80px;
   padding-bottom: 80px;
+  /* wider than the default .section (1200px) so the long headline has room */
+  max-width: 1440px;
 }
 
 .heroGrid {
   display: grid;
-  grid-template-columns: 1.4fr minmax(320px, 1fr);
+  /* more share to the copy column so the headline wraps to fewer lines */
+  grid-template-columns: 1.7fr minmax(300px, 1fr);
   gap: 64px;
   align-items: stretch;
   min-height: 620px;
@@ -609,96 +612,90 @@
 
 /* ---------- ecosystem ---------- */
 
-/* bento — a non-uniform nested-flex accordion. At rest the rows and tiles are
-   deliberately uneven (no two the same size). Hover a tile and it blows up in
-   BOTH axes — the tile grows wide, its row grows tall — while every other tile
-   and row shrinks to make room; its description fades in. */
-.bento {
-  margin-top: 48px;
-  display: flex;
-  flex-direction: column;
-  height: 660px;
-  border-top: 1px solid #000;
-  border-left: 1px solid #000;
-  /* when the CTA jumps here, clear the sticky nav */
+/* ECOSYSTEM — a full-width STAIRCASE. The 12 boxes sit in one horizontal row,
+   bottoms on a shared baseline, each taller than the box to its left, so the top
+   edge climbs to the right. They're connected: margin-left:-1px overlaps the
+   shared vertical borders into a single hairline; each box keeps its rectangular
+   form. The header is the bottom-left landing, parked in the open space above the
+   short left boxes. The accordion is kept (horizontal now): hover a box and it
+   widens and goes black while its neighbours shrink; its description fades in. */
+.ecoSection {
+  max-width: 1640px;
+  padding-left: clamp(24px, 4vw, 64px);
+  padding-right: clamp(24px, 4vw, 64px);
+}
+
+.ecoStage {
+  position: relative;
+}
+
+/* the bottom-left landing, sitting in the open space above the short left steps */
+.stairHeader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  margin: 0;
+  width: clamp(240px, 28%, 420px);
+  font-size: clamp(30px, 3.4vw, 50px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
   scroll-margin-top: 96px;
 }
 
-.bentoRow {
+.bento {
+  margin-top: 40px;
   display: flex;
-  flex: 1 1 0;
-  min-height: 0;
-  transition: flex-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  align-items: flex-end;
+  width: 100%;
+  height: 460px;
+  /* when the CTA jumps here, clear the sticky nav */
+  scroll-margin-top: 96px;
 }
 
 .bentoBox {
   position: relative;
   flex: 1 1 0;
   min-width: 0;
-  padding: 18px;
-  border-right: 1px solid #000;
-  border-bottom: 1px solid #000;
+  /* the step: each box is taller than the one on its left (i = 0…11) */
+  height: calc(38% + var(--i) * 5.63%);
+  /* connect the boxes — overlap the 1px borders into one shared hairline */
+  margin-left: -1px;
+  padding: 14px 16px;
+  border: 1px solid #000;
+  background: #fff;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 10px;
+  justify-content: flex-start;
+  gap: 6px;
   overflow: hidden;
   transition: flex-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
     background 0.3s ease, color 0.3s ease;
 }
-
-/* non-uniform at rest — uneven row heights, uneven tile widths, and the wide
-   tile alternates sides so the columns never line up into a plain grid */
-.bentoRow:nth-child(1) {
-  flex-grow: 1.25;
-}
-.bentoRow:nth-child(2) {
-  flex-grow: 0.9;
-}
-.bentoRow:nth-child(3) {
-  flex-grow: 1.12;
-}
-.bentoRow:nth-child(4) {
-  flex-grow: 0.78;
-}
-.bentoRow:nth-child(even) {
-  flex-direction: row-reverse;
-}
-.bentoBox:nth-child(1) {
-  flex-grow: 1.5;
-}
-.bentoBox:nth-child(2) {
-  flex-grow: 0.8;
-}
-.bentoBox:nth-child(3) {
-  flex-grow: 1.1;
+.bentoBox:first-child {
+  margin-left: 0;
 }
 
-/* Jac-Scale and Jac-Client ship expanded by default (active flag in the data):
-   wider than their neighbours and their description already showing. Placed
-   after the nth-child base rules so it wins the specificity tie. */
+/* Jac-Scale and Jac-Client ship expanded (wider, description already showing) */
 .bentoBox.bentoBoxActive {
-  flex-grow: 2.7;
+  flex-grow: 2;
 }
 .bentoBoxActive .bentoDesc {
   opacity: 1;
 }
 
-/* the accordion only with a pointer (placed after the base rules so the
-   :hover flex-grow wins the tie on specificity) */
-@media (hover: hover) and (min-width: 601px) {
-  .bentoRow:has(.bentoBox:hover) {
-    flex-grow: 2.4;
-  }
+/* the accordion — pointer only, above the stacked breakpoint */
+@media (hover: hover) and (min-width: 901px) {
   .bentoBox:hover {
-    flex-grow: 5;
+    flex-grow: 4;
     background: #000;
     color: #fff;
+    z-index: 2;
   }
 }
 
 .bentoStat {
-  font-size: 30px;
+  font-size: 24px;
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.04em;
@@ -711,39 +708,71 @@
 
 .bentoName {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
-/* hidden until the tile is hovered (and roomy enough to read it) */
+/* hidden until the box expands (hover or active) */
 .bentoDesc {
   margin-top: 8px;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.4;
   opacity: 0;
   transition: opacity 0.35s ease 0.12s;
 }
-
 .bentoBox:hover .bentoDesc {
   opacity: 1;
 }
 
-/* stacked: one column, everything visible, no accordion */
-@media (max-width: 600px) {
-  .bento {
-    height: auto;
+/* the word that completes the stat (e.g. "10×" → "10× Faster"). Hidden until
+   the box expands, then it fades in after the number — mirrors .bentoDesc. */
+.bentoStatWord {
+  margin-left: 0.3em;
+  opacity: 0;
+  transition: opacity 0.35s ease 0.12s;
+}
+.bentoBox:hover .bentoStatWord,
+.bentoBoxActive .bentoStatWord {
+  opacity: 1;
+}
+
+/* stats whose accent is an abbreviation (1L, 1G): the letter gives way to the
+   full word on expand, so it reads "1 Language" rather than "1L Language". */
+.bentoBox:hover .bentoAccentSwap,
+.bentoBoxActive .bentoAccentSwap {
+  display: none;
+}
+
+/* stacked: a plain vertical list, no staircase, no accordion */
+@media (max-width: 900px) {
+  .stairHeader {
+    position: static;
+    width: auto;
+    margin-bottom: 24px;
   }
-  .bentoRow,
-  .bentoRow:nth-child(even) {
+  .bento {
     flex-direction: column;
+    align-items: stretch;
+    height: auto;
+    margin-top: 24px;
   }
   .bentoBox {
-    min-height: 150px;
+    height: auto;
+    min-height: 110px;
+    margin-left: 0;
+    margin-top: -1px;
   }
-  .bentoDesc {
+  .bentoBox:first-child {
+    margin-top: 0;
+  }
+  .bentoDesc,
+  .bentoStatWord {
     opacity: 1;
+  }
+  .bentoAccentSwap {
+    display: none;
   }
 }
 
