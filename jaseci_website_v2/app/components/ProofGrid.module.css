@@ -104,6 +104,7 @@
   transition: border-color 0.2s ease;
 }
 .logoCard:hover {
+  background: var(--accent);
   border-color: var(--accent);
 }
 .logoMark {
@@ -111,7 +112,7 @@
   max-width: 144px;
   height: 56px;
 }
-/* umich + nsf carry real colour: grayscale at rest, true colour on hover */
+/* umich + nsf: grayscale at rest; knocked out to white on the orange hover fill */
 .logoMarkImg {
   background-position: center;
   background-repeat: no-repeat;
@@ -120,10 +121,10 @@
   transition: filter 0.25s ease;
 }
 .logoCard:hover .logoMarkImg {
-  filter: none;
+  filter: brightness(0) invert(1);
 }
-/* nvidia is a single black wordmark: draw it as a mask so it can be tinted —
-   black at rest, NVIDIA green (--brand) on hover */
+/* nvidia is a single black wordmark, drawn as a mask: black at rest,
+   knocked out to white on the orange hover fill */
 .logoMarkMask {
   background-color: #000;
   -webkit-mask-image: var(--logo);
@@ -137,7 +138,7 @@
   transition: background-color 0.25s ease;
 }
 .logoCard:hover .logoMarkMask {
-  background-color: var(--brand);
+  background-color: #fff;
 }
 
 /* ── 01 — Enterprise: Pocketnest marquee ───────────────────────────────── */
@@ -401,9 +402,10 @@
   background: #000;
   transition: background 0.15s ease;
 }
-/* keep the key badge black so it reads on the orange fill */
+/* invert the key badge to a white box on the orange fill */
 .paper:hover .paperKey {
-  background: #000;
+  background: #fff;
+  color: #000;
 }
 .paperMeta {
   display: flex;
