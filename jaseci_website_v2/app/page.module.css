@@ -1022,19 +1022,22 @@
   color: rgba(255, 255, 255, 0.78);
 }
 
-/* FPS card — gameplay gif plays on hover */
-.projectCardFps {
+/* Media cards (FPS, Todo) — preview gif plays on hover */
+.projectCardFps,
+.projectCardTodo {
   position: relative;
   overflow: hidden;
 }
 
 /* keep meta + title above the media and scrim */
-.projectCardFps > div {
+.projectCardFps > div,
+.projectCardTodo > div {
   position: relative;
   z-index: 2;
 }
 
-.fpsMedia {
+.fpsMedia,
+.todoMedia {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -1046,8 +1049,9 @@
   transition: opacity 0.3s ease;
 }
 
-/* dark scrim under the text so the title stays legible over gameplay */
-.projectCardFps::after {
+/* dark scrim under the text so the title stays legible over the gif */
+.projectCardFps::after,
+.projectCardTodo::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -1064,12 +1068,15 @@
 }
 
 .projectCardFps:hover .fpsMedia,
-.projectCardFps:hover::after {
+.projectCardFps:hover::after,
+.projectCardTodo:hover .todoMedia,
+.projectCardTodo:hover::after {
   opacity: 1;
 }
 
-/* let the gameplay take over: hide the long description on hover */
-.projectCardFps:hover .projectCardDesc {
+/* let the preview take over: hide the long description on hover */
+.projectCardFps:hover .projectCardDesc,
+.projectCardTodo:hover .projectCardDesc {
   opacity: 0;
   transition: opacity 0.2s ease;
 }

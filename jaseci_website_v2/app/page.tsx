@@ -233,9 +233,8 @@ export default function Home() {
           <div className={styles.heroCopy}>
             <h1 className={styles.heroHeadline}>
               Jac, the language built to program <br />
-              AI{" "}
               <Typewriter
-                words={["Applications.", "Agents.", "Workflows.", "Everything."]}
+                words={["AI Applications.", "AI Agents.", "AI Workflows.", "everything."]}
               />
             </h1>
             <p className={styles.heroLede}>
@@ -352,11 +351,19 @@ export default function Home() {
           <div className={styles.projectsShowcase}>
             <div className={styles.projectsCards}>
               <a
-                className={styles.projectCard}
+                className={`${styles.projectCard} ${styles.projectCardTodo}`}
                 href="https://github.com/jaseci-labs/jac-todo"
                 target="_blank"
                 rel="noopener noreferrer"
               >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/todo.gif"
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                  className={styles.todoMedia}
+                />
                 <div className={styles.projectCardTop}>
                   <span className={styles.projectCardMeta}>Built in Jac</span>
                   <span className={styles.projectCardArrow} aria-hidden="true">
