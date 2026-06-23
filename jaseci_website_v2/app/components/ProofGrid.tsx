@@ -81,6 +81,14 @@ export default function ProofGrid() {
 
           {/* ── Bottom zone: research papers + "all the research" CTA, one row ── */}
           <div className={styles.bottomRow}>
+            <a
+              href="https://jaseci.engin.umich.edu/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.researchLink}
+            >
+              All the research →
+            </a>
             {PAPERS.map((p) => (
               <a
                 key={p.href}
@@ -99,14 +107,6 @@ export default function ProofGrid() {
                 </span>
               </a>
             ))}
-            <a
-              href="https://jaseci.engin.umich.edu/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.researchLink}
-            >
-              All the research →
-            </a>
           </div>
         </div>
       </div>

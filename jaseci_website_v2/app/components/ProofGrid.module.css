@@ -203,6 +203,8 @@
 .caseNav {
   display: flex;
   gap: 6px;
+  margin-top: auto;
+  align-self: flex-end;
 }
 .caseArrow {
   width: 30px;
@@ -347,9 +349,6 @@
 }
 
 .featureFoot {
-  margin-top: auto;
-  padding-top: 28px;
-  align-self: flex-end;
   font-family: var(--font-mono);
   font-size: clamp(22px, 2.6vw, 32px);
   letter-spacing: 0.05em;
@@ -366,7 +365,7 @@
 
 .bottomRow {
   display: grid;
-  grid-template-columns: 1fr 1fr auto;
+  grid-template-columns: auto 1fr 1fr;
   gap: 16px;
   align-items: stretch;
 }
@@ -484,9 +483,6 @@
   }
   .feature {
     padding: 30px 26px;
-  }
-  .featureFoot {
-    align-self: flex-start;
   }
   .bottomRow {
     grid-template-columns: 1fr;

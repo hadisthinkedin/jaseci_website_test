@@ -74,24 +74,9 @@ export default function CaseStudyCarousel() {
   return (
     <article className={styles.feature} aria-roledescription="carousel">
       <div className={styles.featureTop}>
-        <div className={styles.caseNav}>
-          <button
-            type="button"
-            className={styles.caseArrow}
-            onClick={() => go(-1)}
-            aria-label="Previous case study"
-          >
-            ‹
-          </button>
-          <button
-            type="button"
-            className={styles.caseArrow}
-            onClick={() => go(1)}
-            aria-label="Next case study"
-          >
-            ›
-          </button>
-        </div>
+        <a href={c.href} className={styles.featureFoot}>
+          Read the case study →
+        </a>
       </div>
 
       <div className={styles.caseTabs} role="tablist" aria-label="Case studies">
@@ -130,9 +115,24 @@ export default function CaseStudyCarousel() {
         </blockquote>
       </div>
 
-      <a href={c.href} className={styles.featureFoot}>
-        Read the case study →
-      </a>
+      <div className={styles.caseNav}>
+        <button
+          type="button"
+          className={styles.caseArrow}
+          onClick={() => go(-1)}
+          aria-label="Previous case study"
+        >
+          ‹
+        </button>
+        <button
+          type="button"
+          className={styles.caseArrow}
+          onClick={() => go(1)}
+          aria-label="Next case study"
+        >
+          ›
+        </button>
+      </div>
     </article>
   );
 }
