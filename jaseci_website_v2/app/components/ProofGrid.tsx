@@ -73,9 +73,6 @@ export default function ProofGrid() {
                   </div>
                 ))}
               </div>
-              <div className={styles.colCap}>
-                <span className={styles.colCapNum}>02</span> Company-backed
-              </div>
             </div>
 
             {/* 01 — Enterprise-backed: case-study carousel */}
@@ -105,9 +102,6 @@ export default function ProofGrid() {
           </div>
 
           <div className={styles.researchCap}>
-            <div className={styles.colCap}>
-              <span className={styles.colCapNum}>03</span> Research-backed
-            </div>
             <a
               href="https://jaseci.engin.umich.edu/"
               target="_blank"

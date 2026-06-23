@@ -74,9 +74,6 @@ export default function CaseStudyCarousel() {
   return (
     <article className={styles.feature} aria-roledescription="carousel">
       <div className={styles.featureTop}>
-        <div className={styles.featureEyebrow}>
-          <span className={styles.featureNum}>01</span> Enterprise-backed
-        </div>
         <div className={styles.caseNav}>
           <button
             type="button"
