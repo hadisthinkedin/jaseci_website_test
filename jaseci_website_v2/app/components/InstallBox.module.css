@@ -1,0 +1,128 @@
+/* Install box modelled on bun.sh's — OS tabs riding on top of an accent-bordered
+   terminal block, with a copy button. Rebuilt on the site's locked palette:
+   white surface, hairline tabs, orange (--accent) active tab + block border. */
+
+.box {
+  width: 100%;
+  max-width: 560px; /* aligns under .heroLede (same max-width) */
+  margin-top: 32px;
+}
+
+.tabRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+
+.tabs {
+  display: flex;
+  flex-direction: row;
+}
+
+/* tabs sit flush as a connected group; the shared edge collapses via -2px */
+.tab + .tab {
+  margin-left: -2px;
+}
+
+.tab {
+  cursor: pointer;
+  border: 2px solid var(--muted);
+  border-bottom: none;
+  background: var(--background);
+  color: var(--muted);
+  padding: 6px 16px;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.2;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.tab:hover:not(.tabActive) {
+  color: var(--foreground);
+  border-color: var(--foreground);
+}
+
+.tabActive {
+  position: relative; /* draw the active tab over its neighbour's edge */
+  z-index: 1;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.source {
+  margin-left: auto;
+  padding-left: 16px;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--muted);
+  opacity: 0.7;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.source:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.codeBlock {
+  position: relative;
+  border: 2px solid var(--accent);
+  /* square the top-left so the block reads as continuous with the active tab */
+  border-radius: 0 6px 6px 6px;
+  background: var(--background);
+  padding: 18px 56px 18px 20px; /* right padding clears the copy button */
+}
+
+.pre {
+  margin: 0;
+  overflow-x: auto;
+}
+
+.code {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  line-height: 1.4;
+  color: var(--foreground);
+  white-space: pre;
+}
+
+.copy {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.copy:hover {
+  opacity: 1;
+  color: var(--foreground);
+}
+
+/* copied — flash the check in the brand orange */
+.copyDone {
+  opacity: 1;
+  color: var(--accent);
+}
+
+.copy svg {
+  width: 28px;
+  height: 28px;
+}
