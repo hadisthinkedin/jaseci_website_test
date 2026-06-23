@@ -79,7 +79,7 @@ export default function ProofGrid() {
             <CaseStudyCarousel />
           </div>
 
-          {/* ── Bottom zone: research papers ── */}
+          {/* ── Bottom zone: research papers + "all the research" CTA, one row ── */}
           <div className={styles.bottomRow}>
             {PAPERS.map((p) => (
               <a
@@ -99,9 +99,6 @@ export default function ProofGrid() {
                 </span>
               </a>
             ))}
-          </div>
-
-          <div className={styles.researchCap}>
             <a
               href="https://jaseci.engin.umich.edu/"
               target="_blank"
