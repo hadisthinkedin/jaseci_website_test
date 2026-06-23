@@ -354,7 +354,7 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--foreground);
   transition: color 0.15s ease;
 }
 .featureFoot:hover {
@@ -455,11 +455,11 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--foreground);
   transition: color 0.15s ease;
 }
 .researchLink:hover {
-  color: var(--accent-hover);
+  text-decoration: underline;
 }
 
 /* ── Responsive — collapse to a single column ──────────────────────────── */

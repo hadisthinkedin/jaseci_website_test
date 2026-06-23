@@ -87,7 +87,7 @@ export default function ProofGrid() {
               rel="noopener noreferrer"
               className={styles.researchLink}
             >
-              All the research →
+              Backed by research →
             </a>
             {PAPERS.map((p) => (
               <a
