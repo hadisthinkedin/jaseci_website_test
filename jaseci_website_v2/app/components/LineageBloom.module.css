@@ -1,0 +1,188 @@
+/* Lineage constellation — Jac → Jaseci (slow), then a black radial web that
+   explodes outward almost instantly. After that, JS floats every point on its
+   own path (see LineageBloom.tsx); CSS here only handles the reveal + twinkle,
+   so the two never fight: JS owns position (cx/cy, x1…y2), CSS owns opacity,
+   scale and the line-draw. Everything sits in its hidden initial state until the
+   wrapper gets .play (set by an IntersectionObserver); per-element --d staggers
+   the reveal. */
+
+/* full-bleed: .askVisual centres its child, so a 100vw child spans the screen.
+   overflow: visible on the svg lets the widest points (and their float) spill
+   past the viewBox — i.e. off the screen edges; html/body use overflow-x: clip,
+   so that never makes a horizontal scrollbar. flex-shrink:0 stops the centring
+   flex parent from squeezing it back to the section width. */
+.wrap {
+  width: 100vw;
+  max-width: 100vw;
+  flex-shrink: 0;
+}
+
+.svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+  font-family: var(--font-mono);
+}
+
+/* ── lines (initial: undrawn) — all black ─────────────────────────────────────
+   stroke-width + stroke-opacity are set INLINE per edge (depth-driven) so the
+   web mixes thin/faint far lines with bold/solid near lines → a 3D feel. */
+
+.line {
+  fill: none;
+  stroke: var(--foreground);
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.main {
+  stroke-width: 1.6; /* the slow connection */
+}
+
+/* ── points (initial: hidden) — black ─────────────────────────────────────────
+   depth dimming is an inline fill-opacity; the reveal pop + twinkle animate the
+   element `opacity`, and the two multiply (far points read fainter AND still
+   twinkle). */
+
+.node {
+  fill: var(--foreground);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.rootNode {
+  fill: var(--background);
+  stroke: var(--foreground);
+  stroke-width: 2;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.hubNode {
+  fill: var(--foreground);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.hubRing {
+  fill: none;
+  stroke: var(--foreground);
+  stroke-width: 1.2;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.label {
+  fill: var(--foreground);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  opacity: 0;
+}
+
+/* ── play: the slow connection, then the instant burst ────────────────────── */
+
+.play .main {
+  animation: draw 1.5s ease forwards; /* slow */
+  animation-delay: var(--d, 0s);
+}
+
+/* the whole web fires in a flash — extreme contrast with the 1.5s approach */
+.play .burst {
+  animation: draw 0.12s ease-out forwards;
+  animation-delay: var(--d, 0s);
+}
+
+/* burst points snap in fast, then twinkle forever (offset so they don't sync) */
+.play .node {
+  animation: pop 0.14s ease-out var(--d) forwards,
+    twinkle 3.6s ease-in-out calc(var(--d) + 0.6s) infinite;
+}
+.play .rootNode {
+  animation: pop 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--d, 0s);
+}
+.play .hubNode {
+  animation: pop 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--d, 0s);
+}
+.play .label {
+  animation: fade 0.5s ease forwards;
+  animation-delay: var(--d, 0s);
+}
+.play .hubRing {
+  animation: ripple 2.6s ease-out infinite;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes fade {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+@keyframes ripple {
+  0% {
+    opacity: 0.4;
+    transform: scale(0.6);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.8);
+  }
+}
+
+/* reduced motion — show the finished web, no draw / twinkle / float (the JS
+   float bails out too, so the points just rest at their base positions). */
+@media (prefers-reduced-motion: reduce) {
+  .play .main,
+  .play .burst,
+  .play .node,
+  .play .rootNode,
+  .play .hubNode,
+  .play .label,
+  .play .hubRing {
+    animation: none;
+  }
+  .line {
+    stroke-dashoffset: 0;
+  }
+  .node,
+  .rootNode,
+  .hubNode,
+  .label {
+    opacity: 1;
+  }
+  .hubRing {
+    opacity: 0.3;
+  }
+}
