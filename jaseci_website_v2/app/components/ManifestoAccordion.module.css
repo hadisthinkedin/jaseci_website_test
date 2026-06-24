@@ -124,3 +124,54 @@
     transition: none;
   }
 }
+
+/* ─── tower variant ────────────────────────────────────────────────────────
+   Pairs the accordion with the BlockTower beside it. Each claim becomes a solid
+   3D block — the white front face plus an extruded right + bottom side face —
+   and the stack widens as it descends, like blocks settling onto a stable base.
+   Scoped to variant="tower", so the jar-section accordion stays flat. */
+.tower {
+  align-items: flex-start; /* let each box take its own, narrower width */
+  gap: 20px;
+  --w-top: 68; /*  % width of the top block    */
+  --w-bottom: 96; /* % width of the bottom block  */
+  --depth: 11px; /*  the extruded block thickness */
+  padding-right: var(--depth); /* room for the widest block's side face */
+}
+
+/* widen by index: top block --w-top%, bottom block --w-bottom%, linear between */
+.tower .box {
+  position: relative;
+  align-self: flex-start;
+  width: calc(
+    (
+        var(--w-top) + (var(--w-bottom) - var(--w-top)) * var(--i) /
+          (var(--n) - 1)
+      ) * 1%
+  );
+}
+
+/* the side faces — a solid plane offset down-right behind the block, so a strip
+   shows along its right and bottom edge: the block's thickness. Black, matching
+   the tower's hairline linework and its solid Python base. */
+.tower .box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #000;
+  transform: translate(var(--depth), var(--depth));
+  transition: background 0.18s ease;
+}
+
+/* hover → the whole block goes orange; the side face takes the darker accent so
+   it reads as a lit 3D block (bright front, shaded side), matching the tower. */
+.tower .box:hover::before {
+  background: var(--accent-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tower .box::before {
+    transition: none;
+  }
+}

@@ -288,7 +288,7 @@ export default function Home() {
         </div>
         <div className={styles.jarCopy}>
           <h2 className={styles.h2}>Python, LangChain, they&rsquo;re all broken.</h2>
-          <ManifestoAccordion />
+          <ManifestoAccordion variant="tower" />
         </div>
       </section>
 

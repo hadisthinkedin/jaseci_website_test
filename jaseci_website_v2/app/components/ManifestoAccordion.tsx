@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import styles from "./ManifestoAccordion.module.css";
 
 /* ───────────────────────────────────────────────
@@ -37,8 +37,12 @@ const ITEMS = [
 
 export default function ManifestoAccordion({
   items = ITEMS,
+  variant = "default",
 }: {
   items?: { headline: string; body: string }[];
+  // "tower" pairs the accordion with the BlockTower beside it: each claim
+  // becomes a 3D block and the stack widens as it descends.
+  variant?: "default" | "tower";
 }) {
   // single-open accordion: opening one box collapses whichever was open
   const [open, setOpen] = useState<number | null>(null);
@@ -46,11 +50,19 @@ export default function ManifestoAccordion({
   const toggle = (i: number) => setOpen((prev) => (prev === i ? null : i));
 
   return (
-    <div className={styles.list}>
+    <div
+      className={`${styles.list} ${variant === "tower" ? styles.tower : ""}`}
+    >
       {items.map((item, i) => {
         const isOpen = open === i;
         return (
-          <div className={styles.box} key={i} data-open={isOpen}>
+          <div
+            className={styles.box}
+            key={i}
+            data-open={isOpen}
+            // index + count drive the per-block width ramp in the tower variant
+            style={{ "--i": i, "--n": items.length } as CSSProperties}
+          >
             <button
               type="button"
               className={styles.head}
