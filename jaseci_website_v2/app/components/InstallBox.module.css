@@ -36,8 +36,6 @@
   font-family: var(--font-sans);
   font-size: 0.95rem;
   line-height: 1.2;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
   transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
 }
 
@@ -73,8 +71,6 @@
 .codeBlock {
   position: relative;
   border: 2px solid var(--accent);
-  /* square the top-left so the block reads as continuous with the active tab */
-  border-radius: 0 6px 6px 6px;
   background: var(--background);
   padding: 18px 56px 18px 20px; /* right padding clears the copy button */
 }
