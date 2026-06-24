@@ -89,7 +89,7 @@
 /* ── play: the slow connection, then the instant burst ────────────────────── */
 
 .play .main {
-  animation: draw 1.5s ease forwards; /* slow */
+  animation: draw var(--dur, 1.5s) ease forwards; /* slow, segment by segment */
   animation-delay: var(--d, 0s);
 }
 
