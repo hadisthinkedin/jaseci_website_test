@@ -48,33 +48,24 @@ function makeRng(seed: number) {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
-const rng = makeRng(0x9e21b7);
+const rng = makeRng(0x9e21b7); // geometry — fixed seed, server === client
+const mrng = makeRng(0x51f3a9); // motion params on a separate stream, so tuning
+// the drift never reshuffles the verified layout
 const jit = (amt: number) => (rng() * 2 - 1) * amt;
 
-// per-point float: each point wanders on its own little Lissajous path (two
-// incommensurate sinusoids per axis → no obvious repeat), with its own speeds
-// and phases. Horizontal swing scales with reach + depth (near points parallax
-// further, and the outermost ones swing clear off the screen); vertical swing is
-// kept small + absolute so the web never overlaps the copy above it.
-type Float = {
-  ax: number;
-  ay: number;
-  wx1: number;
-  wx2: number;
-  px1: number;
-  px2: number;
-  wy1: number;
-  wy2: number;
-  py1: number;
-  py2: number;
-};
 type Pt = {
-  x: number; // base position
+  x: number; // base position (rounded — see r2)
   y: number;
   r: number; // radius (depth)
   fo: number; // fill-opacity (depth)
   delay: number; // reveal stagger
-  f: Float;
+  depth: number; // 0 (far) … 1 (near) — also a gentle motion-parallax weight
+  // a whisper of unique per-point motion, so the web isn't perfectly rigid
+  ma: number; // amplitude
+  mw: number; // speed
+  mp: number; // phase
+  mcx: number; // direction x
+  mcy: number; // direction y (kept shallow)
 };
 // edge endpoints: -1 = the Jaseci hub, otherwise an index into PTS
 type Edge = {
@@ -97,36 +88,21 @@ const place = (a: number, r: number) => ({
   x: r2(CENTER.x + Math.cos(a) * r * XK),
   y: r2(CENTER.y + Math.sin(a) * r * YK),
 });
-const reach = (x: number, y: number) => Math.hypot(x - CENTER.x, y - CENTER.y);
-
-function floatFor(x: number, y: number, depth: number): Float {
-  const ax =
-    (10 + reach(x, y) * 0.06) * (0.6 + depth * 0.85) * (0.85 + rng() * 0.5);
-  const ay = 5 + rng() * 13; // always shallow, regardless of horizontal reach
-  const wx1 = 0.12 + rng() * 0.33;
-  const wy1 = 0.12 + rng() * 0.33;
-  return {
-    ax,
-    ay,
-    wx1,
-    wx2: wx1 * (1.6 + rng() * 0.8),
-    px1: rng() * TAU,
-    px2: rng() * TAU,
-    wy1,
-    wy2: wy1 * (1.6 + rng() * 0.8),
-    py1: rng() * TAU,
-    py2: rng() * TAU,
-  };
-}
 
 function addPt(x: number, y: number, depth: number, delay: number) {
+  const md = mrng() * TAU; // a random direction for this point's own small drift
   PTS.push({
     x,
     y,
     r: +(1.6 + depth * 2.6).toFixed(2),
     fo: +(0.4 + depth * 0.6).toFixed(2),
     delay,
-    f: floatFor(x, y, depth),
+    depth,
+    ma: 3 + mrng() * 4, // 3…7 units — small, so shapes stay legible
+    mw: 0.22 + mrng() * 0.45,
+    mp: mrng() * TAU,
+    mcx: Math.cos(md),
+    mcy: Math.sin(md) * 0.6, // shallow vertical
   });
   return PTS.length - 1;
 }
@@ -140,6 +116,9 @@ function addEdge(a: number, b: number, depth: number, delay: number) {
   });
 }
 
+type Spoke = { p1: number; p2s: number[] };
+const spokes: Spoke[] = [];
+
 const N1 = 17;
 let order = 0;
 for (let i = 0; i < N1; i++) {
@@ -151,6 +130,7 @@ for (let i = 0; i < N1; i++) {
   const i1 = addPt(p1.x, p1.y, d1, 1.5 + i * 0.004 + 0.05);
   addEdge(-1, i1, d1, 1.5 + i * 0.004);
 
+  const p2s: number[] = [];
   const branches = 1 + Math.floor(rng() * 3); // 1–3 secondary branches
   for (let k = 0; k < branches; k++) {
     const a2 = a + jit(0.5);
@@ -158,6 +138,7 @@ for (let i = 0; i < N1; i++) {
     const d2 = rng();
     const i2 = addPt(p2.x, p2.y, d2, 1.55 + order * 0.003 + 0.05);
     addEdge(i1, i2, d2, 1.55 + order * 0.003);
+    p2s.push(i2);
 
     if (rng() < 0.5) {
       const a3 = a2 + jit(0.32);
@@ -168,7 +149,70 @@ for (let i = 0; i < N1; i++) {
     }
     order += 1;
   }
+  spokes.push({ p1: i1, p2s });
 }
+
+// ── close some of the web into geometric shapes ──────────────────────────────
+// Each added chord links two points that ALREADY share a neighbour, so it
+// completes a closed polygon (mostly triangles) instead of dangling. Only a
+// subset is drawn, so the figure stays irregular. Shape edges reveal just after
+// their endpoints and sit a touch bolder, so the shapes read.
+const shapeDelay = (a: number, b: number) =>
+  Math.max(PTS[a].delay, PTS[b].delay) + 0.06;
+function addShape(a: number, b: number) {
+  addEdge(a, b, 0.5 + mrng() * 0.45, shapeDelay(a, b));
+}
+// fan triangles around the hub (hub + two angularly-adjacent p1s); a subset, so
+// the ring stays broken and irregular
+for (let i = 0; i < N1; i++) {
+  if (mrng() < 0.5) addShape(spokes[i].p1, spokes[(i + 1) % N1].p1);
+}
+// sibling triangles: two branches off the same p1 close up
+for (const s of spokes) {
+  if (s.p2s.length >= 2) addShape(s.p2s[0], s.p2s[1]);
+  if (s.p2s.length >= 3 && mrng() < 0.5) addShape(s.p2s[1], s.p2s[2]);
+}
+// a few longer chords between neighbouring spokes' nearest tips → quads/pentagons
+for (let i = 0; i < N1; i++) {
+  const u = spokes[i].p2s;
+  const v = spokes[(i + 1) % N1].p2s;
+  if (u.length && v.length && mrng() < 0.4) {
+    let ba = u[0];
+    let bb = v[0];
+    let bd = Infinity;
+    for (const p of u) {
+      for (const q of v) {
+        const dd = (PTS[p].x - PTS[q].x) ** 2 + (PTS[p].y - PTS[q].y) ** 2;
+        if (dd < bd) {
+          bd = dd;
+          ba = p;
+          bb = q;
+        }
+      }
+    }
+    addShape(ba, bb);
+  }
+}
+
+// ── organic drift: one smooth, large-wavelength flow field shared by every
+// point. The wavelengths are far larger than any single shape, so neighbours
+// move almost in unison — the whole web undulates and flows like one body rather
+// than each point twitching alone. A slow breathing pulse (radial, about the
+// hub) makes it swell past the screen edges and settle back. ──────────────────
+type Wave = { kx: number; ky: number; w: number; p: number; a: number };
+const FX: Wave[] = [
+  { kx: 0.0016, ky: 0.0022, w: 0.24, p: mrng() * TAU, a: 17 },
+  { kx: -0.0011, ky: 0.0039, w: 0.19, p: mrng() * TAU, a: 16 },
+  { kx: 0.0028, ky: -0.0017, w: 0.33, p: mrng() * TAU, a: 12 },
+];
+const FY: Wave[] = [
+  { kx: -0.0024, ky: 0.0019, w: 0.21, p: mrng() * TAU, a: 12 },
+  { kx: 0.0013, ky: 0.0042, w: 0.3, p: mrng() * TAU, a: 10 },
+  { kx: 0.0031, ky: 0.0026, w: 0.23, p: mrng() * TAU, a: 9 },
+];
+const BREATHE_AMP = 0.06;
+const BREATHE_W = 0.12;
+const BREATHE_P = mrng() * TAU;
 
 const mainD = `M${JAC.x} ${JAC.y} L${CENTER.x} ${CENTER.y}`;
 const cssVar = (delay: number) => ({ "--d": `${delay}s` } as CSSProperties);
@@ -191,10 +235,12 @@ export default function LineageBloom() {
     return () => io.disconnect();
   }, []);
 
-  // Per-frame independent float. Each point follows its own Lissajous path; the
-  // lines are re-pointed between the moving points every frame. An eased
-  // envelope holds everything still until the web has finished exploding (~2s),
-  // then lets the drift breathe in — so the burst stays crisp and geometric.
+  // Per-frame organic drift. Every point samples one shared, large-wavelength
+  // flow field (plus a radial breathing pulse and a whisper of its own motion),
+  // so neighbours move together and the web undulates as one body; the lines are
+  // re-pointed between the moving points each frame. An eased envelope holds
+  // everything still until the web has finished exploding (~2s), then breathes
+  // the motion in — so the burst stays crisp, then comes alive.
   useEffect(() => {
     if (!play) return;
     if (
@@ -217,27 +263,35 @@ export default function LineageBloom() {
       const t = (ts - start) / 1000;
       const e0 = (t - 2.0) / 1.8;
       const env = e0 <= 0 ? 0 : e0 >= 1 ? 1 : e0 * e0 * (3 - 2 * e0); // smoothstep
+      const breath = 1 + env * BREATHE_AMP * Math.sin(BREATHE_W * t + BREATHE_P);
 
       for (let i = 0; i < PTS.length; i++) {
-        const { x, y, f } = PTS[i];
-        const ox =
-          env *
-          f.ax *
-          (0.65 * Math.sin(f.wx1 * t + f.px1) +
-            0.35 * Math.sin(f.wx2 * t + f.px2));
-        const oy =
-          env *
-          f.ay *
-          (0.65 * Math.sin(f.wy1 * t + f.py1) +
-            0.35 * Math.sin(f.wy2 * t + f.py2));
-        const nx = x + ox;
-        const ny = y + oy;
+        const p = PTS[i];
+        const { x, y } = p;
+        // shared flow field — coherent across neighbours (shapes drift as units)
+        let ox = 0;
+        for (let c = 0; c < FX.length; c++) {
+          const f = FX[c];
+          ox += f.a * Math.sin(f.kx * x + f.ky * y + f.w * t + f.p);
+        }
+        let oy = 0;
+        for (let c = 0; c < FY.length; c++) {
+          const f = FY[c];
+          oy += f.a * Math.sin(f.kx * x + f.ky * y + f.w * t + f.p);
+        }
+        const par = 0.85 + p.depth * 0.3; // mild parallax, shapes stay intact
+        const m = p.ma * Math.sin(p.mw * t + p.mp); // this point's own whisper
+        // breathe radially about the hub, then add the coherent flow + whisper
+        const nx =
+          CENTER.x + (x - CENTER.x) * breath + env * (ox * par + m * p.mcx);
+        const ny =
+          CENTER.y + (y - CENTER.y) * breath + env * (oy * par + m * p.mcy);
         px[i] = nx;
         py[i] = ny;
-        const c = ptEls.current[i];
-        if (c) {
-          c.cx.baseVal.value = nx;
-          c.cy.baseVal.value = ny;
+        const cc = ptEls.current[i];
+        if (cc) {
+          cc.cx.baseVal.value = nx;
+          cc.cy.baseVal.value = ny;
         }
       }
 
@@ -263,7 +317,7 @@ export default function LineageBloom() {
       ref={ref}
       className={`${styles.wrap} ${play ? styles.play : ""}`}
       role="img"
-      aria-label="A line slowly connecting Jac to Jaseci, which then instantly explodes into a wide, irregular black web that spills past the edges of the screen — every point drifting on its own path, like a living constellation."
+      aria-label="A line slowly connecting Jac to Jaseci, which then instantly explodes into a wide, irregular black web of lines and triangles that spills past the edges of the screen — the whole web then drifting and breathing like a living constellation."
     >
       <svg
         className={styles.svg}
