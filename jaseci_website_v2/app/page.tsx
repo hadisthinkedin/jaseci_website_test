@@ -3,13 +3,17 @@ import styles from "./page.module.css";
 import FallingImages from "./components/FallingImages";
 import AbstractionTrend from "./components/AbstractionTrend";
 import Typewriter from "./components/Typewriter";
+import InstallBox from "./components/InstallBox";
 import ManifestoAccordion from "./components/ManifestoAccordion";
-import AbstractionTrendScroll from "./components/AbstractionTrendScroll";
+import LineageBloom from "./components/LineageBloom";
+import EvolutionCards from "./components/EvolutionCards";
 import ProofGrid from "./components/ProofGrid";
+import BlockTower from "./components/BlockTower";
 
-// The frameworks to toss in the jar. These point at /public/jar/*.svg —
-// currently placeholder marks. Drop each project's OFFICIAL logo SVG in at the
-// same path (bump ?v= to force a refetch) and it auto-sizes to its real shape.
+// The frameworks to toss in the bin — each drops in as an orange hexagon that
+// flips to the logo (forced white-on-black) on hover. SVGs live at
+// /public/jar/*.svg; drop each project's official mark in at the same path
+// (bump ?v= to force a refetch).
 const JAR_IMAGES = [
   { src: "/jar/langchain.svg?v=5", alt: "LangChain" },
   { src: "/jar/langgraph.svg?v=2", alt: "LangGraph" },
@@ -242,6 +246,7 @@ export default function Home() {
               <span className={styles.accent}>50 years</span>{" "}
               of developer&rsquo;s hell.
             </p>
+            <InstallBox />
           </div>
 
           <div className={styles.heroVisual}>
@@ -250,7 +255,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ---------- JAR — the frameworks to toss ---------- */}
+      {/* ---------- THE F*CK BIN — toss the broken frameworks in the trash ---------- */}
 
       <section className={`${styles.section} ${styles.jarSection}`}>
         <div className={styles.jarColumn}>
@@ -259,7 +264,8 @@ export default function Home() {
             <div className={styles.jarBody}>
               <FallingImages
                 images={JAR_IMAGES}
-                maxSize={126}
+                variant="hex"
+                maxSize={110}
                 trigger="scroll"
                 gravity={1.1}
                 mouseConstraintStiffness={0.18}
@@ -267,6 +273,18 @@ export default function Home() {
               />
             </div>
           </div>
+        </div>
+        <div className={styles.jarCopy}>
+          <h2 className={styles.h2}>Python, LangChain, they&rsquo;re all broken.</h2>
+          <ManifestoAccordion />
+        </div>
+      </section>
+
+      {/* ---------- THE STACK — abstractions piled on Python ---------- */}
+
+      <section className={`${styles.section} ${styles.jarSection}`}>
+        <div className={styles.jarColumn}>
+          <BlockTower />
         </div>
         <div className={styles.jarCopy}>
           <h2 className={styles.h2}>Python, LangChain, they&rsquo;re all broken.</h2>
@@ -282,17 +300,18 @@ export default function Home() {
 
       <section className={styles.section}>
         <div className={styles.askEcoLayout}>
-          {/* LEFT — the trend graph */}
-          <div className={styles.askVisual}>
-            <AbstractionTrendScroll />
+          {/* TOP — the copy + the evolution beats as horizontal step cards */}
+          <div className={styles.askEcoContent}>
+            <h2 className={styles.h2}>
+              Developers needed <s>more</s>{" "}
+              <span className={styles.accent}>Jaseci</span>.
+            </h2>
+            <EvolutionCards items={EVOLUTION_POINTS} />
           </div>
 
-          {/* RIGHT — the copy */}
-          <div className={styles.askEcoContent}>
-            <h2 className={styles.h2}>Developers needed more.</h2>
-            <div data-jaseci-anchor>
-              <ManifestoAccordion items={EVOLUTION_POINTS} />
-            </div>
+          {/* BOTTOM — Jac → Jaseci, blooming into the ecosystem tree */}
+          <div className={styles.askVisual}>
+            <LineageBloom />
           </div>
         </div>
       </section>
@@ -411,11 +430,19 @@ export default function Home() {
               </a>
 
               <a
-                className={styles.projectCard}
+                className={`${styles.projectCard} ${styles.projectCardBlackhole}`}
                 href="https://github.com/jaseci-labs/jac-blackhole"
                 target="_blank"
                 rel="noopener noreferrer"
               >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/blackhole.gif"
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                  className={styles.blackholeMedia}
+                />
                 <div className={styles.projectCardTop}>
                   <span className={styles.projectCardMeta}>
                     Built in 4 Days
@@ -436,11 +463,19 @@ export default function Home() {
               </a>
 
               <a
-                className={styles.projectCard}
+                className={`${styles.projectCard} ${styles.projectCardNetwork}`}
                 href="https://github.com/jaseci-labs/jac-research-agent"
                 target="_blank"
                 rel="noopener noreferrer"
               >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/network.gif"
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                  className={styles.networkMedia}
+                />
                 <div className={styles.projectCardTop}>
                   <span className={styles.projectCardMeta}>Built solo</span>
                   <span className={styles.projectCardArrow} aria-hidden="true">

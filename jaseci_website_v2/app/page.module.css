@@ -88,13 +88,13 @@
 
 /* ---------- the ask → so i built jaseci ---------- */
 
-/* simple side-by-side: graph on the left, copy on the right, at natural height.
-   (no tall scroll track — that left a big empty gap before the ecosystem) */
+/* stacked top/bottom: the copy + evolution step cards ride on top, the trend
+   graph sits underneath, centered. (Was side-by-side; reformatted into rows so
+   the cards run horizontally above the graph.) */
 .askEcoLayout {
-  display: grid;
-  grid-template-columns: 1fr 1.05fr;
-  gap: 56px;
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
 }
 
 .askVisual {
@@ -247,8 +247,9 @@
 
 .heroGrid {
   display: grid;
-  /* more share to the copy column so the headline wraps to fewer lines */
-  grid-template-columns: 1.7fr minmax(300px, 1fr);
+  /* more share to the copy column so the headline wraps to fewer lines,
+     balanced against the wider abstraction-trend graph on the right */
+  grid-template-columns: 1.4fr minmax(350px, 1fr);
   gap: 64px;
   align-items: stretch;
   min-height: 620px;
@@ -283,7 +284,7 @@
   justify-content: center;
 }
 
-/* ---------- jar (moved below the hero) ---------- */
+/* ---------- the F*CK bin — a thin wire-mesh trash can ---------- */
 
 .jarSection {
   display: grid;
@@ -304,18 +305,20 @@
 }
 
 .jar {
+  /* the can silhouette — hairline (1px) to match the Pocketnest card border */
   position: relative;
   width: 100%;
   max-width: 360px;
-  border: 2px solid #000;
-  border-top: none;
-  border-radius: 0 0 8px 8px;
+  border: 1px solid #000;
+  border-top: none; /* the black label band is the top of the can */
+  border-radius: 0 0 10px 10px;
   background: #fff;
   display: flex;
   flex-direction: column;
 }
 
 .jarLabel {
+  /* the can's top band / label */
   font-family: var(--font-mono);
   font-weight: 700;
   font-size: clamp(48px, 5vw, 72px);
@@ -327,26 +330,33 @@
   color: #fff;
   border-radius: 0;
   position: relative;
-  margin: 0 -2px;
+  margin: 0 -1px; /* cover the 1px side hairlines */
 }
 
-/* small "rim" detail above the lid */
+/* the metal hoop above the label */
 .jar::before {
   content: "";
   position: absolute;
-  top: -10px;
-  left: -8px;
-  right: -8px;
-  height: 10px;
+  top: -9px;
+  left: -7px;
+  right: -7px;
+  height: 9px;
   background: #000;
   border-radius: 4px 4px 0 0;
 }
 
 .jarBody {
+  /* the wire-mesh body the hex tiles drop into */
   position: relative;
   flex: 1;
   min-height: 520px;
   overflow: hidden;
+  border-radius: 0 0 10px 10px;
+  background-color: #fff;
+  /* 1px diamond wire mesh — the same hairline weight as the borders */
+  background-image:
+    repeating-linear-gradient(60deg, transparent 0 13px, #000 13px 14px),
+    repeating-linear-gradient(-60deg, transparent 0 13px, #000 13px 14px);
 }
 
 /* ---------- proof ---------- */
@@ -1022,22 +1032,28 @@
   color: rgba(255, 255, 255, 0.78);
 }
 
-/* Media cards (FPS, Todo) — preview gif plays on hover */
+/* Media cards (FPS, Todo, Black Hole, Research Agent) — preview gif plays on hover */
 .projectCardFps,
-.projectCardTodo {
+.projectCardTodo,
+.projectCardBlackhole,
+.projectCardNetwork {
   position: relative;
   overflow: hidden;
 }
 
 /* keep meta + title above the media and scrim */
 .projectCardFps > div,
-.projectCardTodo > div {
+.projectCardTodo > div,
+.projectCardBlackhole > div,
+.projectCardNetwork > div {
   position: relative;
   z-index: 2;
 }
 
 .fpsMedia,
-.todoMedia {
+.todoMedia,
+.blackholeMedia,
+.networkMedia {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -1051,7 +1067,9 @@
 
 /* dark scrim under the text so the title stays legible over the gif */
 .projectCardFps::after,
-.projectCardTodo::after {
+.projectCardTodo::after,
+.projectCardBlackhole::after,
+.projectCardNetwork::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -1070,13 +1088,19 @@
 .projectCardFps:hover .fpsMedia,
 .projectCardFps:hover::after,
 .projectCardTodo:hover .todoMedia,
-.projectCardTodo:hover::after {
+.projectCardTodo:hover::after,
+.projectCardBlackhole:hover .blackholeMedia,
+.projectCardBlackhole:hover::after,
+.projectCardNetwork:hover .networkMedia,
+.projectCardNetwork:hover::after {
   opacity: 1;
 }
 
 /* let the preview take over: hide the long description on hover */
 .projectCardFps:hover .projectCardDesc,
-.projectCardTodo:hover .projectCardDesc {
+.projectCardTodo:hover .projectCardDesc,
+.projectCardBlackhole:hover .projectCardDesc,
+.projectCardNetwork:hover .projectCardDesc {
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -1252,10 +1276,9 @@
     min-height: auto;
   }
 
-  /* stacked: graph on top, copy beneath */
+  /* tighten the row gap on small screens (already stacked) */
   .askEcoLayout {
-    grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 40px;
   }
 
   .jarSection {
