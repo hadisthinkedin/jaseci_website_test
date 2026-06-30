@@ -58,9 +58,6 @@ export default function InstallBox() {
             </button>
           ))}
         </div>
-        <a className={styles.source} href="/docs">
-          View install docs
-        </a>
       </div>
 
       <div className={styles.codeBlock}>
@@ -104,6 +101,10 @@ export default function InstallBox() {
           )}
         </button>
       </div>
+
+      <a className={styles.source} href="/docs">
+        View install docs
+      </a>
     </div>
   );
 }
