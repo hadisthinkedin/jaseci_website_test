@@ -41,6 +41,36 @@
   stroke-width: 1.6; /* the slow connection */
 }
 
+/* ── hover-cells: one transparent triangle per 3-clique in the web, sitting
+   BEHIND the lines/nodes. Each tints orange on its OWN :hover only, so a single
+   polygon lights up — never the whole graph. pointer-events: fill lets the empty
+   (transparent) interior catch the hover; the painted web below is set
+   pointer-events: none so the cell under the cursor always wins. Interactive
+   only once the web has bloomed (.play). */
+.cell {
+  fill: var(--accent);
+  fill-opacity: 0;
+  stroke: none;
+  pointer-events: none;
+  transition: fill-opacity 0.12s ease;
+}
+.play .cell {
+  pointer-events: fill;
+}
+.play .cell:hover {
+  fill-opacity: 0.25;
+}
+
+/* the web itself is decorative — let hovers fall through to the cells above */
+.line,
+.node,
+.rootNode,
+.hubNode,
+.hubRing,
+.label {
+  pointer-events: none;
+}
+
 /* ── points (initial: hidden) — black ─────────────────────────────────────────
    depth dimming is an inline fill-opacity; the reveal pop + twinkle animate the
    element `opacity`, and the two multiply (far points read fainter AND still
@@ -54,8 +84,8 @@
 }
 
 .rootNode {
-  fill: var(--background);
-  stroke: var(--foreground);
+  fill: var(--accent);
+  stroke: var(--accent);
   stroke-width: 2;
   opacity: 0;
   transform-box: fill-box;

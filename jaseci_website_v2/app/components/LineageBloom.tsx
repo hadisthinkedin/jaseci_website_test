@@ -6,11 +6,12 @@ import styles from "./LineageBloom.module.css";
 
 /* ───────────────────────────────────────────────
    Lineage constellation (full-bleed).
-   Jac (far left) slowly connects to Jaseci — a thin line creeps across (now a
-   short chain of sub-cap segments rather than one long line). The instant it
-   lands, Jaseci EXPLODES outward into a dense, wide + tall mesh of MANY points
-   joined by SHORT lines (none longer than ~350px), triangulating into geometric
-   shapes that spill past both edges of the screen.
+   Jac (top) slowly connects DOWN to Jaseci — a thin line descends from the top
+   (a short chain of sub-cap segments rather than one long line). The instant it
+   lands, Jaseci EXPLODES outward into a wide + tall WEB: many points joined by
+   SHORT lines (none longer than ~350px), triangulating into a dense net that
+   spills past both edges of the screen. EVERY point is woven in — no loose dust —
+   and Jac itself laces into the web, while uneven density keeps it organic.
 
    Then it lives: every mesh point samples one shared, large-wavelength flow
    field (plus a slow radial breathing pulse), so neighbours move together and
@@ -27,7 +28,7 @@ const VH = 620; // taller than before — uses the vertical space
 const CX = 740; // hub x (left-of-centre, so the web leans right)
 const CY = VH / 2;
 const HUB = { x: CX, y: CY };
-const JAC = { x: 64, y: CY };
+const JAC = { x: CX, y: 64 }; // top-centre, directly above the hub — line descends
 const TAU = Math.PI * 2;
 
 // Every line is capped at this many viewBox units. The SVG is 100vw wide over a
@@ -46,7 +47,7 @@ const COLS = 27;
 const ROWS = 7;
 const CELL_W = (X_MAX - X_MIN) / COLS;
 const CELL_H = (Y_MAX - Y_MIN) / ROWS;
-const NEAR = 116; // connect neighbours within this → a triangulating mesh
+const NEAR = 130; // connect neighbours within this → a triangulating web
 
 function makeRng(seed: number) {
   let s = seed >>> 0;
@@ -117,8 +118,8 @@ function pushNode(
   NODES.push({
     x: r2(x),
     y: r2(y),
-    r: +(1.4 + depth * 2.4).toFixed(2),
-    fo: +(0.38 + depth * 0.6).toFixed(2),
+    r: +(1.1 + depth * 2.9).toFixed(2), // wider size spread (fine dust → bold anchors)
+    fo: +(0.12 + depth * 0.85).toFixed(2), // ghostly faint … near-solid — a spectral range
     delay,
     depth,
     fixed,
@@ -137,23 +138,27 @@ function pushEdge(
   EDGES.push({
     a,
     b,
-    w: +(0.45 + depth * 1.7 + rng() * 0.3).toFixed(2), // ~0.45 (far) … ~2.45 (near)
-    o: +(0.3 + depth * 0.6).toFixed(2),
+    w: +(0.4 + depth * 1.8 + rng() * 0.3).toFixed(2), // ~0.4 (far) … ~2.5 (near)
+    o: +(0.16 + depth * 0.66).toFixed(2), // fainter floor → wispier, more spectral filaments
     delay,
     ...extra,
   });
 }
 
-// ── scatter the mesh: one jittered point per grid cell (even coverage, organic
-// irregularity), skipping the corridor down the centre-left where the Jac→Jaseci
-// thread runs. ───────────────────────────────────────────────────────────────
+// ── scatter the mesh: a jittered point in MOST grid cells (some left empty for
+// uneven, random density), skipping the corridor straight above the hub where the
+// Jac→Jaseci thread descends. ────────────────────────────────────────────────
 const meshIdx: number[] = [];
 for (let row = 0; row < ROWS; row++) {
   for (let col = 0; col < COLS; col++) {
-    const gx = X_MIN + (col + 0.5) * CELL_W + (rng() * 2 - 1) * CELL_W * 0.42;
-    const gy = Y_MIN + (row + 0.5) * CELL_H + (rng() * 2 - 1) * CELL_H * 0.42;
-    if (gx < CX - 30 && Math.abs(gy - CY) < 80) continue; // approach corridor
-    meshIdx.push(pushNode(gx, gy, rng(), 0, "mesh", false));
+    // leave a few cells empty → slightly uneven density (random, not grid-even),
+    // but full enough to weave into a continuous web.
+    if (rng() < 0.1) continue;
+    const gx = X_MIN + (col + 0.5) * CELL_W + (rng() * 2 - 1) * CELL_W * 0.52;
+    const gy = Y_MIN + (row + 0.5) * CELL_H + (rng() * 2 - 1) * CELL_H * 0.52;
+    if (gy < CY - 30 && Math.abs(gx - CX) < 70) continue; // approach corridor — Jac descends from the top
+    // depth skewed toward 0 → many faint "spectral" points, the occasional bright one
+    meshIdx.push(pushNode(gx, gy, Math.pow(rng(), 1.15), 0, "mesh", false));
   }
 }
 
@@ -171,11 +176,14 @@ for (const i of meshIdx)
 // (still ≤ MAX_EDGE) for variety. Each edge links near neighbours, so the web
 // is full of triangles. ──────────────────────────────────────────────────────
 const seen = new Set<number>();
+const deg: number[] = []; // edge count per node → used to leave NO point unconnected
 const key = (a: number, b: number) => (a < b ? a * 100000 + b : b * 100000 + a);
 function connect(a: number, b: number) {
   const k = key(a, b);
   if (seen.has(k)) return;
   seen.add(k);
+  deg[a] = (deg[a] || 0) + 1;
+  deg[b] = (deg[b] || 0) + 1;
   const depth = Math.max(NODES[a].depth, NODES[b].depth);
   const delay = Math.max(NODES[a].delay, NODES[b].delay);
   pushEdge(a, b, depth, delay);
@@ -185,12 +193,17 @@ for (let ii = 0; ii < connectable.length; ii++) {
     const A = connectable[ii];
     const B = connectable[jj];
     const dd = dist(NODES[A].x, NODES[A].y, NODES[B].x, NODES[B].y);
-    if (dd <= NEAR && rng() < 0.82) connect(A, B); // most near pairs, some dropped
+    if (dd > NEAR) continue;
+    // dense, web-like netting: link MOST near pairs into a triangulated web
+    // (hub linked even harder so the bloom stays firmly anchored).
+    const atHub = A === hubIdx || B === hubIdx;
+    if (rng() < (atHub ? 0.95 : 0.82)) connect(A, B);
   }
 }
-// sparse longer struts: a few nodes reach to their nearest beyond-NEAR neighbour
+// longer struts: many nodes reach to their nearest beyond-NEAR neighbour, lacing
+// separate clusters together so the whole thing reads as one connected web.
 for (const A of connectable) {
-  if (rng() >= 0.16) continue;
+  if (rng() >= 0.22) continue;
   let best = -1;
   let bestD = Infinity;
   for (const B of connectable) {
@@ -203,17 +216,63 @@ for (const A of connectable) {
   }
   if (best >= 0) connect(A, best);
 }
+// guarantee: NO loose points. Any node the passes above missed is laced to its
+// single nearest neighbour, so every point is woven into the web.
+for (const A of connectable) {
+  if ((deg[A] || 0) > 0) continue;
+  let best = -1;
+  let bestD = Infinity;
+  for (const B of connectable) {
+    if (B === A) continue;
+    const dd = dist(NODES[A].x, NODES[A].y, NODES[B].x, NODES[B].y);
+    if (dd < bestD) {
+      bestD = dd;
+      best = B;
+    }
+  }
+  if (best >= 0) connect(A, best);
+}
 
 // ── the slow Jac → Jaseci connection, as a chain of sub-cap segments so it still
-// "creeps across" left-to-right but no segment exceeds the cap. Waypoints are
-// fixed + hidden, so it reads as one clean line. ─────────────────────────────
+// descends top→down but no segment exceeds the cap. Waypoints are fixed + hidden,
+// so it reads as one clean vertical line. ────────────────────────────────────
 const jacIdx = pushNode(JAC.x, JAC.y, 0.9, 0.1, "jac", true);
-const STEP = (CX - JAC.x) / 3;
-const m1 = pushNode(JAC.x + STEP, CY, 0.85, 0, "approach", true);
-const m2 = pushNode(JAC.x + STEP * 2, CY, 0.85, 0, "approach", true);
+const STEP = (CY - JAC.y) / 3; // descend straight down from Jac (top) into the hub
+const m1 = pushNode(CX, JAC.y + STEP, 0.85, 0, "approach", true);
+const m2 = pushNode(CX, JAC.y + STEP * 2, 0.85, 0, "approach", true);
 pushEdge(jacIdx, m1, 0.9, 0.0, { main: true, dur: 0.5 });
 pushEdge(m1, m2, 0.9, 0.5, { main: true, dur: 0.5 });
 pushEdge(m2, hubIdx, 0.9, 1.0, { main: true, dur: 0.5 });
+
+// Jac is intentionally NOT woven into the web: its ONLY connection is the slow
+// main line down to Jaseci (the hub) built above. No strands reach out to the
+// mesh points, so Jac reads as the lone ancestor feeding into the Jaseci bloom.
+
+// ── hoverable cells: every triangle (3-clique) in the web becomes a transparent
+// polygon. Hovering one tints THAT polygon orange (see .module.css) and leaves
+// the rest of the web untouched. Built from the final edge set — the Jac→Jaseci
+// path forms no clique, so no cell involves Jac or the hidden waypoints. ──────
+type Tri = { a: number; b: number; c: number };
+const TRIS: Tri[] = [];
+{
+  const adj: Set<number>[] = NODES.map(() => new Set<number>());
+  for (const e of EDGES) {
+    adj[e.a].add(e.b);
+    adj[e.b].add(e.a);
+  }
+  const triSeen = new Set<string>();
+  for (const e of EDGES) {
+    for (const c of adj[e.a]) {
+      // c closes a triangle only if it neighbours BOTH endpoints of the edge
+      if (c === e.b || !adj[e.b].has(c)) continue;
+      const t = [e.a, e.b, c].sort((p, q) => p - q);
+      const k = `${t[0]}-${t[1]}-${t[2]}`;
+      if (triSeen.has(k)) continue;
+      triSeen.add(k);
+      TRIS.push({ a: t[0], b: t[1], c: t[2] });
+    }
+  }
+}
 
 // ── organic drift: one smooth, large-wavelength flow field shared by every
 // point. Wavelengths dwarf any single triangle, so neighbours move almost in
@@ -241,6 +300,7 @@ export default function LineageBloom() {
   const [play, setPlay] = useState(false);
   const lineEls = useRef<(SVGLineElement | null)[]>([]);
   const ptEls = useRef<(SVGCircleElement | null)[]>([]);
+  const cellEls = useRef<(SVGPolygonElement | null)[]>([]);
 
   useEffect(() => {
     const el = ref.current;
@@ -327,6 +387,20 @@ export default function LineageBloom() {
         ln.y2.baseVal.value = py[e.b];
       }
 
+      // keep each hover-cell polygon glued to its (now drifted) corner points
+      for (let j = 0; j < TRIS.length; j++) {
+        const poly = cellEls.current[j];
+        if (!poly) continue;
+        const t = TRIS[j];
+        const pts = poly.points;
+        pts.getItem(0).x = px[t.a];
+        pts.getItem(0).y = py[t.a];
+        pts.getItem(1).x = px[t.b];
+        pts.getItem(1).y = py[t.b];
+        pts.getItem(2).x = px[t.c];
+        pts.getItem(2).y = py[t.c];
+      }
+
       raf = requestAnimationFrame(loop);
     };
 
@@ -339,7 +413,7 @@ export default function LineageBloom() {
       ref={ref}
       className={`${styles.wrap} ${play ? styles.play : ""}`}
       role="img"
-      aria-label="A line slowly creeping from Jac to Jaseci, which then explodes into a dense, wide and tall black mesh of short lines and triangles that spills past the edges of the screen — the whole web then drifting and breathing like a living constellation."
+      aria-label="A line slowly descending from Jac at the top down to Jaseci, which then explodes into a wide, interconnected black web of short lines — every point laced into the net — that spills past the edges of the screen, the whole web then drifting and breathing like a living constellation."
     >
       <svg
         className={styles.svg}
@@ -348,6 +422,19 @@ export default function LineageBloom() {
         preserveAspectRatio="xMidYMid meet"
         xmlns="http://www.w3.org/2000/svg"
       >
+        {/* hover-cells: transparent triangles behind the web; each tints orange
+            on its own :hover (pointer-events: fill catches the empty interior). */}
+        {TRIS.map((t, i) => (
+          <polygon
+            key={`c${i}`}
+            ref={(el) => {
+              cellEls.current[i] = el;
+            }}
+            className={styles.cell}
+            points={`${NODES[t.a].x},${NODES[t.a].y} ${NODES[t.b].x},${NODES[t.b].y} ${NODES[t.c].x},${NODES[t.c].y}`}
+          />
+        ))}
+
         {EDGES.map((e, j) => {
           const A = NODES[e.a];
           const B = NODES[e.b];
@@ -425,7 +512,7 @@ export default function LineageBloom() {
         <text
           className={styles.label}
           x={JAC.x}
-          y={JAC.y + 30}
+          y={JAC.y - 14}
           textAnchor="middle"
           style={cssVar(0.25)}
         >
