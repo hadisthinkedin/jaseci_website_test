@@ -133,7 +133,7 @@
   cursor: pointer;
   -webkit-appearance: none;
   appearance: none;
-  transition: border-color 0.18s ease;
+  transition: background 0.18s ease, border-color 0.18s ease;
   z-index: 2;
 }
 .icon::before,
@@ -169,6 +169,16 @@
 .card:focus-visible .icon::after,
 .card[data-open="true"] .icon::after {
   transform: translate(-50%, -50%) scaleY(0); /* + → − */
+}
+/* frozen (clicked) + hovered away → filled black box with a white − mark,
+   echoing the manifesto accordion's active/open icon */
+.card[data-open="true"]:not(:hover):not(:focus-visible) .icon {
+  background: #000;
+  border-color: #000;
+}
+.card[data-open="true"]:not(:hover):not(:focus-visible) .icon::before,
+.card[data-open="true"]:not(:hover):not(:focus-visible) .icon::after {
+  background: #fff;
 }
 
 /* ── stacked / always-open below the desktop row ───────────────────────────
