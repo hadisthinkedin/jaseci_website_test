@@ -35,12 +35,17 @@
     background 0.18s ease, border-color 0.18s ease;
 }
 
-/* open — this card takes more of the row; the others shrink toward flex-grow:1.
-   Hover/focus previews; [data-open] is the click-frozen (pinned) state. */
+/* wider — hover/focus preview OR the click-frozen [data-open] pin. Width and
+   the revealed answer only; the orange fill is a separate rule (next) so a
+   frozen card stays white until an actual mouse hover. */
 .card:hover,
 .card:focus-visible,
 .card[data-open="true"] {
   flex-grow: 3.1;
+}
+/* orange fill — hover/focus ONLY, never the frozen pin */
+.card:hover,
+.card:focus-visible {
   background: var(--accent);
   border-color: var(--accent);
 }
@@ -56,8 +61,7 @@
 }
 
 .card:hover .step,
-.card:focus-visible .step,
-.card[data-open="true"] .step {
+.card:focus-visible .step {
   color: #fff;
 }
 
@@ -90,8 +94,7 @@
 }
 
 .card:hover .headline,
-.card:focus-visible .headline,
-.card[data-open="true"] .headline {
+.card:focus-visible .headline {
   color: #fff;
 }
 
@@ -104,11 +107,17 @@
   width: 17rem; /* fixed → clean horizontal wipe, no reflow */
   margin: 0;
   padding-left: 18px;
-  border-left: 1px solid rgba(255, 255, 255, 0.5);
+  border-left: 1px solid rgba(0, 0, 0, 0.15);
   font-family: var(--font-body);
   font-size: 15px;
   line-height: 1.5;
-  color: #fff; /* only ever seen once the card is orange */
+  color: #333; /* dark on a frozen (white) card... */
+}
+/* ...flips white once the card fills orange on hover/focus */
+.card:hover .body,
+.card:focus-visible .body {
+  color: #fff;
+  border-left-color: rgba(255, 255, 255, 0.5);
 }
 
 /* +/− affordance, echoing the manifesto accordion's expand button */
@@ -146,18 +155,16 @@
   height: 10px;
 }
 .card:hover .icon,
-.card:focus-visible .icon,
-.card[data-open="true"] .icon {
+.card:focus-visible .icon {
   border-color: #fff;
 }
 .card:hover .icon::before,
 .card:hover .icon::after,
 .card:focus-visible .icon::before,
-.card:focus-visible .icon::after,
-.card[data-open="true"] .icon::before,
-.card[data-open="true"] .icon::after {
+.card:focus-visible .icon::after {
   background: #fff;
 }
+/* the − (open) marker persists while frozen; only its COLOR is hover-driven */
 .card:hover .icon::after,
 .card:focus-visible .icon::after,
 .card[data-open="true"] .icon::after {
