@@ -1,0 +1,209 @@
+/* Evolution story — horizontal step cards.
+   A row of numbered cards (01→04), one per beat of the
+   "developers needed Jaseci" narrative. Each card shows
+   only its main point; on hover/focus that card grows
+   sideways and the other three SHRINK to make room (no
+   overlap), and the fuller answer wipes in to the right
+   of the headline. Card height is fixed and overflow is
+   clipped, so shrunk headlines simply wrap rather than
+   reflowing the row. Hairline B&W border that fills
+   orange on open, matching the manifesto + project cards. */
+
+.grid {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  position: relative;
+  flex: 1 1 0; /* equal widths by default */
+  min-width: 0; /* allow the non-open cards to shrink */
+  height: 196px; /* fixed → the row never changes height */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px 20px;
+  border: 1px solid #000;
+  background: var(--background);
+  overflow: hidden; /* clip the answer + any wrapped headline overflow */
+  outline: none;
+  transition: flex-grow 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.18s ease, border-color 0.18s ease;
+}
+
+/* open — this card takes more of the row; the others shrink toward flex-grow:1.
+   Hover/focus previews; [data-open] is the click-frozen (pinned) state. */
+.card:hover,
+.card:focus-visible,
+.card[data-open="true"] {
+  flex-grow: 3.1;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* step number — the left-to-right progression marker */
+.step {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  transition: color 0.18s ease;
+}
+
+.card:hover .step,
+.card:focus-visible .step,
+.card[data-open="true"] .step {
+  color: #fff;
+}
+
+/* headline (main point) flexes with the card; answer wipes in on the right */
+.inner {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 0fr; /* answer collapsed */
+  align-items: start;
+  min-height: 0;
+  transition: grid-template-columns 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card:hover .inner,
+.card:focus-visible .inner,
+.card[data-open="true"] .inner {
+  grid-template-columns: 1fr 1.6fr; /* answer revealed */
+}
+
+.headline {
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+  color: var(--foreground);
+  margin: 0;
+  transition: color 0.18s ease;
+}
+
+.card:hover .headline,
+.card:focus-visible .headline,
+.card[data-open="true"] .headline {
+  color: #fff;
+}
+
+.bodyWrap {
+  overflow: hidden;
+  min-width: 0;
+}
+
+.body {
+  width: 17rem; /* fixed → clean horizontal wipe, no reflow */
+  margin: 0;
+  padding-left: 18px;
+  border-left: 1px solid rgba(255, 255, 255, 0.5);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: #fff; /* only ever seen once the card is orange */
+}
+
+/* +/− affordance, echoing the manifesto accordion's expand button */
+.icon {
+  position: absolute;
+  top: 20px;
+  right: 18px;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid #000;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color 0.18s ease;
+  z-index: 2;
+}
+.icon::before,
+.icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: #000;
+  transform: translate(-50%, -50%);
+  transition: transform 0.25s ease, background 0.18s ease;
+}
+.icon::before {
+  width: 10px;
+  height: 2px;
+}
+.icon::after {
+  width: 2px;
+  height: 10px;
+}
+.card:hover .icon,
+.card:focus-visible .icon,
+.card[data-open="true"] .icon {
+  border-color: #fff;
+}
+.card:hover .icon::before,
+.card:hover .icon::after,
+.card:focus-visible .icon::before,
+.card:focus-visible .icon::after,
+.card[data-open="true"] .icon::before,
+.card[data-open="true"] .icon::after {
+  background: #fff;
+}
+.card:hover .icon::after,
+.card:focus-visible .icon::after,
+.card[data-open="true"] .icon::after {
+  transform: translate(-50%, -50%) scaleY(0); /* + → − */
+}
+
+/* ── stacked / always-open below the desktop row ───────────────────────────
+   the horizontal accordion needs width, so on narrow screens the cards stack
+   and show the answer beneath the headline at all times (no hover on touch). */
+@media (max-width: 760px) {
+  .grid {
+    flex-direction: column;
+  }
+  .card {
+    height: auto;
+    flex: none;
+    overflow: visible;
+  }
+  .inner,
+  .card:hover .inner,
+  .card:focus-visible .inner,
+  .card[data-open="true"] .inner {
+    grid-template-columns: 1fr; /* stack headline over answer */
+  }
+  /* the +/− freeze control is a desktop-row affordance; on the stacked
+     mobile layout every card is already open, so hide it */
+  .icon {
+    display: none;
+  }
+  .bodyWrap {
+    overflow: visible;
+  }
+  .body {
+    width: auto;
+    padding: 14px 0 0;
+    border-left: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+    color: #333;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .inner,
+  .icon::before,
+  .icon::after {
+    transition: none;
+  }
+}
