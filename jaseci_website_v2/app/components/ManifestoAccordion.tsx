@@ -14,23 +14,23 @@ import styles from "./ManifestoAccordion.module.css";
 
 const ITEMS = [
   {
-    headline: "Your application is unstable relying on so much abstraction.",
+    headline: "Your application is unstable, relying on so much abstractions",
     body: "When you need to change something on the frontend, you need to change something on the backend (and the middleware). Long term maintenance is easy because everything is done with 11x less files.",
   },
   {
-    headline: "Prompting can be simplified. It should be simplified.",
+    headline: "Prompts can be simplified. It should be simplified",
     body: "We know the obvious: coders are the ones coding. So we made an algebraic syntax method that allows you to compress your 500 word prompt into a single line that only coders understand.",
   },
   {
-    headline: "Python was primarily built for machine learning, Jac was primarily built for artificial intelligence.",
+    headline: "Python was primarily built for machine learning, Jac was primarily built for artificial intelligence",
     body: "Jac is built today, so that it can acknowledge Artificial Intelligence, Deployments, Cloud Infrastructure, Middleware, everything that dates before Machine Learning. When it comes to AI, Jac beats Python because the time for Jac was right.",
   },
   {
-    headline: "Jac’s OSP is optimized for AI.",
+    headline: "Jac’s Object Spatial Programming is optimized for AI",
     body: "AI agents face three problems OOP is bad at: memory (scattered across databases, arrays, and caches you manually merge), decision flow (state machines and callback chains you maintain separately from the data), and context filtering (hand-picking what’s relevant for the LLM’s token limit). OSP solves all three structurally: the agent’s memory is just nodes in the graph, the decision flow is the graph topology itself (walk an edge instead of writing an if/else), and context is naturally scoped by where the walker currently sits. Traditional apps have fixed logic you know at compile time, but AI agents make runtime decisions about what to do next; OOP forces you to pre-define every path in code, while OSP lets the agent discover paths by traversing a graph that grows and changes as it reasons.",
   },
   {
-    headline: "Jac is multiparadigmatic, so it wouldn’t have to rely on any other dependencies.",
+    headline: "Jac is multiparadigmatic, so it never has to rely on other dependencies",
     body: "AI apps aren’t one problem. They’re several at once, each fitting a different programming style: OOP to model your domain (users, sessions, documents), functional programming for clean data transforms (chaining LLM outputs, filtering lists without side effects), declarative components for UI (what React uses, describing what the interface looks like, not how to update it), and graph-based traversal for agent reasoning (navigating knowledge, making decisions step by step). In a traditional stack, each paradigm means a separate dependency: Python for OOP, LangChain for agent flows, NetworkX for graphs, React for UI, each with its own install, API, version conflicts, and CVEs. Jac gives you all four natively: obj for domain models, pure functions and comprehensions for data pipelines, cl blocks for React-style declarative components, and walkers on graphs for agent logic, all in the same file, same language, zero external dependencies. Fewer dependencies means less to install, less that breaks, fewer CVEs to patch, and fewer abstractions fighting each other.",
   },
 ];
