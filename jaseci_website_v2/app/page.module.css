@@ -57,8 +57,9 @@
 }
 
 .h2 {
+  font-family: var(--font-mono);
   font-size: clamp(36px, 5vw, 64px);
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.05;
   letter-spacing: -0.03em;
   margin-bottom: 32px;
@@ -95,6 +96,11 @@
   display: flex;
   flex-direction: column;
   gap: 64px;
+}
+
+/* tighten the space below the lineage graph so the ecosystem frame sits closer */
+.section:has(.askEcoLayout) {
+  padding-bottom: 40px;
 }
 
 .askVisual {
@@ -291,6 +297,20 @@
   grid-template-columns: minmax(280px, 360px) 1fr;
   gap: 64px;
   align-items: center;
+}
+
+/* the block-tower "stack" section: center the tower + copy as a balanced pair
+   (instead of the copy spreading to the right edge via 1fr) with a bit more
+   room between them. Desktop only — ≤900px the shared rule still stacks. */
+@media (min-width: 901px) {
+  .jarSection.stackSection {
+    grid-template-columns: minmax(280px, 360px) minmax(0, 620px);
+    justify-content: center;
+    gap: clamp(64px, 6vw, 100px);
+    /* nudge the whole tower + copy pair 60px right (this section only;
+       transform = no reflow, so nothing else on the page moves) */
+    transform: translateX(60px);
+  }
 }
 
 .jarCopy {
@@ -644,6 +664,8 @@
   max-width: 1640px;
   padding-left: clamp(24px, 4vw, 64px);
   padding-right: clamp(24px, 4vw, 64px);
+  /* pulled in to close the gap up to the lineage graph above */
+  padding-top: 40px;
 }
 
 .ecoStage {
@@ -1241,8 +1263,9 @@
 }
 
 .finalSection h2 {
+  font-family: var(--font-mono);
   font-size: clamp(48px, 7vw, 112px);
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1;
   letter-spacing: -0.04em;
   max-width: 1000px;
