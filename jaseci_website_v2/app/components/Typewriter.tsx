@@ -5,19 +5,19 @@ import styles from "./Typewriter.module.css";
 
 /* ───────────────────────────────────────────────
    Typewriter — types a word, holds, backspaces it,
-   then types the next, looping forever. Used in the
-   hero headline after "…built to program ___".
+   then types the next, looping forever. Sits right
+   after "…built for" in the hero headline.
 
-   Most words carry the "AI " prefix (e.g. "AI Agents."),
-   and that prefix stays put between them — we backspace
+   The "AI " prefix rides on the line above the cycling
+   word (a <br/> splits them), so the headline reads
+   "built for AI" / "Applications." Most words carry the
+   prefix, and it stays put between them — we backspace
    only the trailing word and type the next, so "AI" never
    flickers. Only when the loop reaches "everything." (no
    prefix) is the "AI" backspaced away too — leaving
-   "…built to program everything." — then typed back in
-   full when the loop returns to a prefixed word. The
-   leading "AI" renders in the headline colour,
-   the rest in accent, so it still reads black "AI" +
-   orange word.
+   "built for" / "everything." — then typed back in full
+   when the loop returns to a prefixed word. "AI" renders
+   in the headline colour, the cycling word in accent.
 
    SSR renders the first word complete (no empty flash);
    the loop then backspaces and cycles, so the full
@@ -91,15 +91,17 @@ export default function Typewriter({
 
   // Colour the leading "AI" like the headline (black) and the rest in accent —
   // but only while the current word actually carries the prefix, so the lone
-  // "everything." stays fully accent.
+  // "everything." stays fully accent. The prefix sits on the line above; the
+  // separating space is dropped in favour of the <br/>.
   const aiPrefixed = words[index].startsWith(AI_PREFIX);
   const lead = aiPrefixed ? text.slice(0, AI_PREFIX.length) : "";
-  const rest = aiPrefixed ? text.slice(AI_PREFIX.length) : text;
+  const rest = aiPrefixed ? text.slice(AI_PREFIX.length + 1) : text;
 
   return (
     <span className={styles.tw}>
       <span className={styles.word} aria-hidden="true">
         {lead ? <span className={styles.lead}>{lead}</span> : null}
+        <br />
         {rest}
       </span>
       {/* static, screen-reader-only copy so the headline still reads in full */}

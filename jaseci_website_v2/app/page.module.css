@@ -37,16 +37,25 @@
   transition:
     max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
     padding 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
-/* hover → orange: just the underline while flush, the whole outline once
-   the nav has detached into its box */
+/* hover → the whole bar fills orange; text and the corner marks flip to
+   white so they stay legible on the fill */
 .nav:hover {
-  border-bottom-color: var(--accent);
-}
-:global(html.nav-detached) .nav:hover {
+  background: var(--accent);
   border-color: var(--accent);
+  color: #fff;
+}
+.nav:hover .navLinks a:hover {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+.nav:hover .corner::before,
+.nav:hover .corner::after {
+  background: #fff;
 }
 
 /* floating state — NavDetach sets html.nav-detached once the page scrolls */
@@ -389,6 +398,11 @@
   line-height: 1.02;
   letter-spacing: -0.035em;
   margin-bottom: 32px;
+  /* Always reserve the full 3 lines (line-height 1.02 × 3). The typewriter
+     drops the "AI" line when it types "everything.", which would otherwise
+     collapse a line and shift the whole page down; pinning the height here
+     keeps it rock-steady. */
+  min-height: calc(1.02em * 3);
 }
 
 .heroLede {
