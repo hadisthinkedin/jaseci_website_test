@@ -1,12 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" viewBox="5 5 46 46">
-  <g stroke="#ff7448" stroke-width="4" stroke-linecap="round">
-    <line x1="16" y1="19" x2="40" y2="17"/>
-    <line x1="40" y1="17" x2="26" y2="40"/>
-    <line x1="16" y1="19" x2="26" y2="40"/>
-  </g>
-  <g fill="#ff7448">
-    <circle cx="16" cy="19" r="6"/>
-    <circle cx="40" cy="17" r="6"/>
-    <circle cx="26" cy="40" r="6"/>
-  </g>
-</svg>
+<svg fill="#ff7448" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>LangGraph</title><path d="M5 19H10A5 5 0 115 14ZM19 14A5 5 0 1114 19H19ZM10 5A5 5 0 105 10V5ZM19 5V10A5 5 0 1014 5Z"/></svg>
