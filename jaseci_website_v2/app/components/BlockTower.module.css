@@ -126,10 +126,17 @@
   transition: filter 0.18s ease;
 }
 
-/* the top "Your Application" block — a solid black front face makes the app
-   teetering at the crown of the stack read as the emphasised piece */
+/* the top "Your Application" block — a solid black block. The front reads pure
+   black; the side + top faces take lighter shades of black so it still looks
+   3D (a shaded solid) instead of a flat black face sitting on white sides. */
+.isDark .face {
+  background: #202020; /* side / end faces */
+}
 .isDark .front {
-  background: #000;
+  background: #000; /* head-on face — the darkest */
+}
+.isDark .top {
+  background: #383838; /* the top catches the most light — the lightest shade */
 }
 .isDark .name {
   color: #fff;
