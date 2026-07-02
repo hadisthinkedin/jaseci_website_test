@@ -4,16 +4,60 @@
 
 /* ---------- nav ---------- */
 
-.nav {
+/* The nav rides in a sticky "dock". At the top of the page it's a flush,
+   full-width bar with a hairline underline; once NavDetach adds
+   `nav-detached` to <html> (on first scroll) the dock lifts off the top edge
+   and the inner nav morphs into a centred, fully-bordered floating box. It's
+   all transitions — and the vertical gap comes from the sticky `top` offset
+   (not extra height), so nothing below it shifts. */
+.navDock {
   position: sticky;
   top: 0;
   z-index: 20;
+  padding: 0;
+  transition:
+    top 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
   padding: 24px 48px;
   background: #fff;
-  border-bottom: 1px solid #000;
+  /* a constant 1px border (sides transparent) so the full outline can fade in
+     with no layout shift; only the bottom hairline shows while flush */
+  border: 1px solid transparent;
+  border-bottom-color: #000;
+  transition:
+    max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    padding 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.4s ease,
+    border-radius 0.4s ease;
+}
+
+/* floating state — NavDetach sets html.nav-detached once the page scrolls */
+:global(html.nav-detached) .navDock {
+  top: 12px;
+  padding: 0 16px;
+}
+
+:global(html.nav-detached) .nav {
+  max-width: 1200px;
+  padding: 14px 28px;
+  border-color: #000;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navDock,
+  .nav {
+    transition: none;
+  }
 }
 
 .brand {

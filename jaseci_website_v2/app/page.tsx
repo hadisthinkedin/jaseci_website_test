@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import styles from "./page.module.css";
+import NavDetach from "./components/NavDetach";
 import FallingImages from "./components/FallingImages";
 import AbstractionTrend from "./components/AbstractionTrend";
 import Typewriter from "./components/Typewriter";
@@ -221,14 +222,17 @@ const EVOLUTION_POINTS = [
 export default function Home() {
   return (
     <div className={styles.page}>
-      <nav className={styles.nav}>
-        <div className={styles.brand}>JAC</div>
-        <div className={styles.navLinks}>
-          <a href="#ecosystem">Ecosystem</a>
-          <a href="#projects">Projects</a>
-          <a href="#community">Community</a>
-        </div>
-      </nav>
+      <NavDetach />
+      <div className={styles.navDock}>
+        <nav className={styles.nav}>
+          <div className={styles.brand}>JAC</div>
+          <div className={styles.navLinks}>
+            <a href="#ecosystem">Ecosystem</a>
+            <a href="#projects">Projects</a>
+            <a href="#community">Community</a>
+          </div>
+        </nav>
+      </div>
 
       {/* ---------- HERO ---------- */}
 
