@@ -14,7 +14,9 @@
 
 .wrap {
   width: 100%;
-  max-width: 620px;
+  /* sized to fill the hero's visual column at full width; only binds when
+     the grid stacks single-column (≤900px) */
+  max-width: 680px;
   margin: 0 auto;
 }
 

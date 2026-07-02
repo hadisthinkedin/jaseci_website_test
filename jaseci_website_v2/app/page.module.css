@@ -247,16 +247,18 @@
 .hero {
   padding-top: 80px;
   padding-bottom: 80px;
-  /* wider than the default .section (1200px) so the long headline has room */
-  max-width: 1440px;
+  /* wider than the default .section (1200px) so the long headline has room
+     and the abstraction-trend graph renders at a size proportionate to it */
+  max-width: 1560px;
 }
 
 .heroGrid {
   display: grid;
-  /* more share to the copy column so the headline wraps to fewer lines,
-     balanced against the wider abstraction-trend graph on the right */
-  grid-template-columns: 1.4fr minmax(350px, 1fr);
-  gap: 64px;
+  /* the copy column keeps just enough share that the 88px headline lines
+     ("Jac, the language") never wrap; the rest goes to the graph so the
+     figure holds its own against the headline mass */
+  grid-template-columns: 1.3fr minmax(380px, 1fr);
+  gap: 56px;
   align-items: stretch;
   min-height: 620px;
 }
