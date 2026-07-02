@@ -41,7 +41,7 @@ const NODES: {
   { id: "java", label: "Java", era: "1990s", x: 416, y: 302, tier: "primary" },
   { id: "py", label: "Python", era: "1990s", x: 496, y: 229, tier: "primary" },
   { id: "jsts", label: "JS/TS", era: "1990s", x: 576, y: 229, tier: "muted" },
-  { id: "jac", label: "Jac", era: "NOW", x: 656, y: 91, tier: "accent" },
+  { id: "jac", label: "Jac", era: "NOW", x: 656, y: 100, tier: "accent" },
 ];
 
 // named abstraction tiers — one per plateau in the staircase
@@ -50,7 +50,7 @@ const LEVELS: { label: string; y: number; accent?: boolean }[] = [
   { label: "SYSTEMS", y: 375 },
   { label: "MANAGED", y: 302 },
   { label: "DYNAMIC", y: 229 },
-  { label: "AI-NATIVE", y: 91, accent: true },
+  { label: "AI-NATIVE", y: 100, accent: true },
 ];
 
 const FRAME = { x: 72, y: 40, w: 612, h: 472 };
@@ -58,7 +58,7 @@ const BASE_Y = FRAME.y + FRAME.h; // 512
 
 // step ladder through the legacy languages, then the tall final leap to Jac
 const LEGACY = "M96 457 H256 V375 H416 V302 H496 V229 H576";
-const LEAP = "M576 229 H656 V91";
+const LEAP = "M576 229 H656 V100";
 
 // hatched areas under the staircase and under the leap run
 const LEGACY_AREA =
@@ -189,19 +189,20 @@ export default function AbstractionTrend() {
         </g>
 
         {/* one faint guide grounding the leap to Jac */}
-        <line className={styles.guide} x1={656} y1={BASE_Y} x2={656} y2={91} />
+        <line className={styles.guide} x1={656} y1={BASE_Y} x2={656} y2={100} />
 
         {/* the trend — legacy ladder, then the leap */}
         <path className={styles.legacy} d={LEGACY} pathLength={1} />
         <path className={styles.leap} d={LEAP} pathLength={1} />
 
         {/* emphasis ring + infinite radar pulse + annotation on Jac;
-            the label is right-aligned to the frame edge so its tracking
-            doesn't spill past the plot */}
-        <circle className={styles.halo} cx={656} cy={91} r={16.5} />
-        <circle className={styles.pulse} cx={656} cy={91} r={11} />
-        <text className={styles.annotation} x={678} y={63} textAnchor="end">
-          THE LEAP
+            the label stacks on two lines, centred over the node so it
+            reads as a caption on the peak without spilling past the frame */}
+        <circle className={styles.halo} cx={656} cy={100} r={16.5} />
+        <circle className={styles.pulse} cx={656} cy={100} r={11} />
+        <text className={styles.annotation} x={656} y={63} textAnchor="middle">
+          <tspan x={656}>THE</tspan>
+          <tspan x={656} dy={14}>LEAP</tspan>
         </text>
 
         {/* nodes */}
