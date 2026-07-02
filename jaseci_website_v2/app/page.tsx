@@ -233,29 +233,25 @@ export default function Home() {
       {/* ---------- HERO ---------- */}
 
       <section className={`${styles.section} ${styles.hero}`}>
-        <div className={styles.heroTop}>
-          <h1 className={styles.heroHeadline}>
-            Jac, the language <br />
-            built for <br />
-            <Typewriter
-              words={["AI Applications.", "AI Agents.", "AI Workflows.", "everything."]}
-            />
-          </h1>
-          <div className={styles.heroAside}>
+        <div className={styles.heroGrid}>
+          <div className={styles.heroCopy}>
+            <h1 className={styles.heroHeadline}>
+              Jac, the language built to program <br />
+              <Typewriter
+                words={["AI Applications.", "AI Agents.", "AI Workflows.", "everything."]}
+              />
+            </h1>
             <p className={styles.heroLede}>
-              Instead of building your AI applications with python, langchain
-              and abstraction slop, use a language that is built exactly for AI
-              development. Forget boilerplate traditions like overcomplicated
-              prompts, unnecessary middleware, and lengthy deployments.
-              Let&rsquo;s bring back the coding joy by making Jac aware of the
-              complexity, and remove it.
+              Jac is the solution to the last{" "}
+              <span className={styles.accent}>50 years</span>{" "}
+              of developer&rsquo;s hell.
             </p>
             <InstallBox />
           </div>
-        </div>
 
-        <div className={styles.heroVisual}>
-          <AbstractionTrend />
+          <div className={styles.heroVisual}>
+            <AbstractionTrend />
+          </div>
         </div>
       </section>
 
