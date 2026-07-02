@@ -57,6 +57,12 @@
 .nav:hover .corner::after {
   background: #fff;
 }
+/* the detached base sets the border black and out-specifies the plain
+   :hover, so scope the orange border to the detached state too — otherwise a
+   black outline lingers around the orange fill */
+:global(html.nav-detached) .nav:hover {
+  border-color: var(--accent);
+}
 
 /* floating state — NavDetach sets html.nav-detached once the page scrolls */
 :global(html.nav-detached) .navDock {
