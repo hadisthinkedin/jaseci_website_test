@@ -92,21 +92,28 @@
   height: 100%;
   transform: translateX(-50%);
 }
+/* centre each marker on its corner: pin a corner of the marker to the box's
+   outer corner (the -1px cancels the 1px border), then pull back half its own
+   size so the crosshair's centre lands exactly on the point */
 .cornerTL {
-  top: 8px;
-  left: 8px;
+  top: -1px;
+  left: -1px;
+  transform: translate(-50%, -50%);
 }
 .cornerTR {
-  top: 8px;
-  right: 8px;
+  top: -1px;
+  right: -1px;
+  transform: translate(50%, -50%);
 }
 .cornerBL {
-  bottom: 8px;
-  left: 8px;
+  bottom: -1px;
+  left: -1px;
+  transform: translate(-50%, 50%);
 }
 .cornerBR {
-  bottom: 8px;
-  right: 8px;
+  bottom: -1px;
+  right: -1px;
+  transform: translate(50%, 50%);
 }
 :global(html.nav-detached) .corner {
   opacity: 1;
