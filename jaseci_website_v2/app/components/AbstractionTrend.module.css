@@ -14,9 +14,9 @@
 
 .wrap {
   width: 100%;
-  /* sized to fill the hero's visual column at full width; only binds when
-     the grid stacks single-column (≤900px) */
-  max-width: 680px;
+  /* the stacked hero gives the graph the full row — cap it so the landscape
+     spread tops out around 620px tall */
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -26,6 +26,24 @@
   display: block;
   overflow: visible;
   font-family: var(--font-mono);
+}
+
+/* two spreads of the same chart, swapped by viewport — landscape for the
+   stacked hero, compact when the page goes single-column */
+.svgNarrow {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .wrap {
+    max-width: 680px;
+  }
+  .svgWide {
+    display: none;
+  }
+  .svgNarrow {
+    display: block;
+  }
 }
 
 /* ── Header row — site-standard mono eyebrow, real pixels (not SVG-scaled) ── */

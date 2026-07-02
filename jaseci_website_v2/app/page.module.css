@@ -245,38 +245,34 @@
 /* ---------- hero ---------- */
 
 .hero {
-  padding-top: 80px;
+  padding-top: 72px;
   padding-bottom: 80px;
-  /* wider than the default .section (1200px) so the long headline has room
-     and the abstraction-trend graph renders at a size proportionate to it */
+  /* wider than the default .section (1200px) — the hero stacks: headline row
+     on top, the abstraction-trend graph full-width beneath it */
   max-width: 1600px;
 }
 
-.heroGrid {
+/* top row — headline left, lede + install top-aligned on the right */
+.heroTop {
   display: grid;
-  /* near-even split: the graph is the co-star, so it gets almost half the
-     row. The copy column keeps just enough share that the headline lines
-     ("Jac, the language") never wrap at the 84px cap. */
-  grid-template-columns: 1.15fr minmax(400px, 1fr);
-  gap: 48px;
-  align-items: stretch;
-  min-height: 620px;
-}
-
-.heroCopy {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 48px 64px;
+  align-items: start;
+  margin-bottom: 72px;
 }
 
 .heroHeadline {
-  /* capped at 84px (was 88) — the shaved headroom goes to the graph column;
-     at 84px the longest line still clears the narrower copy column */
-  font-size: clamp(40px, 5.5vw, 84px);
+  /* the stacked hero hands the headline its own row, so it goes back up to
+     full size; at 5.8vw the longest line still clears the 1.5fr column */
+  font-size: clamp(44px, 5.8vw, 96px);
   font-weight: 700;
   line-height: 1.02;
   letter-spacing: -0.035em;
-  margin-bottom: 32px;
+  margin-bottom: 0;
+}
+
+.heroAside {
+  max-width: 620px;
 }
 
 .heroLede {
@@ -286,12 +282,22 @@
   color: #1a1a1a;
 }
 
-/* hero visual — the abstraction trendline */
+/* hero visual — the abstraction trendline, full row width under the copy */
 
 .heroVisual {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* below this the headline takes the full row and the aside tucks under it */
+@media (max-width: 1080px) {
+  .heroTop {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 40px;
+    margin-bottom: 56px;
+  }
 }
 
 /* ---------- the F*CK bin — a thin wire-mesh trash can ---------- */
@@ -1297,10 +1303,11 @@
 /* ---------- responsive ---------- */
 
 @media (max-width: 900px) {
-  .heroGrid {
-    grid-template-columns: 1fr;
-    gap: 48px;
-    min-height: auto;
+  /* the hero is already single-column by 1080px; just tighten the rhythm
+     (the graph swaps to its compact spread at this width too) */
+  .heroTop {
+    gap: 32px;
+    margin-bottom: 48px;
   }
 
   /* tighten the row gap on small screens (already stacked) */
