@@ -21,6 +21,7 @@
 }
 
 .nav {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -974,6 +975,12 @@
 }
 .bentoBox:hover .bentoStatWord,
 .bentoBoxActive .bentoStatWord {
+  opacity: 1;
+}
+
+/* stats whose bare accent (1L, N+) reads as cryptic alone show their word in
+   the resting state, not just on expand */
+.bentoStatWordStatic {
   opacity: 1;
 }
 

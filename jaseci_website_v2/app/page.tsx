@@ -38,6 +38,10 @@ type EcosystemModule = {
   statAccent?: string;
   // the word that fades in after the number once the tile expands
   statWord?: string;
+  // when true statWord shows in the resting state, not just on expand — for
+  // stats whose bare accent reads as cryptic on its own (1L → "1 Language",
+  // N+ → "N+ Machines")
+  statWordStatic?: boolean;
   // when true the accent letter gives way to statWord on expand, so the stat
   // reads "1 Language" rather than "1L Language"
   accentExpands?: boolean;
@@ -50,9 +54,8 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
     {
       name: "Jac",
       stat: "1",
-      statAccent: "L",
       statWord: "Language",
-      accentExpands: true,
+      statWordStatic: true,
       desc: "The language. A superset of Python built from the ground up for agents, apps, and AI.",
     },
     {
@@ -124,6 +127,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
       stat: "N",
       statAccent: "+",
       statWord: "Machines",
+      statWordStatic: true,
       desc: "Distributes a single program across machines. One graph, many nodes, no orchestration tax.",
     },
     {
@@ -187,7 +191,13 @@ function EcoColumn({
               </span>
             ) : null}
             {mod.statWord ? (
-              <span className={styles.bentoStatWord}>{mod.statWord}</span>
+              <span
+                className={`${styles.bentoStatWord} ${
+                  mod.statWordStatic ? styles.bentoStatWordStatic : ""
+                }`}
+              >
+                {mod.statWord}
+              </span>
             ) : null}
           </div>
           <div className={styles.bentoContent}>
@@ -200,25 +210,18 @@ function EcoColumn({
   );
 }
 
-// "Developers needed more." — the evolution story as one chapter frame:
-// headline always visible, the three beats reveal on hover
+// "Developers needed more." — the evolution story as a statement slab:
+// headline set large on the frame, the story slides in as an orange
+// drawer on hover and lands on the open naming question
 const LEAP_COPY = {
   headline:
     "Though devs used Jac, their application was still too slow because they depended on a third-party stack.",
-  beats: [
-    {
-      tag: "The problem",
-      text: "Jac was just as fast as C by itself, but when teamed up with React for the frontend, and then CORS for the middleware, and then Vercel for deployment, things slowed down.",
-    },
-    {
-      tag: "The fix",
-      text: "So, in Jac v2, we decided to have those dependencies built into Jac. Now, when building your AI application, all you need is Jac.",
-    },
-    {
-      tag: "The question",
-      text: "But what should we call this individual stack in layman’s terms? What should the solution to multiple problems be dubbed as?",
-    },
+  story: [
+    "Jac was just as fast as C by itself, but when teamed up with React for the frontend, and then CORS for the middleware, and then Vercel for deployment, things slowed down.",
+    "So, in Jac v2, we decided to have those dependencies built into Jac. Now, when building your AI application, all you need is Jac.",
   ],
+  punch:
+    "But what should we call this individual stack in layman’s terms? What should the solution to multiple problems be dubbed as?",
 };
 
 export default function Home() {
@@ -248,9 +251,9 @@ export default function Home() {
           <div className={styles.heroCopy}>
             <h1 className={styles.heroHeadline}>
               Jac, the language <br />
-              built for AI <br />
+              built for{" "}
               <Typewriter
-                words={["Applications.", "Agents.", "Workflows.", "everything."]}
+                words={["AI Applications.", "AI Agents.", "AI Workflows.", "everything."]}
               />
             </h1>
             <p className={styles.heroLede}>
@@ -323,7 +326,11 @@ export default function Home() {
               Developers needed <s>more</s>{" "}
               <span className={styles.accent}>Jaseci</span>.
             </h2>
-            <EvolutionBox headline={LEAP_COPY.headline} beats={LEAP_COPY.beats} />
+            <EvolutionBox
+              headline={LEAP_COPY.headline}
+              story={LEAP_COPY.story}
+              punch={LEAP_COPY.punch}
+            />
           </div>
 
           {/* BOTTOM — Jac → Jaseci, blooming into the ecosystem tree */}

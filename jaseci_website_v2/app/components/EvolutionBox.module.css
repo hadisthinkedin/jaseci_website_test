@@ -1,28 +1,32 @@
-/* EvolutionBox — a white chapter frame in the ProofGrid family: hairline
-   border, mono uppercase eyebrow, numbered beats divided by hairlines.
-   Orange is an accent (numbers, icon, the final question), not a fill.
-   The body reveals on hover/focus via the grid-rows 0fr→1fr trick, and the
-   beats stagger in; ≤760px everything is simply open (no hover on touch). */
+/* EvolutionBox — statement slab + orange story drawer.
+   One fixed-height hairline frame: big headline on the left, empty white
+   canvas on the right. On hover/focus an orange drawer slides in from the
+   right edge over that canvas (width 0 → --storyW), with its text pinned
+   right so the wipe reveals it without any rewrap. Fixed height means the
+   page below never reflows. ≤900px it stacks and stays open (no hover on
+   touch), with the story dark-on-white per the site's mobile pattern. */
 
-.box {
-  max-width: 900px; /* aligns with the .h2 measure above it */
+.frame {
+  /* the drawer's open width — fixed px so the wipe never rewraps text */
+  --storyW: 480px;
+
+  position: relative;
+  height: 300px;
   border: 1px solid #000;
   background: var(--background);
+  overflow: hidden;
   outline: none;
 }
 
-/* ── header (always visible) ─────────────────────────────────────────── */
+/* ── the statement (always visible) ──────────────────────────────────── */
 
-.head {
+.statement {
+  height: 100%;
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 22px 26px;
-}
-
-.headText {
-  min-width: 0;
+  flex-direction: column;
+  padding: 24px 28px;
+  /* keep the headline clear of the drawer's landing zone */
+  padding-right: calc(var(--storyW) + 48px);
 }
 
 .eyebrow {
@@ -35,7 +39,7 @@
   text-transform: uppercase;
   color: var(--foreground);
 }
-/* the small accent square — twists 45° while the box is open */
+/* the small accent square — twists 45° while the drawer is out */
 .eyebrow::before {
   content: "";
   width: 8px;
@@ -43,31 +47,93 @@
   background: var(--accent);
   transition: transform 0.3s ease;
 }
-.box:hover .eyebrow::before,
-.box:focus-visible .eyebrow::before {
+.frame:hover .eyebrow::before,
+.frame:focus-visible .eyebrow::before {
   transform: rotate(45deg);
 }
 
 .headline {
-  margin: 12px 0 0;
+  margin: auto 0;
   font-family: var(--font-sans);
-  font-size: clamp(18px, 2vw, 22px);
-  font-weight: 600;
-  line-height: 1.32;
-  letter-spacing: -0.01em;
+  font-size: clamp(22px, 2.6vw, 34px);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
   color: var(--foreground);
-  max-width: 48ch;
+  max-width: 24ch;
 }
 
-/* +/− affordance — fills orange (white glyph) while open */
+/* ── the orange story drawer ─────────────────────────────────────────── */
+
+.story {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 0;
+  overflow: hidden;
+  background: var(--accent);
+  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.frame:hover .story,
+.frame:focus-visible .story {
+  width: var(--storyW);
+}
+
+/* text pinned at final width to the right edge → clean wipe, no rewrap */
+.storyInner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--storyW);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px 30px;
+}
+
+.storyBeat {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: #fff;
+}
+/* the beat number — the old cards' mono step marker, gone white-on-orange */
+.storyNum {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-right: 10px;
+}
+
+/* the naming question — the punchline, set apart above a white hairline */
+.punch {
+  margin: 4px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+
+/* ── the +/− affordance (rides above the drawer) ─────────────────────── */
+
 .icon {
-  position: relative;
-  flex-shrink: 0;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
   width: 24px;
   height: 24px;
-  margin-top: 2px;
   border: 1px solid #000;
-  transition: background 0.18s ease, border-color 0.18s ease;
+  transition: border-color 0.18s ease;
 }
 .icon::before,
 .icon::after {
@@ -87,134 +153,82 @@
   width: 2px;
   height: 11px;
 }
-.box:hover .icon,
-.box:focus-visible .icon {
-  background: var(--accent);
-  border-color: var(--accent);
+.frame:hover .icon,
+.frame:focus-visible .icon {
+  border-color: #fff;
 }
-.box:hover .icon::before,
-.box:hover .icon::after,
-.box:focus-visible .icon::before,
-.box:focus-visible .icon::after {
+.frame:hover .icon::before,
+.frame:hover .icon::after,
+.frame:focus-visible .icon::before,
+.frame:focus-visible .icon::after {
   background: #fff;
 }
-/* + → − on open */
-.box:hover .icon::after,
-.box:focus-visible .icon::after {
+/* + → − while the drawer is out */
+.frame:hover .icon::after,
+.frame:focus-visible .icon::after {
   transform: translate(-50%, -50%) scaleY(0);
 }
 
-/* ── body reveal (grid-rows 0fr → 1fr animates real height) ──────────── */
-
-.bodyWrap {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.box:hover .bodyWrap,
-.box:focus-visible .bodyWrap {
-  grid-template-rows: 1fr;
-}
-.bodyInner {
+/* visually hidden copy of the drawer text for screen readers */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
-/* the three story beats — hairline-divided rows: mono tag | copy */
-.beats {
-  border-top: 1px solid #000;
+/* ── narrower desktops: slimmer drawer so the statement keeps room ───── */
+@media (max-width: 1200px) {
+  .frame {
+    --storyW: 420px;
+  }
+}
+@media (max-width: 1040px) {
+  .frame {
+    --storyW: 380px;
+  }
 }
 
-.beat {
-  display: grid;
-  grid-template-columns: 170px 1fr;
-  gap: 24px;
-  padding: 18px 26px;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-.beat + .beat {
-  border-top: 1px solid #000;
-}
-
-/* stagger the beats in as the frame opens */
-.box:hover .beat,
-.box:focus-visible .beat {
-  opacity: 1;
-  transform: none;
-}
-.box:hover .beat:nth-child(1),
-.box:focus-visible .beat:nth-child(1) {
-  transition-delay: 0.08s;
-}
-.box:hover .beat:nth-child(2),
-.box:focus-visible .beat:nth-child(2) {
-  transition-delay: 0.16s;
-}
-.box:hover .beat:nth-child(3),
-.box:focus-visible .beat:nth-child(3) {
-  transition-delay: 0.24s;
-}
-
-.beatTag {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  padding-top: 3px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--foreground);
-}
-/* the step number — mono orange 700, echoing the old cards' 01→04 */
-.beatNum {
-  font-weight: 700;
-  color: var(--accent);
-}
-
-.beatText {
-  margin: 0;
-  max-width: 62ch;
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.55;
-  color: #333;
-}
-
-/* the final beat is the cliffhanger — the open question goes accent */
-.beat:last-child .beatTag {
-  color: var(--accent);
-}
-.beat:last-child .beatText {
-  color: var(--accent);
-  font-weight: 500;
-}
-
-/* ── stacked / always-open below desktop (no hover on touch) ─────────── */
-@media (max-width: 760px) {
-  .head {
-    padding: 18px;
+/* ── stacked / always-open below the desktop slab (no hover on touch) ── */
+@media (max-width: 900px) {
+  .frame {
+    height: auto;
+  }
+  .statement {
+    padding: 18px 20px;
   }
   .icon {
     display: none;
   }
-  .bodyWrap {
-    grid-template-rows: 1fr;
+  .story {
+    position: static;
+    width: auto;
+    background: var(--background);
+    border-top: 1px solid #000;
   }
-  .beat {
-    grid-template-columns: 1fr;
-    gap: 8px;
-    padding: 14px 18px;
-    opacity: 1;
-    transform: none;
+  .storyInner {
+    position: static;
+    width: auto;
+    padding: 18px 20px;
+  }
+  .storyBeat {
+    color: #333;
+  }
+  .storyNum {
+    color: var(--accent);
+  }
+  .punch {
+    border-top-color: rgba(0, 0, 0, 0.15);
+    color: var(--foreground);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bodyWrap,
-  .beat,
-  .icon,
+  .story,
   .icon::before,
   .icon::after,
   .eyebrow::before {
