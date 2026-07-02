@@ -236,15 +236,19 @@ export default function Home() {
         <div className={styles.heroGrid}>
           <div className={styles.heroCopy}>
             <h1 className={styles.heroHeadline}>
-              Jac, the language built to program <br />
+              Jac, the language <br />
+              built for <br />
               <Typewriter
                 words={["AI Applications.", "AI Agents.", "AI Workflows.", "everything."]}
               />
             </h1>
             <p className={styles.heroLede}>
-              Jac is the solution to the last{" "}
-              <span className={styles.accent}>50 years</span>{" "}
-              of developer&rsquo;s hell.
+              Instead of building your AI applications with python, langchain
+              and abstraction slop, use a language that is built exactly for AI
+              development. Forget boilerplate traditions like overcomplicated
+              prompts, unnecessary middleware, and lengthy deployments.
+              Let&rsquo;s bring back the coding joy by making Jac aware of the
+              complexity, and remove it.
             </p>
             <InstallBox />
           </div>
@@ -358,11 +362,12 @@ export default function Home() {
               Why did you start coding anyway?
             </h2>
             <p className={styles.body}>
-              Let me give you a small history lesson: Dennis Ritchie, the
-              creator of C, and this is his philosophy: people should code
-              what&rsquo;s important, that&rsquo;s it. In 1989, he took away the
-              boilerplate that stood between us and the human purpose to ideate
-              and create. Let Jaseci remove the tooling bottleneck in 2026.
+              Dennis Ritchie&rsquo;s philosophy of why he built the C was the
+              idea that people should spend their time coding something
+              innovative, nothing else. His instinct was to take away the
+              boilerplate, like registers, that stood between us and human
+              ideation. We want to replicate that same philosophy over 50 years
+              ago, and take away that boilerplate and give devs more time.
             </p>
           </div>
 
