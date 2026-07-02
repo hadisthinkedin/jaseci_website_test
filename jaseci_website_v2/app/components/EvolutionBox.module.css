@@ -1,0 +1,115 @@
+/* A single hover/focus-expanding box for the "evolution → the leap" beat.
+   Stark B&W, hairline border, fills accent orange on open — matching the
+   evolution step cards it replaced. Body height animates via grid-rows. */
+
+.box {
+  border: 1px solid #000;
+  background: var(--background);
+  padding: 24px 26px;
+  cursor: default;
+  outline: none;
+  transition: background 0.32s ease, border-color 0.32s ease;
+}
+.box:hover,
+.box:focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.headline {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(18px, 1.8vw, 22px);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--foreground);
+  transition: color 0.18s ease;
+}
+.box:hover .headline,
+.box:focus-visible .headline {
+  color: #fff;
+}
+
+/* +/− affordance echoing the step cards */
+.icon {
+  position: relative;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  margin-top: 2px;
+  border: 1px solid #000;
+  transition: border-color 0.18s ease;
+}
+.icon::before,
+.icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: #000;
+  transform: translate(-50%, -50%);
+  transition: transform 0.25s ease, background 0.18s ease;
+}
+.icon::before {
+  width: 11px;
+  height: 2px;
+}
+.icon::after {
+  width: 2px;
+  height: 11px;
+}
+.box:hover .icon,
+.box:focus-visible .icon {
+  border-color: #fff;
+}
+.box:hover .icon::before,
+.box:hover .icon::after,
+.box:focus-visible .icon::before,
+.box:focus-visible .icon::after {
+  background: #fff;
+}
+/* + → − on open */
+.box:hover .icon::after,
+.box:focus-visible .icon::after {
+  transform: translate(-50%, -50%) scaleY(0);
+}
+
+/* body reveal — grid-rows 0fr → 1fr animates the real height */
+.bodyWrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.box:hover .bodyWrap,
+.box:focus-visible .bodyWrap {
+  grid-template-rows: 1fr;
+}
+.bodyInner {
+  overflow: hidden;
+}
+.body {
+  margin: 0;
+  padding-top: 18px;
+  max-width: 660px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: #fff; /* only ever seen once the box is orange */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .box,
+  .bodyWrap,
+  .icon::before,
+  .icon::after {
+    transition: none;
+  }
+}

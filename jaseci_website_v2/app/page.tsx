@@ -7,9 +7,11 @@ import Typewriter from "./components/Typewriter";
 import InstallBox from "./components/InstallBox";
 import ManifestoAccordion from "./components/ManifestoAccordion";
 import LineageBloom from "./components/LineageBloom";
-import EvolutionCards from "./components/EvolutionCards";
+import EvolutionBox from "./components/EvolutionBox";
 import ProofGrid from "./components/ProofGrid";
 import BlockTower from "./components/BlockTower";
+import BlackHole from "./components/BlackHole";
+import NeuralNetwork from "./components/NeuralNetwork";
 
 // The frameworks to toss in the bin — each drops in as an orange hexagon that
 // flips to the logo (forced white-on-black) on hover. SVGs live at
@@ -199,25 +201,11 @@ function EcoColumn({
 }
 
 // "Developers needed more." — the evolution story, as expandable claims
-const EVOLUTION_POINTS = [
-  {
-    headline:
-      "Developers weren’t building AI alone — they were building whole applications.",
-    body: "Jac was good at building an agentic AI, but developers weren’t just building AI alone. They were building applications — the data, the scale, and the deployment.",
-  },
-  {
-    headline: "That exposed a bigger problem: Jac was too slow in production.",
-    body: "Building real applications highlighted a large problem — Jac was too slow in production.",
-  },
-  {
-    headline: "The root cause was a dependency on third-party tools.",
-    body: "After a lengthy analysis, the problem came down to a dependency on third-party tools to fill those potholes.",
-  },
-  {
-    headline: "So we designed Jac to be the evolutionary leap.",
-    body: "We designed Jac to be that evolutionary leap. How do you turn a language into the next evolutionary step?",
-  },
-];
+const LEAP_COPY = {
+  headline:
+    "Though devs used Jac, their application was still too slow because they depended on a third-party stack.",
+  body: "Jac was just as fast as C by itself, but when teamed up with React for the frontend, and then CORS for the middleware, and then Vercel for deployment, things slowed down. So, in Jac v2, we decided to have those dependencies built into Jac. Now, when building your AI application, all you need is Jac. But what should we call this individual stack in layman’s terms? What should the solution to multiple problems be dubbed as?",
+};
 
 export default function Home() {
   return (
@@ -290,7 +278,9 @@ export default function Home() {
 
       {/* ---------- THE STACK — abstractions piled on Python ---------- */}
 
-      <section className={`${styles.section} ${styles.jarSection}`}>
+      <section
+        className={`${styles.section} ${styles.jarSection} ${styles.stackSection}`}
+      >
         <div className={styles.jarColumn}>
           <BlockTower />
         </div>
@@ -308,13 +298,13 @@ export default function Home() {
 
       <section className={styles.section}>
         <div className={styles.askEcoLayout}>
-          {/* TOP — the copy + the evolution beats as horizontal step cards */}
+          {/* TOP — the copy + the evolution beat as a single hover-expanding box */}
           <div className={styles.askEcoContent}>
             <h2 className={styles.h2}>
               Developers needed <s>more</s>{" "}
               <span className={styles.accent}>Jaseci</span>.
             </h2>
-            <EvolutionCards items={EVOLUTION_POINTS} />
+            <EvolutionBox headline={LEAP_COPY.headline} body={LEAP_COPY.body} />
           </div>
 
           {/* BOTTOM — Jac → Jaseci, blooming into the ecosystem tree */}
@@ -444,14 +434,10 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/blackhole.gif"
-                  alt=""
-                  aria-hidden="true"
-                  loading="lazy"
-                  className={styles.blackholeMedia}
-                />
+                {/* live three.js black hole — fills the card, fades in on hover
+                    and back out on leave; falls back to /blackhole.gif without
+                    WebGL2 */}
+                <BlackHole className={styles.blackholeCanvas} />
                 <div className={styles.projectCardTop}>
                   <span className={styles.projectCardMeta}>
                     Built in 4 Days
@@ -477,14 +463,10 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/network.gif"
-                  alt=""
-                  aria-hidden="true"
-                  loading="lazy"
-                  className={styles.networkMedia}
-                />
+                {/* live three.js neural network — fills the card, fades in on
+                    hover and back out on leave; falls back to /network.gif
+                    without WebGL2 */}
+                <NeuralNetwork className={styles.networkCanvas} />
                 <div className={styles.projectCardTop}>
                   <span className={styles.projectCardMeta}>Built solo</span>
                   <span className={styles.projectCardArrow} aria-hidden="true">
@@ -546,7 +528,7 @@ export default function Home() {
 
       <section className={styles.finalSection} id="community">
         <h2>
-          Stay with the old. Get <span className={styles.accent}>left behind</span>.
+          Stay with the old. <span className={styles.accent}>Get left behind.</span>
         </h2>
         <div>
           <a href="/community" className={styles.cta}>
