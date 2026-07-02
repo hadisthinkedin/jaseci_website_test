@@ -14,7 +14,7 @@ const BLOCKS: Block[] = [
   { name: "CrewAI", logo: "/jar/crewai.svg?v=3" },
   { name: "AutoGen", logo: "/jar/autogen.svg?v=2" },
   { name: "DSPy", logo: "/jar/dspy.svg?v=2" },
-  { name: "Haystack", logo: "/jar/haystack.svg?v=3" },
+  { name: "Haystack", logo: "/jar/haystack.svg?v=4" },
   { name: "Your Application" }, // the reader's own app — perched on top, about to fall
 ];
 
