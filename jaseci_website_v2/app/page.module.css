@@ -1121,9 +1121,7 @@
 }
 
 .fpsMedia,
-.todoMedia,
-.blackholeMedia,
-.networkMedia {
+.todoMedia {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -1158,11 +1156,7 @@
 .projectCardFps:hover .fpsMedia,
 .projectCardFps:hover::after,
 .projectCardTodo:hover .todoMedia,
-.projectCardTodo:hover::after,
-.projectCardBlackhole:hover .blackholeMedia,
-.projectCardBlackhole:hover::after,
-.projectCardNetwork:hover .networkMedia,
-.projectCardNetwork:hover::after {
+.projectCardTodo:hover::after {
   opacity: 1;
 }
 
@@ -1173,6 +1167,40 @@
 .projectCardNetwork:hover .projectCardDesc {
   opacity: 0;
   transition: opacity 0.2s ease;
+}
+
+/* the black hole preview: reveals on hover and fades back out when the pointer
+   leaves (same behaviour as the other media cards), but the visual is a live
+   three.js canvas filling the whole card rather than a gif. The generic
+   `.projectCardBlackhole > div` rule above would pull a plain div into the
+   card's flow (relative, z-index 2) — the child selector below out-specifies
+   it back to an absolute, full-bleed layer behind the text. */
+.projectCardBlackhole > .blackholeCanvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.projectCardBlackhole:hover > .blackholeCanvas,
+.projectCardBlackhole:hover::after {
+  opacity: 1;
+}
+
+/* the research-agent card gets the same treatment: a live three.js neural
+   network fills the card on hover instead of the gif */
+.projectCardNetwork > .networkCanvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.projectCardNetwork:hover > .networkCanvas,
+.projectCardNetwork:hover::after {
+  opacity: 1;
 }
 
 /* vertical scrolling "See more JacPacks" banner */

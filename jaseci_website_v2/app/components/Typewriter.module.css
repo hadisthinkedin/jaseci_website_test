@@ -1,7 +1,8 @@
-/* Typewriter — the cycling word after "…to program AI".
+/* Typewriter — the cycling segment after "…built to program".
    The blinking caret is the word's right border so it auto-matches the
-   headline's size and line-height. Word is the accent colour (echoes the
-   original orange "AI Everything."). */
+   headline's size and line-height. The word is the accent colour (echoes the
+   original orange "AI Everything."); the leading "AI" is overridden back to
+   the headline colour via .lead. */
 
 .tw {
   /* keep the word from breaking mid-token as it grows/shrinks */
@@ -23,6 +24,12 @@
   50% {
     border-right-color: transparent;
   }
+}
+
+/* the "AI" prefix keeps the headline's colour while the rest of the word
+   (and the lone "everything.") stays accent-orange */
+.lead {
+  color: var(--foreground);
 }
 
 /* visually hidden, but present for screen readers / SEO */

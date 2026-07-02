@@ -57,8 +57,10 @@
 .play .cell {
   pointer-events: fill;
 }
+/* harsh, high-contrast orange — full-strength accent (the black web lines and
+   dots still paint on top, so the lit shape stays sharp, not flat) */
 .play .cell:hover {
-  fill-opacity: 0.25;
+  fill-opacity: 1;
 }
 
 /* the web itself is decorative — let hovers fall through to the cells above */
@@ -110,6 +112,14 @@
 
 .label {
   fill: var(--foreground);
+  /* white halo knocked out around the glyphs so the web's lines don't cut through
+     the word — paint-order draws the stroke first, then the black fill on top, so
+     the letters stay crisp while a clean ring separates them from the mesh. This
+     restyles only the label; the graph's points and lines are untouched. */
+  stroke: var(--background);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+  paint-order: stroke;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -119,13 +129,20 @@
 /* ── play: the slow connection, then the instant burst ────────────────────── */
 
 .play .main {
-  animation: draw var(--dur, 1.5s) ease forwards; /* slow, segment by segment */
+  /* logarithmic descent: the tip shoots fast out of Jac then decelerates onto
+     Jaseci. ease-out-CUBIC (not quint) is used deliberately — quint's tail is so
+     long the line LOOKS landed ~0.3s before it mathematically finishes, leaving a
+     dead pause before the web branches. Cubic still reads logarithmic but arrives
+     crisply at var(--dur), so the branch (fired at that same instant in JS) springs
+     out the moment the line actually touches the hub. */
+  animation: draw var(--dur, 1.5s) cubic-bezier(0.33, 1, 0.68, 1) forwards;
   animation-delay: var(--d, 0s);
 }
 
-/* the whole web fires in a flash — extreme contrast with the 1.5s approach */
+/* each line draws OUTWARD from the hub as the horizontal growth-front reaches it
+   (staggered by --d), so the web visibly grows sideways instead of snapping in */
 .play .burst {
-  animation: draw 0.12s ease-out forwards;
+  animation: draw 0.35s ease-out forwards;
   animation-delay: var(--d, 0s);
 }
 

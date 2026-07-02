@@ -6,13 +6,32 @@ import styles from "./Typewriter.module.css";
 /* ───────────────────────────────────────────────
    Typewriter — types a word, holds, backspaces it,
    then types the next, looping forever. Used in the
-   hero headline after "…built to program AI ___".
-   SSR renders the first word complete (no empty
-   flash); the loop then backspaces and cycles, so
-   the full type-out is visible every revolution.
+   hero headline after "…built to program ___".
+
+   Most words carry the "AI " prefix (e.g. "AI Agents."),
+   and that prefix stays put between them — we backspace
+   only the trailing word and type the next, so "AI" never
+   flickers. Only when the loop reaches "everything." (no
+   prefix) is the "AI" backspaced away too — leaving
+   "…built to program everything." — then typed back in
+   full when the loop returns to a prefixed word. The
+   leading "AI" renders in the headline colour,
+   the rest in accent, so it still reads black "AI" +
+   orange word.
+
+   SSR renders the first word complete (no empty flash);
+   the loop then backspaces and cycles, so the full
+   type-out is visible every revolution.
    ─────────────────────────────────────────────── */
 
-const DEFAULT_WORDS = ["Applications.", "Agents.", "Workflows.", "Everything."];
+const DEFAULT_WORDS = [
+  "AI Applications.",
+  "AI Agents.",
+  "AI Workflows.",
+  "everything.",
+];
+
+const AI_PREFIX = "AI";
 
 type Phase = "hold" | "deleting" | "typing" | "pre";
 
@@ -37,12 +56,21 @@ export default function Typewriter({
     if (reduced.current) return; // hold on the first word — no animation
 
     const word = words[index];
+    // How far back to delete before the next word. Consecutive AI-prefixed
+    // words share the "AI " prefix, so we stop there and leave it standing
+    // rather than backspacing and retyping it every cycle. Only when the next
+    // word drops the prefix ("everything.") do we delete "AI" too.
+    const next = words[(index + 1) % words.length];
+    const floor =
+      word.startsWith(AI_PREFIX) && next.startsWith(AI_PREFIX)
+        ? `${AI_PREFIX} `
+        : "";
     let t: ReturnType<typeof setTimeout>;
 
     if (phase === "hold") {
       t = setTimeout(() => setPhase("deleting"), HOLD_MS);
     } else if (phase === "deleting") {
-      if (text.length > 0) {
+      if (text.length > floor.length) {
         t = setTimeout(() => setText((s) => s.slice(0, -1)), DELETE_MS);
       } else {
         t = setTimeout(() => {
@@ -61,10 +89,18 @@ export default function Typewriter({
     return () => clearTimeout(t);
   }, [text, phase, index, words]);
 
+  // Colour the leading "AI" like the headline (black) and the rest in accent —
+  // but only while the current word actually carries the prefix, so the lone
+  // "everything." stays fully accent.
+  const aiPrefixed = words[index].startsWith(AI_PREFIX);
+  const lead = aiPrefixed ? text.slice(0, AI_PREFIX.length) : "";
+  const rest = aiPrefixed ? text.slice(AI_PREFIX.length) : text;
+
   return (
     <span className={styles.tw}>
       <span className={styles.word} aria-hidden="true">
-        {text}
+        {lead ? <span className={styles.lead}>{lead}</span> : null}
+        {rest}
       </span>
       {/* static, screen-reader-only copy so the headline still reads in full */}
       <span className={styles.srOnly}>{words.join(" ")}</span>

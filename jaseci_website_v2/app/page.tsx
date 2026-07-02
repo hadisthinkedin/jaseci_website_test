@@ -200,11 +200,25 @@ function EcoColumn({
   );
 }
 
-// "Developers needed more." — the evolution story, as expandable claims
+// "Developers needed more." — the evolution story as one chapter frame:
+// headline always visible, the three beats reveal on hover
 const LEAP_COPY = {
   headline:
     "Though devs used Jac, their application was still too slow because they depended on a third-party stack.",
-  body: "Jac was just as fast as C by itself, but when teamed up with React for the frontend, and then CORS for the middleware, and then Vercel for deployment, things slowed down. So, in Jac v2, we decided to have those dependencies built into Jac. Now, when building your AI application, all you need is Jac. But what should we call this individual stack in layman’s terms? What should the solution to multiple problems be dubbed as?",
+  beats: [
+    {
+      tag: "The problem",
+      text: "Jac was just as fast as C by itself, but when teamed up with React for the frontend, and then CORS for the middleware, and then Vercel for deployment, things slowed down.",
+    },
+    {
+      tag: "The fix",
+      text: "So, in Jac v2, we decided to have those dependencies built into Jac. Now, when building your AI application, all you need is Jac.",
+    },
+    {
+      tag: "The question",
+      text: "But what should we call this individual stack in layman’s terms? What should the solution to multiple problems be dubbed as?",
+    },
+  ],
 };
 
 export default function Home() {
@@ -229,9 +243,9 @@ export default function Home() {
           <div className={styles.heroCopy}>
             <h1 className={styles.heroHeadline}>
               Jac, the language <br />
-              built for <br />
+              built for AI <br />
               <Typewriter
-                words={["AI Applications.", "AI Agents.", "AI Workflows.", "everything."]}
+                words={["Applications.", "Agents.", "Workflows.", "everything."]}
               />
             </h1>
             <p className={styles.heroLede}>
@@ -304,7 +318,7 @@ export default function Home() {
               Developers needed <s>more</s>{" "}
               <span className={styles.accent}>Jaseci</span>.
             </h2>
-            <EvolutionBox headline={LEAP_COPY.headline} body={LEAP_COPY.body} />
+            <EvolutionBox headline={LEAP_COPY.headline} beats={LEAP_COPY.beats} />
           </div>
 
           {/* BOTTOM — Jac → Jaseci, blooming into the ecosystem tree */}

@@ -1,0 +1,52 @@
+/* FallingImages — "hex" variant. Each framework drops in as an orange flat-top
+   hexagon tile; hovering one flips it to a black tile with the logo revealed as
+   a white silhouette. Matter.js positions the tiles (see FallingImages.tsx) with
+   rotation locked, so they pack like a honeycomb and the logos stay upright.
+   The tiles are real DOM nodes, so the :hover reveal just works. */
+
+.hex {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  /* flat-top regular hexagon (paired with a bbox ratio of 1 : 0.866 in the TSX) */
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  will-change: transform;
+  transition: background-color 0.2s ease;
+}
+
+.hex:active {
+  cursor: grabbing;
+}
+
+.hex:hover {
+  background: #000;
+}
+
+.hexLogo {
+  width: 54%;
+  height: 54%;
+  object-fit: contain;
+  opacity: 0;
+  transform: scale(0.82);
+  /* flatten any logo to a pure-white silhouette so it reads on the black tile */
+  filter: brightness(0) invert(1);
+  pointer-events: none;
+  -webkit-user-drag: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.hex:hover .hexLogo {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hex,
+  .hexLogo {
+    transition: none;
+  }
+}

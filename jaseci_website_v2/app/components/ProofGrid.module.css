@@ -42,8 +42,8 @@
    weight, line-height and tracking so the Proof heading reads as a peer of
    "Developers needed more.", "Why did you start coding anyway?", etc. */
 .headline {
-  font-family: var(--font-sans);
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-weight: 800;
   font-size: clamp(36px, 5vw, 64px);
   line-height: 1.05;
   letter-spacing: -0.03em;
@@ -250,7 +250,7 @@
 }
 .caseTabActive {
   color: var(--foreground);
-  border-bottom-color: var(--accent);
+  border-bottom-color: var(--foreground);
 }
 .caseSlide {
   display: flex;
@@ -333,7 +333,7 @@
   font-size: 15px;
   line-height: 1.5;
   color: var(--foreground);
-  border-left: 2px solid var(--accent);
+  border-left: 2px solid var(--foreground);
   padding-left: 16px;
   max-width: 620px;
 }
@@ -459,7 +459,8 @@
   transition: color 0.15s ease;
 }
 .researchLink:hover {
-  text-decoration: underline;
+  color: var(--accent);
+  text-decoration: none;
 }
 
 /* ── Responsive — collapse to a single column ──────────────────────────── */

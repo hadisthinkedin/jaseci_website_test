@@ -2,30 +2,40 @@
 
 import { useRef, useState, useEffect } from "react";
 import Matter from "matter-js";
+import styles from "./FallingImages.module.css";
 
 export interface FallingImage {
   src: string;
   alt: string;
-  /** optional explicit size override (px); otherwise sized from the image's
-   *  natural aspect ratio, longest side = maxSize. */
+  /** optional explicit size override (px), image variant only; otherwise sized
+   *  from the image's natural aspect ratio, longest side = maxSize. */
   width?: number;
   height?: number;
 }
 
 interface FallingImagesProps {
   images: FallingImage[];
-  /** longest side, in px, that any image is scaled to. */
+  /** longest side, in px, that any item is scaled to. */
   maxSize?: number;
   trigger?: "auto" | "scroll";
   gravity?: number;
   mouseConstraintStiffness?: number;
   backgroundColor?: string;
+  /** "image" tumbles each logo as-is; "hex" drops an orange hexagon tile per
+   *  logo that flips to the logo (white on black) on hover. */
+  variant?: "image" | "hex";
 }
 
-/* A physics jar that drops images. Drop any logo SVG/PNG into the manifest and
-   it auto-sizes to its natural aspect ratio (capped at maxSize), then tumbles
-   in with Matter.js. Waits for the images to load before measuring so the
-   physics bodies match whatever shape each logo is. */
+// flat-top regular hexagon: bbox height = width * sin(60°)
+const HEX_RATIO = 0.866;
+
+/* A physics bin that drops items. In "image" mode each logo tumbles in at its
+   natural aspect ratio. In "hex" mode each logo becomes an orange flat-top
+   hexagon whose rotation is locked, so the tiles pack like a honeycomb and the
+   logo — revealed on hover as a white silhouette on black — stays upright.
+   Matter.js does the positioning; the tiles/imgs are real DOM nodes so :hover
+   works. Waits for images to load before measuring (image mode only) so the
+   physics bodies match each logo's shape. */
 const FallingImages = ({
   images,
   maxSize = 126,
@@ -33,31 +43,30 @@ const FallingImages = ({
   gravity = 1,
   mouseConstraintStiffness = 0.2,
   backgroundColor = "transparent",
+  variant = "image",
 }: FallingImagesProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const targetRef = useRef<HTMLDivElement | null>(null);
   const canvasContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const [effectStarted, setEffectStarted] = useState(false);
+  // "auto" starts immediately; "scroll" waits for the bin to come into view
+  const [effectStarted, setEffectStarted] = useState(trigger === "auto");
+  const isHex = variant === "hex";
+  const hexHeight = Math.round(maxSize * HEX_RATIO);
 
   useEffect(() => {
-    if (trigger === "auto") {
-      setEffectStarted(true);
-      return;
-    }
-    if (trigger === "scroll" && containerRef.current) {
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setEffectStarted(true);
-            observer.disconnect();
-          }
-        },
-        { threshold: 0.2 }
-      );
-      observer.observe(containerRef.current);
-      return () => observer.disconnect();
-    }
+    if (trigger !== "scroll" || !containerRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setEffectStarted(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 }
+    );
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
   }, [trigger]);
 
   useEffect(() => {
@@ -77,42 +86,47 @@ const FallingImages = ({
       const target = targetRef.current!;
       const container = containerRef.current!;
       const canvasHost = canvasContainerRef.current!;
-      const imgEls = Array.from(
-        target.querySelectorAll<HTMLImageElement>("img")
+      const itemEls = Array.from(
+        target.querySelectorAll<HTMLElement>("[data-falling-item]")
       );
 
-      // wait until every image has loaded so we know its real aspect ratio
-      await Promise.all(
-        imgEls.map((img) =>
-          img.complete && img.naturalWidth
-            ? Promise.resolve()
-            : new Promise<void>((res) => {
-                img.addEventListener("load", () => res(), { once: true });
-                img.addEventListener("error", () => res(), { once: true });
-              })
-        )
-      );
-      if (cancelled || !containerRef.current) return;
+      // image mode sizes each logo from its natural aspect ratio, so wait for
+      // the images to load first. hex tiles are a fixed size set in the markup —
+      // nothing to wait for or measure.
+      if (!isHex) {
+        const imgEls = itemEls as HTMLImageElement[];
+        await Promise.all(
+          imgEls.map((img) =>
+            img.complete && img.naturalWidth
+              ? Promise.resolve()
+              : new Promise<void>((res) => {
+                  img.addEventListener("load", () => res(), { once: true });
+                  img.addEventListener("error", () => res(), { once: true });
+                })
+          )
+        );
+        if (cancelled || !containerRef.current) return;
 
-      // size each image: explicit override, else natural aspect capped at maxSize
-      imgEls.forEach((img, i) => {
-        const ov = images[i];
-        if (ov?.width && ov?.height) {
-          img.width = ov.width;
-          img.height = ov.height;
-          return;
-        }
-        const nw = img.naturalWidth;
-        const nh = img.naturalHeight;
-        if (nw > 0 && nh > 0) {
-          const s = maxSize / Math.max(nw, nh);
-          img.width = Math.round(nw * s);
-          img.height = Math.round(nh * s);
-        } else {
-          img.width = maxSize;
-          img.height = maxSize;
-        }
-      });
+        // size each image: explicit override, else natural aspect capped at maxSize
+        imgEls.forEach((img, i) => {
+          const ov = images[i];
+          if (ov?.width && ov?.height) {
+            img.width = ov.width;
+            img.height = ov.height;
+            return;
+          }
+          const nw = img.naturalWidth;
+          const nh = img.naturalHeight;
+          if (nw > 0 && nh > 0) {
+            const s = maxSize / Math.max(nw, nh);
+            img.width = Math.round(nw * s);
+            img.height = Math.round(nh * s);
+          } else {
+            img.width = maxSize;
+            img.height = maxSize;
+          }
+        });
+      }
 
       const { Engine, Render, World, Bodies, Runner, Mouse, MouseConstraint } =
         Matter;
@@ -137,25 +151,37 @@ const FallingImages = ({
       const rightWall = Bodies.rectangle(width + 25, height / 2, 50, height, bOpts);
       const ceiling = Bodies.rectangle(width / 2, -25, width, 50, bOpts);
 
-      const bodies = imgEls.map((elem) => {
+      const bodies = itemEls.map((elem) => {
         const rect = elem.getBoundingClientRect();
         const x = rect.left - containerRect.left + rect.width / 2;
         const y = rect.top - containerRect.top + rect.height / 2;
-        const body = Bodies.rectangle(
-          x,
-          y,
-          rect.width || maxSize,
-          rect.height || maxSize,
-          {
-            chamfer: { radius: 8 },
-            render: { fillStyle: "transparent" },
-            restitution: 0.55,
-            frictionAir: 0.02,
-            friction: 0.25,
-          }
-        );
+        const w = rect.width || maxSize;
+        const h = rect.height || maxSize;
+
+        const body = isHex
+          ? Bodies.polygon(x, y, 6, w / 2, {
+              render: { fillStyle: "transparent" },
+              restitution: 0.35,
+              frictionAir: 0.02,
+              friction: 0.45,
+            })
+          : Bodies.rectangle(x, y, w, h, {
+              chamfer: { radius: 8 },
+              render: { fillStyle: "transparent" },
+              restitution: 0.55,
+              frictionAir: 0.02,
+              friction: 0.25,
+            });
+
         Matter.Body.setVelocity(body, { x: (Math.random() - 0.5) * 5, y: 0 });
-        Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.05);
+        if (isHex) {
+          // orient the hexagon flat-top (Matter's default is pointy-top) and
+          // lock rotation, so the tiles stay level and the logos read upright
+          Matter.Body.setAngle(body, Math.PI / 6);
+          Matter.Body.setInertia(body, Infinity);
+        } else {
+          Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.05);
+        }
         return { elem, body };
       });
 
@@ -192,7 +218,10 @@ const FallingImages = ({
         bodies.forEach(({ body, elem }) => {
           elem.style.left = `${body.position.x}px`;
           elem.style.top = `${body.position.y}px`;
-          elem.style.transform = `translate(-50%, -50%) rotate(${body.angle}rad)`;
+          // hex tiles keep their fixed flat-top orientation (rotation is locked);
+          // image tiles follow the body's tumble
+          const rotation = isHex ? 0 : body.angle;
+          elem.style.transform = `translate(-50%, -50%) rotate(${rotation}rad)`;
         });
         Matter.Engine.update(engine);
         rafId = requestAnimationFrame(loop);
@@ -215,7 +244,15 @@ const FallingImages = ({
       cancelled = true;
       teardown();
     };
-  }, [effectStarted, gravity, mouseConstraintStiffness, backgroundColor, maxSize]);
+  }, [
+    effectStarted,
+    gravity,
+    mouseConstraintStiffness,
+    backgroundColor,
+    maxSize,
+    isHex,
+    images,
+  ]);
 
   return (
     <div
@@ -239,22 +276,39 @@ const FallingImages = ({
           fontSize: 0,
         }}
       >
-        {images.map((img, i) => (
-          <img
-            key={i}
-            src={img.src}
-            alt={img.alt}
-            draggable={false}
-            style={{
-              display: "inline-block",
-              margin: "7px",
-              maxWidth: maxSize,
-              maxHeight: maxSize,
-              userSelect: "none",
-              willChange: "transform",
-            }}
-          />
-        ))}
+        {images.map((img, i) =>
+          isHex ? (
+            <div
+              key={i}
+              data-falling-item
+              className={styles.hex}
+              style={{ width: maxSize, height: hexHeight, margin: 7 }}
+            >
+              <img
+                src={img.src}
+                alt={img.alt}
+                draggable={false}
+                className={styles.hexLogo}
+              />
+            </div>
+          ) : (
+            <img
+              key={i}
+              data-falling-item
+              src={img.src}
+              alt={img.alt}
+              draggable={false}
+              style={{
+                display: "inline-block",
+                margin: "7px",
+                maxWidth: maxSize,
+                maxHeight: maxSize,
+                userSelect: "none",
+                willChange: "transform",
+              }}
+            />
+          )
+        )}
       </div>
       <div
         ref={canvasContainerRef}

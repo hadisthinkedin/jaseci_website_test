@@ -166,11 +166,9 @@ for (let row = 0; row < ROWS; row++) {
 const hubIdx = pushNode(CX, CY, 1, 0.3, "hub", true);
 const connectable = [...meshIdx, hubIdx];
 
-// reveal staggered by distance from the hub → explodes outward from Jaseci
-let maxD = 1;
-for (const i of meshIdx) maxD = Math.max(maxD, dist(NODES[i].x, NODES[i].y, CX, CY));
-for (const i of meshIdx)
-  NODES[i].delay = 1.5 + (dist(NODES[i].x, NODES[i].y, CX, CY) / maxD) * 0.5 + 0.05;
+// reveal order is computed AFTER the web is built — a breadth-first spread from
+// the single hub seed (see the BFS below the connect step), so the tree starts at
+// one node and grows out along its actual connections rather than by position.
 
 // ── connect into a triangulating mesh of SHORT edges, plus a few longer struts
 // (still ≤ MAX_EDGE) for variety. Each edge links near neighbours, so the web
@@ -184,9 +182,10 @@ function connect(a: number, b: number) {
   seen.add(k);
   deg[a] = (deg[a] || 0) + 1;
   deg[b] = (deg[b] || 0) + 1;
+  // edge direction + reveal delay are set after the BFS below — they depend on
+  // each node's graph-distance from the seed, which needs the finished adjacency.
   const depth = Math.max(NODES[a].depth, NODES[b].depth);
-  const delay = Math.max(NODES[a].delay, NODES[b].delay);
-  pushEdge(a, b, depth, delay);
+  pushEdge(a, b, depth, 0);
 }
 for (let ii = 0; ii < connectable.length; ii++) {
   for (let jj = ii + 1; jj < connectable.length; jj++) {
@@ -233,16 +232,62 @@ for (const A of connectable) {
   if (best >= 0) connect(A, best);
 }
 
-// ── the slow Jac → Jaseci connection, as a chain of sub-cap segments so it still
-// descends top→down but no segment exceeds the cap. Waypoints are fixed + hidden,
-// so it reads as one clean vertical line. ────────────────────────────────────
+// ── growth order: a breadth-first spread from a SINGLE seed (the Jaseci hub). The
+// web reveals in waves of graph-distance (hops along the edges), so it starts at
+// one node and spreads through its connections outward — no geometric columns, no
+// all-at-once pop. Each node's delay is its hop-distance from the seed; each edge
+// is oriented parent → child and draws outward as the wave reaches it. ─────────
+{
+  const adj: number[][] = NODES.map(() => []);
+  for (const e of EDGES) {
+    adj[e.a].push(e.b);
+    adj[e.b].push(e.a);
+  }
+  // BFS hop-distance from the hub through the web
+  const hop: number[] = NODES.map(() => Infinity);
+  hop[hubIdx] = 0;
+  const bfsQ = [hubIdx];
+  for (let qi = 0; qi < bfsQ.length; qi++) {
+    const u = bfsQ[qi];
+    for (const v of adj[u])
+      if (!Number.isFinite(hop[v])) {
+        hop[v] = hop[u] + 1;
+        bfsQ.push(v);
+      }
+  }
+  let maxHop = 1;
+  for (const i of connectable)
+    if (Number.isFinite(hop[i])) maxHop = Math.max(maxHop, hop[i]);
+
+  const GROW_START = 1.5; // fires the instant the Jac → Jaseci line lands on the hub
+  const GROW_SPREAD = 1.3; // time for the branch wave to reach the outermost nodes
+  const denom = Math.max(1, maxHop - 1); // hop 1 → 0 … maxHop → 1
+  for (const i of connectable) {
+    const h = Number.isFinite(hop[i]) ? hop[i] : maxHop; // stragglers reveal last
+    // hop 0 (the hub) AND hop 1 (its direct branches) both fire at GROW_START, so the
+    // radial web branches out of Jaseci the MOMENT the line touches it — no gap. Hops
+    // 2… then spread outward from there over GROW_SPREAD.
+    NODES[i].delay = GROW_START + (Math.max(0, h - 1) / denom) * GROW_SPREAD;
+  }
+  // orient each edge parent → child (so it draws OUTWARD from the seed) and reveal
+  // it as the wave reaches its deeper end
+  for (const e of EDGES) {
+    if (hop[e.b] < hop[e.a]) {
+      const t = e.a;
+      e.a = e.b;
+      e.b = t;
+    }
+    e.delay = Math.max(NODES[e.a].delay, NODES[e.b].delay);
+  }
+}
+
+// ── the slow Jac → Jaseci connection: a SINGLE straight line descending from Jac
+// (top) into the Jaseci hub. One segment (not a chain) so the timing curve shapes
+// the WHOLE descent as one smooth motion — the CSS eases it logarithmically, fast
+// out of Jac then decelerating gently onto Jaseci. dur spans the full 1.5s the old
+// three 0.5s segments took, so the mesh still blooms right as the line lands. ──
 const jacIdx = pushNode(JAC.x, JAC.y, 0.9, 0.1, "jac", true);
-const STEP = (CY - JAC.y) / 3; // descend straight down from Jac (top) into the hub
-const m1 = pushNode(CX, JAC.y + STEP, 0.85, 0, "approach", true);
-const m2 = pushNode(CX, JAC.y + STEP * 2, 0.85, 0, "approach", true);
-pushEdge(jacIdx, m1, 0.9, 0.0, { main: true, dur: 0.5 });
-pushEdge(m1, m2, 0.9, 0.5, { main: true, dur: 0.5 });
-pushEdge(m2, hubIdx, 0.9, 1.0, { main: true, dur: 0.5 });
+pushEdge(jacIdx, hubIdx, 0.9, 0.0, { main: true, dur: 1.5 });
 
 // Jac is intentionally NOT woven into the web: its ONLY connection is the slow
 // main line down to Jaseci (the hub) built above. No strands reach out to the
@@ -305,9 +350,17 @@ export default function LineageBloom() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    // Reduced-motion users get the finished constellation straight from CSS.
+    // Play the grow-in exactly ONCE: the first time the graph scrolls into view we
+    // latch .play on and stop observing, so scrolling away and back never restarts
+    // (or reverses) the reveal. Reduced-motion users get the finished constellation
+    // straight from CSS regardless.
     const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => setPlay(e.isIntersecting)),
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setPlay(true);
+          io.disconnect();
+        }
+      },
       { threshold: 0.2 }
     );
     io.observe(el);
