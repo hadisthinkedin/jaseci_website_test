@@ -233,6 +233,11 @@ export default function Home() {
             <a href="#projects">Projects</a>
             <a href="#community">Community</a>
           </div>
+          {/* registration-mark corners — fade in when the nav detaches */}
+          <span aria-hidden className={`${styles.corner} ${styles.cornerTL}`} />
+          <span aria-hidden className={`${styles.corner} ${styles.cornerTR}`} />
+          <span aria-hidden className={`${styles.corner} ${styles.cornerBL}`} />
+          <span aria-hidden className={`${styles.corner} ${styles.cornerBR}`} />
         </nav>
       </div>
 
