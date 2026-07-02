@@ -202,7 +202,7 @@ export default function AbstractionTrend() {
         <circle className={styles.pulse} cx={656} cy={100} r={11} />
         <text className={styles.annotation} x={656} y={63} textAnchor="middle">
           <tspan x={656}>THE</tspan>
-          <tspan x={656} dy={14}>LEAP</tspan>
+          <tspan x={656} dy={16}>LEAP</tspan>
         </text>
 
         {/* nodes */}
