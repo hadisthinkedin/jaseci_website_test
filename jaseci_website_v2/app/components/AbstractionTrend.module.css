@@ -1,9 +1,15 @@
 /* ───────────────────────────────────────────────
    Abstraction trendline — draw-in animation.
-   The two trend paths use pathLength="1", so the
-   dash trick draws them regardless of real length.
-   Nodes / labels / guides stagger in via inline
-   animation-delay set per index in the component.
+   The frame, the two trend paths and the dimension
+   rule use pathLength="1", so the dash trick draws
+   them regardless of real length. Nodes, labels,
+   gridlines and eras stagger in via animation-delay
+   set per index in the component; the header, frame,
+   ticks, hatches, legend, guide, ring, annotation
+   and dimension line carry fixed delays here. Tiers:
+   primary milestones read crisp, the flat languages
+   recede (muted), Jac pops — then keeps a slow radar
+   pulse so the figure stays alive after the draw-in.
    ─────────────────────────────────────────────── */
 
 .wrap {
@@ -20,30 +26,136 @@
   font-family: var(--font-mono);
 }
 
-/* ── Axes ──────────────────────────────────────────────────────────────── */
+/* ── Header row — site-standard mono eyebrow, real pixels (not SVG-scaled) ── */
 
-.axis {
-  stroke: #000;
+.figHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin-bottom: 12px;
+  font-family: var(--font-mono);
+  opacity: 0;
+  animation: fade 0.6s ease 0.1s forwards;
+}
+
+.figTitle {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--foreground);
+}
+
+.figMeta {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* ── Plot frame + axis ticks ───────────────────────────────────────────── */
+
+.frame {
+  fill: none;
+  stroke: var(--foreground);
   stroke-width: 1;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw 0.9s ease 0s forwards;
+}
+
+.tick {
+  stroke: var(--foreground);
+  stroke-width: 1;
+  opacity: 0;
+  animation: fadeHalf 0.5s ease 0.35s forwards;
+}
+
+.tickAccent {
+  stroke: var(--accent);
+  stroke-width: 1;
+  opacity: 0;
+  animation: fadeHalf 0.5s ease 2.05s forwards;
+}
+
+/* ── Tier gridlines + level names ──────────────────────────────────────── */
+
+.gridline,
+.gridlineAccent {
+  stroke-width: 1;
+  stroke-dasharray: 1 6;
+  stroke-linecap: round;
+  opacity: 0;
+}
+.gridline {
+  stroke: var(--foreground);
+  animation: fadeFaint 0.6s ease forwards;
+}
+.gridlineAccent {
+  stroke: var(--accent);
+  animation: fadeSoft 0.6s ease forwards;
+}
+
+.levelLabel {
+  fill: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.12em;
   opacity: 0;
   animation: fade 0.5s ease forwards;
 }
-.axisLabel {
-  fill: var(--muted);
-  font-size: 13px;
-  letter-spacing: 0.18em;
-  opacity: 0;
-  animation: fade 0.6s ease 0.2s forwards;
+.levelLabelAccent {
+  fill: var(--accent);
+  font-weight: 700;
 }
 
-/* ── Vertical guides ───────────────────────────────────────────────────── */
+/* ── In-plot legend — decodes the node tiers ───────────────────────────── */
+
+.legend {
+  opacity: 0;
+  animation: fade 0.6s ease 0.75s forwards;
+}
+.legendDotPrimary {
+  fill: var(--background);
+  stroke: var(--foreground);
+  stroke-width: 2;
+}
+.legendDotMuted {
+  fill: var(--muted);
+}
+.legendText {
+  fill: var(--muted);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+}
+
+/* ── Hatched areas under the trend ─────────────────────────────────────── */
+
+.hatchLine {
+  stroke: var(--foreground);
+  stroke-width: 1;
+}
+.hatchLineAccent {
+  stroke: var(--accent);
+  stroke-width: 1;
+}
+.hatchLegacy {
+  opacity: 0;
+  animation: fadeHatchFg 0.8s ease 1.35s forwards;
+}
+.hatchLeap {
+  opacity: 0;
+  animation: fadeHatchAccent 0.8s ease 1.95s forwards;
+}
+
+/* ── Single faint guide grounding the leap ─────────────────────────────── */
 
 .guide {
-  stroke: #000;
+  stroke: var(--foreground);
   stroke-width: 1;
-  stroke-dasharray: 2 4;
+  stroke-dasharray: 2 6;
   opacity: 0;
-  animation: fadeGuide 0.5s ease forwards;
+  animation: fadeFaint 0.6s ease 1.6s forwards;
 }
 
 /* ── Trend lines ───────────────────────────────────────────────────────── */
@@ -58,53 +170,136 @@
 }
 .legacy {
   stroke: var(--foreground);
-  stroke-width: 3;
-  animation: draw 1.3s ease 0.2s forwards;
+  stroke-width: 2.5;
+  animation: draw 1.2s ease 0.2s forwards;
 }
 .leap {
   stroke: var(--accent);
-  stroke-width: 4;
-  animation: draw 0.9s ease 1.2s forwards;
+  stroke-width: 3.5;
+  animation: draw 0.8s ease 1.15s forwards;
 }
 
 /* ── Nodes ─────────────────────────────────────────────────────────────── */
 
 .node {
-  fill: var(--background);
-  stroke: var(--foreground);
-  stroke-width: 2.5;
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
   animation: pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+.nodePrimary {
+  fill: var(--background);
+  stroke: var(--foreground);
+  stroke-width: 2;
+}
+.nodeMuted {
+  fill: var(--muted);
+  stroke: none;
+}
 .nodeAccent {
   fill: var(--accent);
   stroke: var(--accent);
+  stroke-width: 2;
+  /* the money node lands with a slight overshoot */
+  animation-name: popAccent;
+}
+
+/* emphasis ring on the Jac node */
+.halo {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  opacity: 0;
+  animation: fadeRing 0.6s ease 2.15s forwards;
+}
+
+/* infinite radar pulse — keeps the figure alive after the entrance */
+.pulse {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulseRing 3s cubic-bezier(0, 0, 0.2, 1) 3.4s infinite;
 }
 
 /* ── Labels ────────────────────────────────────────────────────────────── */
 
 .xlabel {
-  fill: var(--foreground);
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   opacity: 0;
+  text-transform: uppercase;
   animation: fade 0.5s ease forwards;
+}
+.xlabelPrimary {
+  fill: var(--foreground);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.xlabelMuted {
+  fill: var(--muted);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
 }
 .xlabelAccent {
   fill: var(--accent);
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* era of each generation — kept lowercase so "1940s" reads right */
+.eraLabel {
+  fill: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  opacity: 0;
+  animation: fade 0.5s ease forwards;
+}
+.eraLabelAccent {
+  fill: var(--accent);
+  font-weight: 700;
 }
 
 .annotation {
   fill: var(--accent);
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
   opacity: 0;
-  animation: fade 0.6s ease forwards;
+  animation: fade 0.6s ease 2.25s forwards;
+}
+
+/* ── Dimension line — "≈ 50 years" ─────────────────────────────────────── */
+
+.dimension {
+  opacity: 0;
+  animation: fade 0.7s ease 2.5s forwards;
+}
+.dimLine {
+  stroke: var(--muted);
+  stroke-width: 1;
+}
+/* the rule draws left → right, like the years passing */
+.dimRule {
+  stroke: var(--muted);
+  stroke-width: 1;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw 0.8s ease 2.55s forwards;
+}
+/* the far tick lands as the rule reaches it */
+.dimLineEnd {
+  opacity: 0;
+  animation: fade 0.3s ease 3.25s forwards;
+}
+.dimText {
+  fill: var(--muted);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
 }
 
 /* ── Keyframes ─────────────────────────────────────────────────────────── */
@@ -119,9 +314,34 @@
     opacity: 1;
   }
 }
-@keyframes fadeGuide {
+@keyframes fadeFaint {
   to {
-    opacity: 0.22;
+    opacity: 0.16;
+  }
+}
+@keyframes fadeSoft {
+  to {
+    opacity: 0.35;
+  }
+}
+@keyframes fadeHalf {
+  to {
+    opacity: 0.55;
+  }
+}
+@keyframes fadeRing {
+  to {
+    opacity: 0.4;
+  }
+}
+@keyframes fadeHatchFg {
+  to {
+    opacity: 0.07;
+  }
+}
+@keyframes fadeHatchAccent {
+  to {
+    opacity: 0.16;
   }
 }
 @keyframes pop {
@@ -134,23 +354,89 @@
     transform: scale(1);
   }
 }
+@keyframes popAccent {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.22);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes pulseRing {
+  0% {
+    opacity: 0;
+    transform: scale(0.66);
+  }
+  10% {
+    opacity: 0.55;
+  }
+  55% {
+    opacity: 0;
+    transform: scale(2.1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.1);
+  }
+}
 
 /* ── Respect reduced motion — render the final state, no draw ───────────── */
 
 @media (prefers-reduced-motion: reduce) {
-  .axis,
-  .axisLabel,
+  .guide {
+    opacity: 0.16;
+    animation: none;
+  }
+  .gridline {
+    opacity: 0.16;
+    animation: none;
+  }
+  .gridlineAccent {
+    opacity: 0.35;
+    animation: none;
+  }
+  .tick,
+  .tickAccent {
+    opacity: 0.55;
+    animation: none;
+  }
+  .hatchLegacy {
+    opacity: 0.07;
+    animation: none;
+  }
+  .hatchLeap {
+    opacity: 0.16;
+    animation: none;
+  }
+  .figHead,
+  .legend,
+  .levelLabel,
   .xlabel,
-  .annotation {
+  .eraLabel,
+  .annotation,
+  .dimension,
+  .dimLineEnd {
     opacity: 1;
     animation: none;
   }
-  .guide {
-    opacity: 0.22;
+  .halo {
+    opacity: 0.4;
     animation: none;
   }
+  .pulse {
+    opacity: 0;
+    animation: none;
+  }
+  .frame,
   .legacy,
-  .leap {
+  .leap,
+  .dimRule {
     stroke-dashoffset: 0;
     animation: none;
   }
