@@ -34,38 +34,38 @@ const NODES: {
   y: number;
   tier: Tier;
 }[] = [
-  { id: "asm", label: "Assembly", era: "1940s", x: 96, y: 404, tier: "primary" },
-  { id: "fortran", label: "Fortran", era: "1950s", x: 176, y: 404, tier: "muted" },
-  { id: "c", label: "C", era: "1970s", x: 256, y: 332, tier: "primary" },
-  { id: "cpp", label: "C++", era: "1980s", x: 336, y: 332, tier: "muted" },
-  { id: "java", label: "Java", era: "1990s", x: 416, y: 268, tier: "primary" },
-  { id: "py", label: "Python", era: "1990s", x: 496, y: 204, tier: "primary" },
-  { id: "jsts", label: "JS/TS", era: "1990s", x: 576, y: 204, tier: "muted" },
-  { id: "jac", label: "Jac", era: "NOW", x: 656, y: 84, tier: "accent" },
+  { id: "asm", label: "Assembly", era: "1940s", x: 96, y: 457, tier: "primary" },
+  { id: "fortran", label: "Fortran", era: "1950s", x: 176, y: 457, tier: "muted" },
+  { id: "c", label: "C", era: "1970s", x: 256, y: 375, tier: "primary" },
+  { id: "cpp", label: "C++", era: "1980s", x: 336, y: 375, tier: "muted" },
+  { id: "java", label: "Java", era: "1990s", x: 416, y: 302, tier: "primary" },
+  { id: "py", label: "Python", era: "1990s", x: 496, y: 229, tier: "primary" },
+  { id: "jsts", label: "JS/TS", era: "1990s", x: 576, y: 229, tier: "muted" },
+  { id: "jac", label: "Jac", era: "NOW", x: 656, y: 91, tier: "accent" },
 ];
 
 // named abstraction tiers — one per plateau in the staircase
 const LEVELS: { label: string; y: number; accent?: boolean }[] = [
-  { label: "MACHINE", y: 404 },
-  { label: "SYSTEMS", y: 332 },
-  { label: "MANAGED", y: 268 },
-  { label: "DYNAMIC", y: 204 },
-  { label: "AI-NATIVE", y: 84, accent: true },
+  { label: "MACHINE", y: 457 },
+  { label: "SYSTEMS", y: 375 },
+  { label: "MANAGED", y: 302 },
+  { label: "DYNAMIC", y: 229 },
+  { label: "AI-NATIVE", y: 91, accent: true },
 ];
 
-const FRAME = { x: 72, y: 40, w: 612, h: 412 };
-const BASE_Y = FRAME.y + FRAME.h; // 452
+const FRAME = { x: 72, y: 40, w: 612, h: 472 };
+const BASE_Y = FRAME.y + FRAME.h; // 512
 
 // step ladder through the legacy languages, then the tall final leap to Jac
-const LEGACY = "M96 404 H256 V332 H416 V268 H496 V204 H576";
-const LEAP = "M576 204 H656 V84";
+const LEGACY = "M96 457 H256 V375 H416 V302 H496 V229 H576";
+const LEAP = "M576 229 H656 V91";
 
 // hatched areas under the staircase and under the leap run
 const LEGACY_AREA =
-  "M96 452 V404 H256 V332 H416 V268 H496 V204 H576 V452 Z";
-const LEAP_AREA = "M576 452 V204 H656 V452 Z";
+  "M96 512 V457 H256 V375 H416 V302 H496 V229 H576 V512 Z";
+const LEAP_AREA = "M576 512 V229 H656 V512 Z";
 
-const RADIUS: Record<Tier, number> = { primary: 6, muted: 4, accent: 8 };
+const RADIUS: Record<Tier, number> = { primary: 6.5, muted: 4.5, accent: 9 };
 
 export default function AbstractionTrend() {
   return (
@@ -84,7 +84,7 @@ export default function AbstractionTrend() {
 
       <svg
         className={styles.svg}
-        viewBox="-20 32 740 516"
+        viewBox="-20 32 740 576"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -178,27 +178,29 @@ export default function AbstractionTrend() {
 
         {/* in-plot legend — decodes the node tiers, fills the empty upper-left */}
         <g className={styles.legend}>
-          <circle className={styles.legendDotPrimary} cx={102} cy={112} r={5} />
-          <text className={styles.legendText} x={116} y={116}>
+          <circle className={styles.legendDotPrimary} cx={102} cy={119} r={5.5} />
+          <text className={styles.legendText} x={117} y={123}>
             RAISED ABSTRACTION
           </text>
-          <circle className={styles.legendDotMuted} cx={102} cy={134} r={4} />
-          <text className={styles.legendText} x={116} y={138}>
+          <circle className={styles.legendDotMuted} cx={102} cy={141} r={4.5} />
+          <text className={styles.legendText} x={117} y={145}>
             NO REAL GAIN
           </text>
         </g>
 
         {/* one faint guide grounding the leap to Jac */}
-        <line className={styles.guide} x1={656} y1={BASE_Y} x2={656} y2={84} />
+        <line className={styles.guide} x1={656} y1={BASE_Y} x2={656} y2={91} />
 
         {/* the trend — legacy ladder, then the leap */}
         <path className={styles.legacy} d={LEGACY} pathLength={1} />
         <path className={styles.leap} d={LEAP} pathLength={1} />
 
-        {/* emphasis ring + infinite radar pulse + annotation on Jac */}
-        <circle className={styles.halo} cx={656} cy={84} r={15} />
-        <circle className={styles.pulse} cx={656} cy={84} r={10} />
-        <text className={styles.annotation} x={656} y={56} textAnchor="middle">
+        {/* emphasis ring + infinite radar pulse + annotation on Jac;
+            the label is right-aligned to the frame edge so its tracking
+            doesn't spill past the plot */}
+        <circle className={styles.halo} cx={656} cy={91} r={16.5} />
+        <circle className={styles.pulse} cx={656} cy={91} r={11} />
+        <text className={styles.annotation} x={678} y={63} textAnchor="end">
           THE LEAP
         </text>
 
@@ -265,24 +267,24 @@ export default function AbstractionTrend() {
 
         {/* dimension line — the fifty years the staircase took, drawn L→R */}
         <g className={styles.dimension}>
-          <text className={styles.dimText} x={336} y={514} textAnchor="middle">
+          <text className={styles.dimText} x={336} y={574} textAnchor="middle">
             ≈ 50 YEARS OF INCREMENTAL STEPS
           </text>
           <line
             className={styles.dimRule}
             x1={96}
-            y1={524}
+            y1={584}
             x2={576}
-            y2={524}
+            y2={584}
             pathLength={1}
           />
-          <line className={styles.dimLine} x1={96} y1={519} x2={96} y2={529} />
+          <line className={styles.dimLine} x1={96} y1={579} x2={96} y2={589} />
           <line
             className={`${styles.dimLine} ${styles.dimLineEnd}`}
             x1={576}
-            y1={519}
+            y1={579}
             x2={576}
-            y2={529}
+            y2={589}
           />
         </g>
       </svg>
