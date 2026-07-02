@@ -1,13 +1,15 @@
+"use client";
+
+import { useState } from "react";
 import styles from "./EvolutionBox.module.css";
 
 /* EvolutionBox — the "evolution → the leap" beat as a statement slab.
    A fixed-height hairline frame with the headline set large on the left
-   (conviction-style) and deliberate empty canvas on the right. Hovering
-   (or keyboard focus) slides an orange story drawer in from the right
-   edge — the same horizontal-wipe DNA as the old step cards — covering
-   the empty canvas without moving a single line of text or reflowing
-   anything below. Pure CSS, so this stays a server component; at touch
-   widths the story simply stacks below the statement, always open. */
+   and empty canvas on the right. Hovering (or keyboard focus) slides an
+   orange story drawer in from the right edge — the same horizontal-wipe
+   DNA as the old step cards. Clicking the +/− button freezes the drawer
+   open (data-open) until clicked again, matching the step cards and the
+   manifesto boxes. Touch widths stack the story below, always open. */
 
 export default function EvolutionBox({
   headline,
@@ -16,8 +18,12 @@ export default function EvolutionBox({
   headline: string;
   body: string;
 }) {
+  // click the +/− to freeze the drawer open, like the evolution step cards
+  // and the manifesto accordion; hover still previews when not frozen
+  const [frozen, setFrozen] = useState(false);
+
   return (
-    <div className={styles.frame} tabIndex={0}>
+    <div className={styles.frame} tabIndex={0} data-open={frozen}>
       <div className={styles.statement}>
         <h3 className={styles.headline}>{headline}</h3>
       </div>
@@ -35,7 +41,13 @@ export default function EvolutionBox({
           because its clipped/animated presentation is visual-only) */}
       <div className={styles.srOnly}>{body}</div>
 
-      <span className={styles.icon} aria-hidden="true" />
+      <button
+        type="button"
+        className={styles.icon}
+        aria-label={frozen ? "Collapse the story" : "Expand the story"}
+        aria-expanded={frozen}
+        onClick={() => setFrozen((v) => !v)}
+      />
     </div>
   );
 }

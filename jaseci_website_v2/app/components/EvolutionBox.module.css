@@ -53,7 +53,8 @@
   transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .frame:hover .story,
-.frame:focus-visible .story {
+.frame:focus-visible .story,
+.frame[data-open="true"] .story {
   width: var(--storyW);
 }
 
@@ -87,7 +88,12 @@
   z-index: 2;
   width: 24px;
   height: 24px;
+  padding: 0;
+  background: transparent;
   border: 1px solid #000;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
   transition: border-color 0.18s ease;
 }
 .icon::before,
@@ -109,18 +115,22 @@
   height: 11px;
 }
 .frame:hover .icon,
-.frame:focus-visible .icon {
+.frame:focus-visible .icon,
+.frame[data-open="true"] .icon {
   border-color: #fff;
 }
 .frame:hover .icon::before,
 .frame:hover .icon::after,
 .frame:focus-visible .icon::before,
-.frame:focus-visible .icon::after {
+.frame:focus-visible .icon::after,
+.frame[data-open="true"] .icon::before,
+.frame[data-open="true"] .icon::after {
   background: #fff;
 }
 /* + → − while the drawer is out */
 .frame:hover .icon::after,
-.frame:focus-visible .icon::after {
+.frame:focus-visible .icon::after,
+.frame[data-open="true"] .icon::after {
   transform: translate(-50%, -50%) scaleY(0);
 }
 
@@ -159,7 +169,10 @@
   .icon {
     display: none;
   }
-  .story {
+  .story,
+  .frame:hover .story,
+  .frame:focus-visible .story,
+  .frame[data-open="true"] .story {
     position: static;
     width: auto;
     background: var(--background);
