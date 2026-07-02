@@ -8,12 +8,12 @@ type Block = { name: string; logo?: string };
 const BLOCKS: Block[] = [
   { name: "Python", logo: "/jar/python.svg?v=1" },
   { name: "LangChain", logo: "/jar/langchain.svg?v=5" },
-  { name: "LangGraph", logo: "/jar/langgraph.svg?v=4" },
+  { name: "LangGraph", logo: "/jar/langgraph.svg?v=5" },
   { name: "LlamaIndex", logo: "/jar/llamaindex.svg?v=3" },
   { name: "Pydantic AI", logo: "/jar/pydanticai.svg?v=2" },
-  { name: "CrewAI", logo: "/jar/crewai.svg?v=3" },
+  { name: "CrewAI", logo: "/jar/crewai.svg?v=4" },
   { name: "AutoGen", logo: "/jar/autogen.svg?v=2" },
-  { name: "DSPy", logo: "/jar/dspy.svg?v=3" },
+  { name: "DSPy", logo: "/jar/dspy.svg?v=4" },
   { name: "Haystack", logo: "/jar/haystack.svg?v=4" },
   { name: "Your Application" }, // the reader's own app — perched on top, about to fall
 ];
