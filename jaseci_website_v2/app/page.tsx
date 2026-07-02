@@ -211,17 +211,12 @@ function EcoColumn({
 }
 
 // "Developers needed more." — the evolution story as a statement slab:
-// headline set large on the frame, the story slides in as an orange
-// drawer on hover and lands on the open naming question
+// headline set large on the frame, the full story paragraph slides in
+// as an orange drawer on hover
 const LEAP_COPY = {
   headline:
     "Though devs used Jac, their application was still too slow because they depended on a third-party stack.",
-  story: [
-    "Jac was just as fast as C by itself, but when teamed up with React for the frontend, and then CORS for the middleware, and then Vercel for deployment, things slowed down.",
-    "So, in Jac v2, we decided to have those dependencies built into Jac. Now, when building your AI application, all you need is Jac.",
-  ],
-  punch:
-    "But what should we call this individual stack in layman’s terms? What should the solution to multiple problems be dubbed as?",
+  body: "Jac was just as fast as C by itself, but when teamed up with React for the frontend, and then CORS for the middleware, and then Vercel for deployment, things slowed down. So, in Jac v2, we decided to have those dependencies built into Jac. Now, when building your AI application, all you need is Jac. But what should we call this individual stack in layman’s terms? What should the solution to multiple problems be dubbed as?",
 };
 
 export default function Home() {
@@ -326,11 +321,7 @@ export default function Home() {
               Developers needed <s>more</s>{" "}
               <span className={styles.accent}>Jaseci</span>.
             </h2>
-            <EvolutionBox
-              headline={LEAP_COPY.headline}
-              story={LEAP_COPY.story}
-              punch={LEAP_COPY.punch}
-            />
+            <EvolutionBox headline={LEAP_COPY.headline} body={LEAP_COPY.body} />
           </div>
 
           {/* BOTTOM — Jac → Jaseci, blooming into the ecosystem tree */}

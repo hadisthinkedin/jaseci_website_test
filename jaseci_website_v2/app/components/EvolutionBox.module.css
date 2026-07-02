@@ -29,29 +29,6 @@
   padding-right: calc(var(--storyW) + 48px);
 }
 
-.eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--foreground);
-}
-/* the small accent square — twists 45° while the drawer is out */
-.eyebrow::before {
-  content: "";
-  width: 8px;
-  height: 8px;
-  background: var(--accent);
-  transition: transform 0.3s ease;
-}
-.frame:hover .eyebrow::before,
-.frame:focus-visible .eyebrow::before {
-  transform: rotate(45deg);
-}
-
 .headline {
   margin: auto 0;
   font-family: var(--font-sans);
@@ -90,36 +67,14 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 14px;
   padding: 24px 30px;
 }
 
-.storyBeat {
+.storyText {
   margin: 0;
   font-family: var(--font-body);
   font-size: 15px;
-  line-height: 1.5;
-  color: #fff;
-}
-/* the beat number — the old cards' mono step marker, gone white-on-orange */
-.storyNum {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  margin-right: 10px;
-}
-
-/* the naming question — the punchline, set apart above a white hairline */
-.punch {
-  margin: 4px 0 0;
-  padding-top: 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.5);
-  font-family: var(--font-sans);
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
+  line-height: 1.55;
   color: #fff;
 }
 
@@ -215,23 +170,15 @@
     width: auto;
     padding: 18px 20px;
   }
-  .storyBeat {
+  .storyText {
     color: #333;
-  }
-  .storyNum {
-    color: var(--accent);
-  }
-  .punch {
-    border-top-color: rgba(0, 0, 0, 0.15);
-    color: var(--foreground);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .story,
   .icon::before,
-  .icon::after,
-  .eyebrow::before {
+  .icon::after {
     transition: none;
   }
 }
