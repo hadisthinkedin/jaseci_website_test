@@ -28,7 +28,7 @@ const JAR_IMAGES = [
   { src: "/jar/haystack.svg?v=2", alt: "Haystack" },
 ];
 
-// 12 ecosystem modules — 2 rows of 6. jac-client and jac-super ship expanded
+// 12 ecosystem modules — 2 rows of 6. jac-client and jac-scale ship expanded
 // (the same skyline slots as before); every other box expands on hover.
 // Every stat line shows its word at rest ("0 Prompts", "1 Command", …) since
 // the bare numbers repeat across tiles.
@@ -47,6 +47,10 @@ type EcosystemModule = {
   // when true the accent letter gives way to statWord on expand, so the stat
   // reads "1 Language" rather than "1L Language"
   accentExpands?: boolean;
+  // which half of the stat line gets the orange accent: by default the leading
+  // number is orange; when true the completing word is orange instead (number
+  // goes black). Scattered across tiles so the accent reads as random.
+  accentWord?: boolean;
   desc: string;
   // the install command / syntax token shown in mono under the description
   // ("pip install byllm", "jac nacompile", "@schedule", …)
@@ -65,18 +69,20 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
       pip: "pip install byllm",
     },
     {
-      name: "jac-scale",
-      stat: "0",
-      statWord: "Config",
+      name: "jac-super",
+      stat: "1",
+      statWord: "Command",
       statWordStatic: true,
-      desc: "Faster deployment. Python could not — jac-scale did. Scale to Kubernetes without writing a single YAML file.",
-      pip: "pip install jac-scale",
+      accentWord: true,
+      desc: "Better developer experience. Python could not — jac-super did. Rich-formatted CLI output with themes, panels, and spinners.",
+      pip: "pip install jac-super",
     },
     {
       name: "jac-client",
       stat: "0",
       statWord: "Middleware",
       statWordStatic: true,
+      accentWord: true,
       desc: "No middleware. Python could not — jac-client did. Call your backend from React-style components with zero glue code.",
       pip: "pip install jac-client",
       active: true,
@@ -94,16 +100,17 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
       stat: "0",
       statWord: "Docs Needed",
       statWordStatic: true,
+      accentWord: true,
       desc: "AI-assisted coding. Python could not — jac-mcp did. Give any AI coding assistant deep knowledge of Jac through the Model Context Protocol.",
       pip: "pip install jac-mcp",
     },
     {
-      name: "jac-super",
-      stat: "1",
-      statWord: "Command",
+      name: "jac-scale",
+      stat: "0",
+      statWord: "Config",
       statWordStatic: true,
-      desc: "Better developer experience. Python could not — jac-super did. Rich-formatted CLI output with themes, panels, and spinners.",
-      pip: "pip install jac-super",
+      desc: "Faster deployment. Python could not — jac-scale did. Scale to Kubernetes without writing a single YAML file.",
+      pip: "pip install jac-scale",
       active: true,
     },
   ],
@@ -113,6 +120,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
       stat: "0",
       statWord: "SQL",
       statWordStatic: true,
+      accentWord: true,
       desc: "Built into jaclang. No graph library. Python could not — OSP did. Model your entire domain as nodes, edges, and walkers that traverse them — no Neo4j, no NetworkX.",
     },
     {
@@ -137,6 +145,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
       stat: "0",
       statWord: "Auth Code",
       statWordStatic: true,
+      accentWord: true,
       desc: "Built into jac-scale. Per-user isolation. Python could not — Jac's auth runtime did. Each user gets their own root graph with zero auth middleware code.",
       pip: "jacLogin / jacSignup / :priv",
     },
@@ -152,6 +161,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
       stat: "1",
       statWord: "Line",
       statWordStatic: true,
+      accentWord: true,
       desc: "Built into jac-scale[scheduler]. Background jobs. Python could not — @schedule did. Cron jobs and interval tasks as a decorator on any walker or function — no Celery, no task queue, no separate worker process.",
       pip: "@schedule",
     },
@@ -198,7 +208,11 @@ function EcoColumn({
           }`}
         >
           <div className={styles.bentoStat}>
-            <span className={styles.bentoStatNum}>{mod.stat}</span>
+            {/* accent lands on the number by default, or on the word when
+                accentWord is set — scattered per tile so it reads as random */}
+            <span className={mod.accentWord ? undefined : styles.accent}>
+              {mod.stat}
+            </span>
             {mod.statAccent ? (
               <span
                 className={`${styles.accent} ${
@@ -212,7 +226,7 @@ function EcoColumn({
               <span
                 className={`${styles.bentoStatWord} ${
                   mod.statWordStatic ? styles.bentoStatWordStatic : ""
-                }`}
+                } ${mod.accentWord ? styles.accent : ""}`}
               >
                 {mod.statWord}
               </span>
@@ -337,8 +351,8 @@ export default function Home() {
           {/* TOP — the copy + the evolution beat as a single hover-expanding box */}
           <div className={styles.askEcoContent}>
             <h2 className={styles.h2}>
-              Developers needed <s>more</s>{" "}
-              <span className={styles.accent}>Jaseci</span>.
+              Developers needed <s className={styles.strikeMore}>more</s>{" "}
+              <span className={styles.accent}>interoperts</span>.
             </h2>
             <EvolutionBox headline={LEAP_COPY.headline} body={LEAP_COPY.body} />
           </div>
@@ -390,7 +404,7 @@ export default function Home() {
         <div className={styles.projectsLayout}>
           {/* LEFT — the why */}
           <div className={styles.projectsIntro}>
-            <h2 className={styles.h2}>
+            <h2 className={`${styles.h2} ${styles.whyHeading}`}>
               Why did you
               <br />
               start coding?
@@ -568,7 +582,9 @@ export default function Home() {
 
       <section className={styles.finalSection} id="community">
         <h2>
-          Stay with the old. <span className={styles.accent}>Get left behind.</span>
+          Stay with the old.
+          <br />
+          <span className={styles.accent}>Get left behind.</span>
         </h2>
         <div>
           <a href="/community" className={styles.cta}>
