@@ -590,7 +590,12 @@ export default function Home() {
           <span className={styles.accent}>Get left behind.</span>
         </h2>
         <div>
-          <a href="/community" className={styles.cta}>
+          <a
+            href="https://discord.gg/SJydGR9hrQ"
+            className={styles.cta}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <span className={styles.ctaLabel}>Join the Community</span>
             {/* Discord mark — hidden until the button is hovered, then slides in */}
             <svg
@@ -604,8 +609,10 @@ export default function Home() {
             </svg>
           </a>
           <a
-            href="https://github.com/jaseci-labs"
+            href="https://github.com/jaseci-labs/jaseci"
             className={`${styles.cta} ${styles.ctaSecondary}`}
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <span className={styles.ctaLabel}>Contribute to OSS</span>
             {/* GitHub mark — hidden until the button is hovered, then slides in */}
@@ -626,7 +633,20 @@ export default function Home() {
         <div>© Jaseci</div>
         <div className={styles.navLinks}>
           <a href="/docs">Docs</a>
-          <a href="https://github.com/jaseci-labs">GitHub</a>
+          <a
+            href="https://github.com/jaseci-labs/jaseci"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
+          <a
+            href="https://discord.gg/SJydGR9hrQ"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Discord
+          </a>
         </div>
       </footer>
     </div>
