@@ -4,7 +4,7 @@
 
 .box {
   width: 100%;
-  max-width: 560px; /* aligns under .heroLede (same max-width) */
+  max-width: 680px; /* aligns under .heroLede (same max-width) */
   margin-top: 32px;
 }
 
@@ -78,7 +78,10 @@
 
 .pre {
   margin: 0;
-  overflow-x: auto;
+  /* a command longer than the box ellipsizes ("curl -fsSL https://raw.gi…")
+     instead of scrolling; the copy button still copies the full string */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .code {

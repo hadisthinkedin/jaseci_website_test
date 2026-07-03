@@ -25,6 +25,22 @@
   border-top-color: rgba(255, 255, 255, 0.5);
 }
 
+/* open (clicked) → lock the box into a solid black state with white text:
+   distinct from the transient orange hover, and it holds when you hover away —
+   until the +/− is clicked again. Equal specificity to :hover but declared
+   later, so the lock wins whenever a box is both open and hovered. */
+.box[data-open="true"] {
+  background: #000;
+  border-color: #000;
+}
+.box[data-open="true"] .headline {
+  color: #fff;
+}
+.box[data-open="true"] .body {
+  color: #fff;
+  border-top-color: rgba(255, 255, 255, 0.5);
+}
+
 /* clickable header row */
 .head {
   width: 100%;
@@ -79,11 +95,14 @@
 .box[data-open="true"] .icon::after {
   transform: translate(-50%, -50%) scaleY(0);
 }
-/* open state — invert the button so it reads as "active" */
+/* open state — the box is now black, so the +/− goes white (like hover) and
+   reads as a minus */
 .box[data-open="true"] .icon {
-  background: #000;
+  background: transparent;
+  border-color: #fff;
 }
-.box[data-open="true"] .icon::before {
+.box[data-open="true"] .icon::before,
+.box[data-open="true"] .icon::after {
   background: #fff;
 }
 /* hover → box fills orange, so the button goes white to stay visible */
@@ -175,6 +194,13 @@
    it reads as a lit 3D block (bright front, shaded side), matching the tower. */
 .tower .box:hover::before {
   background: var(--accent-hover);
+}
+
+/* open (clicked) → the block locks solid black; keep the side face black too so
+   it reads as one black monolith, not a black front with an orange side.
+   Declared after the hover rule so it wins when a block is open and hovered. */
+.tower .box[data-open="true"]::before {
+  background: #000;
 }
 
 @media (prefers-reduced-motion: reduce) {

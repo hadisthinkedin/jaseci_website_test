@@ -51,6 +51,10 @@ type EcosystemModule = {
   // number is orange; when true the completing word is orange instead (number
   // goes black). Scattered across tiles so the accent reads as random.
   accentWord?: boolean;
+  // GitHub location this module maps to — the whole box becomes an anchor to
+  // its source (opens in a new tab). Several modules share a repo/dir (the
+  // jaclang trio, the jac-scale trio).
+  href?: string;
   desc: string;
   // the install command / syntax token shown in mono under the description
   // ("pip install byllm", "jac nacompile", "@schedule", …)
@@ -62,6 +66,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
   [
     {
       name: "byLLM",
+      href: "https://github.com/jaseci-labs/jaseci/tree/main/jac/jaclang/byllm",
       stat: "0",
       statWord: "Prompts",
       statWordStatic: true,
@@ -70,6 +75,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
     },
     {
       name: "jac-super",
+      href: "https://github.com/jaseci-labs/jaseci/blob/main/jac/jaclang/cli/console.jac",
       stat: "1",
       statWord: "Command",
       statWordStatic: true,
@@ -79,6 +85,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
     },
     {
       name: "jac-client",
+      href: "https://github.com/jaseci-labs/jac-client",
       stat: "0",
       statWord: "Middleware",
       statWordStatic: true,
@@ -89,6 +96,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
     },
     {
       name: "jac-shadcn",
+      href: "https://github.com/jaseci-labs/jac-shadcn",
       stat: "0",
       statWord: "CSS",
       statWordStatic: true,
@@ -97,6 +105,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
     },
     {
       name: "jac-mcp",
+      href: "https://github.com/jaseci-labs/jaseci/tree/main/jac/jaclang/cli/mcp",
       stat: "0",
       statWord: "Docs",
       statWordStatic: true,
@@ -106,6 +115,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
     },
     {
       name: "jac-scale",
+      href: "https://github.com/jaseci-labs/jaseci/tree/main/jac/jaclang/scale",
       stat: "0",
       statWord: "Config",
       statWordStatic: true,
@@ -117,6 +127,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
   [
     {
       name: "OSP",
+      href: "https://github.com/jaseci-labs/jaseci/tree/main/jac/jaclang/compiler",
       stat: "0",
       statWord: "SQL",
       statWordStatic: true,
@@ -125,6 +136,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
     },
     {
       name: "Codespaces",
+      href: "https://github.com/jaseci-labs/jaseci/tree/main/jac/native",
       stat: "3",
       statWord: "Targets",
       statWordStatic: true,
@@ -133,6 +145,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
     },
     {
       name: "Native Compilation",
+      href: "https://github.com/jaseci-labs/jaseci/tree/main/jac/native",
       stat: "C",
       statAccent: "-level",
       statWord: "Fast",
@@ -142,6 +155,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
     },
     {
       name: "Built-in Auth",
+      href: "https://github.com/jaseci-labs/jaseci/tree/main/jac/jaclang/scale",
       stat: "0",
       statWord: "Auth Code",
       statWordStatic: true,
@@ -151,6 +165,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
     },
     {
       name: "WebSockets & Webhooks",
+      href: "https://github.com/jaseci-labs/jaseci/tree/main/jac/jaclang/scale",
       stat: "1",
       statWord: "Decorator",
       statWordStatic: true,
@@ -158,6 +173,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
     },
     {
       name: "Scheduled Tasks",
+      href: "https://github.com/jaseci-labs/jaseci/tree/main/jac/jaclang/scale",
       stat: "1",
       statWord: "Line",
       statWordStatic: true,
@@ -200,45 +216,64 @@ function EcoColumn({
 }) {
   return (
     <div className={styles.stairCol} style={{ "--h": col.h } as CSSProperties}>
-      {col.modules.map((mod) => (
-        <div
-          key={mod.name}
-          className={`${styles.bentoBox} ${
-            mod.active ? styles.bentoBoxActive : ""
-          }`}
-        >
-          <div className={styles.bentoStat}>
-            {/* accent lands on the number by default, or on the word when
-                accentWord is set — scattered per tile so it reads as random */}
-            <span className={mod.accentWord ? undefined : styles.accent}>
-              {mod.stat}
-            </span>
-            {mod.statAccent ? (
-              <span
-                className={`${styles.accent} ${
-                  mod.accentExpands ? styles.bentoAccentSwap : ""
-                }`}
-              >
-                {mod.statAccent}
+      {col.modules.map((mod) => {
+        const boxClassName = `${styles.bentoBox} ${
+          mod.active ? styles.bentoBoxActive : ""
+        }`;
+        const boxInner = (
+          <>
+            <div className={styles.bentoStat}>
+              {/* accent lands on the number by default, or on the word when
+                  accentWord is set — scattered per tile so it reads as random */}
+              <span className={mod.accentWord ? undefined : styles.accent}>
+                {mod.stat}
               </span>
-            ) : null}
-            {mod.statWord ? (
-              <span
-                className={`${styles.bentoStatWord} ${
-                  mod.statWordStatic ? styles.bentoStatWordStatic : ""
-                } ${mod.accentWord ? styles.accent : ""}`}
-              >
-                {mod.statWord}
-              </span>
-            ) : null}
+              {mod.statAccent ? (
+                <span
+                  className={`${styles.accent} ${
+                    mod.accentExpands ? styles.bentoAccentSwap : ""
+                  }`}
+                >
+                  {mod.statAccent}
+                </span>
+              ) : null}
+              {mod.statWord ? (
+                <span
+                  className={`${styles.bentoStatWord} ${
+                    mod.statWordStatic ? styles.bentoStatWordStatic : ""
+                  } ${mod.accentWord ? styles.accent : ""}`}
+                >
+                  {mod.statWord}
+                </span>
+              ) : null}
+            </div>
+            <div className={styles.bentoContent}>
+              <div className={styles.bentoName}>{mod.name}</div>
+              <p className={styles.bentoDesc}>{mod.desc}</p>
+              {mod.pip ? (
+                <div className={styles.bentoPip}>{mod.pip}</div>
+              ) : null}
+            </div>
+          </>
+        );
+        // the global `a` rule inherits color and drops underline, and .bentoBox
+        // owns display/border, so the anchor renders identically to the div
+        return mod.href ? (
+          <a
+            key={mod.name}
+            href={mod.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={boxClassName}
+          >
+            {boxInner}
+          </a>
+        ) : (
+          <div key={mod.name} className={boxClassName}>
+            {boxInner}
           </div>
-          <div className={styles.bentoContent}>
-            <div className={styles.bentoName}>{mod.name}</div>
-            <p className={styles.bentoDesc}>{mod.desc}</p>
-            {mod.pip ? <div className={styles.bentoPip}>{mod.pip}</div> : null}
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -263,9 +298,34 @@ export default function Home() {
             JAC
           </div>
           <div className={styles.navLinks}>
-            <a href="#ecosystem">Ecosystem</a>
-            <a href="#projects">Projects</a>
-            <a href="#community">Community</a>
+            <a
+              href="https://www.jaseci.org/built-with-jaseci"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Projects
+            </a>
+            <a
+              href="https://blogs.jaseci.org/blog"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Blog
+            </a>
+            <a
+              href="https://docs.jaseci.org/quick-guide/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Docs
+            </a>
+            <a
+              href="https://discord.gg/SJydGR9hrQ"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Community
+            </a>
           </div>
           {/* registration-mark corners — fade in when the nav detaches */}
           <span aria-hidden className={`${styles.corner} ${styles.cornerTL}`} />
@@ -374,7 +434,7 @@ export default function Home() {
           <h2 className={`${styles.h2} ${styles.stairHeader}`} id="ecosystem">
             We built Jaseci.
             <br />
-            An Ecosystem.
+            The Ecosystem.
           </h2>
 
           <div className={styles.bento} id="ecosystem-grid">
@@ -427,7 +487,7 @@ export default function Home() {
             <div className={styles.projectsCards}>
               <a
                 className={`${styles.projectCard} ${styles.projectCardTodo}`}
-                href="https://github.com/jaseci-labs/jac-todo"
+                href="https://github.com/jaseci-labs/jacpacks/tree/main/multi-user-todo-app"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -545,7 +605,7 @@ export default function Home() {
             {/* FAR RIGHT — vertical "See more JacPacks" banner */}
             <a
               className={styles.jacpacksBanner}
-              href="https://github.com/jaseci-labs"
+              href="https://github.com/jaseci-labs/jacpacks/tree/main"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="See more JacPacks"
@@ -629,24 +689,114 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className={styles.footer}>
-        <div>© Jaseci</div>
-        <div className={styles.navLinks}>
-          <a href="/docs">Docs</a>
-          <a
-            href="https://github.com/jaseci-labs/jaseci"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            GitHub
-          </a>
-          <a
-            href="https://discord.gg/SJydGR9hrQ"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Discord
-          </a>
+      <footer className={styles.siteFooter}>
+        <div className={styles.footerInner}>
+          <div className={styles.footerBrand}>
+            <div className={styles.footerLogo}>
+              <img
+                className={styles.footerMark}
+                src="/jaseci-logo.png"
+                alt="Jaseci"
+              />
+              JAC
+            </div>
+            <p className={styles.footerTagline}>
+              A superset of Python for agents, apps, and AI — built to end 50
+              years of developer&apos;s hell.
+            </p>
+            <a
+              className={styles.footerSite}
+              href="https://www.jaseci.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              jaseci.org ↗
+            </a>
+          </div>
+
+          <nav className={styles.footerCols} aria-label="Footer">
+            <div className={styles.footerCol}>
+              <div className={styles.footerColHead}>Explore</div>
+              <a
+                href="https://www.jaseci.org/built-with-jaseci"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Projects
+              </a>
+              <a
+                href="https://blogs.jaseci.org/blog"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Blog
+              </a>
+              <a
+                href="https://docs.jaseci.org/quick-guide/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Docs
+              </a>
+            </div>
+            <div className={styles.footerCol}>
+              <div className={styles.footerColHead}>Community</div>
+              <a
+                href="https://discord.gg/SJydGR9hrQ"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Discord
+              </a>
+              <a
+                href="https://github.com/jaseci-labs/jaseci"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GitHub
+              </a>
+              <a
+                href="https://www.linkedin.com/company/jaseci-labs/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                LinkedIn
+              </a>
+              <a
+                href="https://blogs.jaseci.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Blog
+              </a>
+            </div>
+            <div className={styles.footerCol}>
+              <div className={styles.footerColHead}>Contact</div>
+              <a href="mailto:impact@jaseci.org">impact@jaseci.org</a>
+              <a
+                href="https://jaseci.engin.umich.edu/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Michigan Lab
+              </a>
+              <a
+                href="https://www.jaseci.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                jaseci.org
+              </a>
+            </div>
+          </nav>
+        </div>
+
+        <div className={styles.footerBar}>
+          <div>© 2026 Jaseci Labs</div>
+          <div className={styles.footerLove}>
+            Made with <span className={styles.footerHeart}>♥</span> by the Jaseci
+            community
+          </div>
         </div>
       </footer>
     </div>

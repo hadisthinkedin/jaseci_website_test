@@ -16,6 +16,7 @@
   background: var(--background);
   overflow: hidden;
   outline: none;
+  transition: background 0.18s ease, border-color 0.18s ease;
 }
 
 /* ── the statement (always visible) ──────────────────────────────────── */
@@ -38,6 +39,7 @@
   letter-spacing: -0.02em;
   color: var(--foreground);
   max-width: 24ch;
+  transition: color 0.18s ease;
 }
 
 /* ── the orange story drawer ─────────────────────────────────────────── */
@@ -50,12 +52,26 @@
   width: 0;
   overflow: hidden;
   background: var(--accent);
-  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s ease;
 }
 .frame:hover .story,
 .frame:focus-visible .story,
 .frame[data-open="true"] .story {
   width: var(--storyW);
+}
+
+/* ── clicked / frozen (data-open) → lock the slab into a solid black state
+      with white text: distinct from the transient orange hover preview, and
+      it holds even when you hover away — until the +/− is clicked again ──── */
+.frame[data-open="true"] {
+  background: #000;
+  border-color: #000;
+}
+.frame[data-open="true"] .headline {
+  color: #fff;
+}
+.frame[data-open="true"] .story {
+  background: #000;
 }
 
 /* text pinned at final width to the right edge → clean wipe, no rewrap */
@@ -162,6 +178,18 @@
 @media (max-width: 900px) {
   .frame {
     height: auto;
+  }
+  /* no +/− affordance on touch: keep the stacked slab white with dark text
+     even if a frozen state somehow carried over from a wider layout */
+  .frame[data-open="true"] {
+    background: var(--background);
+    border-color: #000;
+  }
+  .frame[data-open="true"] .headline {
+    color: var(--foreground);
+  }
+  .frame[data-open="true"] .story {
+    background: var(--background);
   }
   .statement {
     padding: 18px 20px;

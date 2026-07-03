@@ -18,7 +18,7 @@ const ITEMS = [
     body: "When you need to change something on the frontend, you need to change something on the backend (and the middleware). Long term maintenance is easy because everything is done with 11x less files.",
   },
   {
-    headline: "Prompts can be simplified. It should be simplified",
+    headline: "Prompts can be simplified. It should be simplified. Jac makes it simplified.",
     body: "We know the obvious: coders are the ones coding. So we made an algebraic syntax method that allows you to compress your 500 word prompt into a single line that only coders understand.",
   },
   {
@@ -32,6 +32,10 @@ const ITEMS = [
   {
     headline: "Jac is multiparadigmatic, so it never has to rely on other dependencies",
     body: "AI apps aren’t one problem. They’re several at once, each fitting a different programming style: OOP to model your domain (users, sessions, documents), functional programming for clean data transforms (chaining LLM outputs, filtering lists without side effects), declarative components for UI (what React uses, describing what the interface looks like, not how to update it), and graph-based traversal for agent reasoning (navigating knowledge, making decisions step by step). In a traditional stack, each paradigm means a separate dependency: Python for OOP, LangChain for agent flows, NetworkX for graphs, React for UI, each with its own install, API, version conflicts, and CVEs. Jac gives you all four natively: obj for domain models, pure functions and comprehensions for data pipelines, cl blocks for React-style declarative components, and walkers on graphs for agent logic, all in the same file, same language, zero external dependencies. Fewer dependencies means less to install, less that breaks, fewer CVEs to patch, and fewer abstractions fighting each other.",
+  },
+  {
+    headline: "Though devs used Jac, their application was still too slow because they depended on a third-party stack.",
+    body: "So, Jac became npm, pypi and CiBA interoperable.",
   },
 ];
 

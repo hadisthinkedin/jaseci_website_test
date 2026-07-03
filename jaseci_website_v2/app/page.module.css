@@ -417,11 +417,12 @@
 
 .heroGrid {
   display: grid;
-  /* the copy column leads, the graph is the co-star. Copy takes the larger
-     share so the lede + install box read at a wider measure; the graph keeps a
-     360px floor so it never gets cramped. The headline ("Jac, the language")
-     has even more room now, so it still never wraps at the 84px cap. */
-  grid-template-columns: 1.4fr minmax(360px, 1fr);
+  /* near-even split: the graph is the co-star, so it gets almost half the
+     row. The copy column keeps just enough share that the headline lines
+     ("Jac, the language") never wrap at the 84px cap. (The lede + install box
+     carry a 680px cap and simply fill whatever this column yields — on wide
+     windows they read at the full 680 without taking anything from the graph.) */
+  grid-template-columns: 1.15fr minmax(400px, 1fr);
   gap: 48px;
   align-items: stretch;
   min-height: 620px;
@@ -489,6 +490,14 @@
 
 .jarCopy {
   max-width: 620px;
+}
+
+/* the jar/tower section headings sit in a ~620px column beside the graphic; at
+   the base .h2 size the long "…Python and its abstractions." line wraps to four
+   lines. Scale the heading down with the column (vw-tracked, capped at 46px) so
+   it settles into three lines on desktop. */
+.jarCopy .h2 {
+  font-size: clamp(32px, 3.4vw, 46px);
 }
 
 .jarColumn {
@@ -1550,15 +1559,126 @@
   color: var(--muted);
 }
 
-.footer {
-  padding: 48px;
+/* the closing "info" band: a full-bleed orange section (mirrors the nav:hover
+   fill — white text on --accent) carrying contacts, communities, and the
+   made-with-love line. Content is contained to the 1200px column like the rest
+   of the site; the orange bleeds edge to edge. */
+.siteFooter {
+  background: var(--accent);
+  color: #fff;
+}
+
+.footerInner {
+  display: grid;
+  grid-template-columns: 1.3fr 2fr;
+  gap: 64px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 96px 48px 64px;
+}
+
+.footerBrand {
+  min-width: 0;
+}
+
+.footerLogo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+}
+
+/* the logo mark is a dark glyph; flip it to a solid white silhouette so it
+   reads on the orange (brightness(0) invert(1)) */
+.footerMark {
+  width: 26px;
+  height: 26px;
+  filter: brightness(0) invert(1);
+}
+
+.footerTagline {
+  margin-top: 20px;
+  max-width: 320px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.footerSite {
+  display: inline-block;
+  margin-top: 20px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  padding-bottom: 2px;
+  transition: border-color 0.15s ease;
+}
+.footerSite:hover {
+  border-bottom-color: #fff;
+}
+
+.footerCols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 40px;
+}
+
+.footerCol {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.footerColHead {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+  margin-bottom: 4px;
+}
+
+.footerCol a {
+  font-size: 15px;
+  color: #fff;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.footerCol a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footerBar {
+  border-top: 1px solid rgba(255, 255, 255, 0.28);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 48px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 24px;
   font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.footerLove {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.footerHeart {
+  font-size: 13px;
+  color: #fff;
 }
 
 /* ---------- responsive ---------- */
@@ -1661,11 +1781,22 @@
     padding: 96px 24px;
   }
 
-  .footer {
-    padding: 32px 24px;
+  .footerInner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    padding: 64px 24px 48px;
+  }
+
+  .footerCols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
+  }
+
+  .footerBar {
+    padding: 24px;
     flex-direction: column;
-    gap: 16px;
-    text-align: center;
+    align-items: flex-start;
+    gap: 12px;
   }
 
   .jarLabel {

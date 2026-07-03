@@ -7,13 +7,18 @@ import styles from "./InstallBox.module.css";
    InstallBox — the hero's "get started" panel, modelled on bun.sh's install
    box: two OS tabs sitting on an accent-bordered terminal block with a copy
    button. Rebuilt in CSS Modules on the site's locked palette (white surface,
-   orange --accent). Both tabs run the same pip install — it's identical across
-   platforms — but the two-tab layout mirrors the reference; give each its own
-   `command` to differentiate.
+   orange --accent). Linux/macOS runs the official curl installer; Windows
+   keeps the pip install. Long commands ellipsize visually (see .pre in the
+   module css) but the copy button always copies the full string.
    ─────────────────────────────────────────────── */
 
 const TABS = [
-  { id: "posix", label: "Linux & macOS", command: "pip install jaclang" },
+  {
+    id: "posix",
+    label: "Linux & macOS",
+    command:
+      "curl -fsSL https://raw.githubusercontent.com/jaseci-labs/jaseci/main/scripts/install.sh | bash",
+  },
   { id: "windows", label: "Windows", command: "pip install jaclang" },
 ] as const;
 
@@ -61,7 +66,8 @@ export default function InstallBox() {
       </div>
 
       <div className={styles.codeBlock}>
-        <pre className={styles.pre}>
+        {/* title shows the full command on hover when it's ellipsized */}
+        <pre className={styles.pre} title={current.command}>
           <code className={styles.code}>{current.command}</code>
         </pre>
         <button
@@ -102,7 +108,12 @@ export default function InstallBox() {
         </button>
       </div>
 
-      <a className={styles.source} href="/docs">
+      <a
+        className={styles.source}
+        href="https://docs.jaseci.org/quick-guide/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         View install docs
       </a>
     </div>

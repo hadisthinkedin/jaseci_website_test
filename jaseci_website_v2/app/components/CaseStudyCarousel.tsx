@@ -7,9 +7,10 @@ import styles from "./ProofGrid.module.css";
    Enterprise case-study carousel.
    The "01 · Enterprise-backed" marquee, now a
    carousel: move through partner companies with the
-   tabs or the ‹ › arrows. Pocketnest is real; Ally
-   and TruSelph use placeholder figures — replace
-   `stats`/`quote`/`cite`/`href` with the real ones.
+   tabs or the ‹ › arrows. Tobu (the default slide)
+   is real; Pocketnest, Ally and TruSelph are "Under
+   Development" stubs — swap the X placeholders in
+   `stats`/`quote`/`cite`/`href` for the real data.
    Client island; drops into ProofGrid's .feature
    grid cell and reuses ProofGrid.module.css.
    ─────────────────────────────────────────────── */
@@ -25,42 +26,52 @@ type CaseStudy = {
 
 const CASES: CaseStudy[] = [
   {
-    brand: "Pocketnest",
-    lede: "Already shipping in production.",
+    brand: "Tobu",
+    lede: "From concept to production in 6 weeks.",
     stats: [
-      { num: "73%", label: "More members completing a financial plan" },
-      { num: "3×", label: "Higher cross-sell conversion for partners" },
-      { num: "<3 min", label: "To move a member’s money forward" },
+      { num: "$1.5M", label: "Raised so far on the Jaseci-built platform" },
+      { num: "92.84%", label: "Retrieval accuracy on real Tobu user data" },
+      { num: "2.2×", label: "Fewer missed memories than traditional RAG" },
     ],
     quote:
-      "Pocketnest turned passive account-holders into engaged members chasing real financial goals.",
-    cite: "Jordan Avery — Pocketnest",
+      "With Jac, the structure of the product stayed close to the structure of the code. A memory was treated not as an isolated record, but as part of a larger network of people, places, stories, and relationships.",
+    cite: "From the Tobu case study",
+    href: "https://blogs.jaseci.org/blog/posts/tobu-memory-graph-case-study",
+  },
+  {
+    brand: "Pocketnest",
+    lede: "Under Development.",
+    stats: [
+      { num: "X", label: "X" },
+      { num: "X", label: "X" },
+      { num: "X", label: "X" },
+    ],
+    quote: "X",
+    cite: "X",
     href: "#cases",
   },
   {
     brand: "Ally",
-    lede: "Scaled to production in weeks.",
+    lede: "Under Development.",
     stats: [
-      { num: "2.4×", label: "Faster agent responses in support flows" },
-      { num: "48%", label: "Fewer escalations to a human agent" },
-      { num: "24/7", label: "Autonomous coverage across channels" },
+      { num: "X", label: "X" },
+      { num: "X", label: "X" },
+      { num: "X", label: "X" },
     ],
-    quote:
-      "We replaced a brittle pipeline of glue code with a single Jac graph our team can actually reason about.",
-    cite: "Platform Engineering — Ally",
+    quote: "X",
+    cite: "X",
     href: "#cases",
   },
   {
     brand: "TruSelph",
-    lede: "From prototype to live in one sprint.",
+    lede: "Under Development.",
     stats: [
-      { num: "5×", label: "Faster to build a new agent workflow" },
-      { num: "60%", label: "Less code than the previous stack" },
-      { num: "0", label: "Third-party orchestration tools needed" },
+      { num: "X", label: "X" },
+      { num: "X", label: "X" },
+      { num: "X", label: "X" },
     ],
-    quote:
-      "byLLM let us express reasoning in a line where we used to maintain hundreds of lines of prompt plumbing.",
-    cite: "Founding Team — TruSelph",
+    quote: "X",
+    cite: "X",
     href: "#cases",
   },
 ];
@@ -70,11 +81,19 @@ export default function CaseStudyCarousel() {
   const c = CASES[i];
   const go = (step: number) =>
     setI((prev) => (prev + step + CASES.length) % CASES.length);
+  // external case studies (e.g. the Tobu blog post) open in a new tab;
+  // placeholder #cases anchors keep navigating in-page
+  const external = c.href.startsWith("http");
 
   return (
     <article className={styles.feature} aria-roledescription="carousel">
       <div className={styles.featureTop}>
-        <a href={c.href} className={styles.featureFoot}>
+        <a
+          href={c.href}
+          className={styles.featureFoot}
+          target={external ? "_blank" : undefined}
+          rel={external ? "noreferrer" : undefined}
+        >
           Read the case study →
         </a>
       </div>
