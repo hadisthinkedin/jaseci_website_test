@@ -28,8 +28,10 @@ const JAR_IMAGES = [
   { src: "/jar/haystack.svg?v=2", alt: "Haystack" },
 ];
 
-// 12 ecosystem modules — 2 rows of 6. Jac-Scale and Jac-Client are
-// expanded by default; every other box expands on hover.
+// 12 ecosystem modules — 2 rows of 6. jac-client and jac-super ship expanded
+// (the same skyline slots as before); every other box expands on hover.
+// Every stat line shows its word at rest ("0 Prompts", "1 Command", …) since
+// the bare numbers repeat across tiles.
 type EcosystemModule = {
   name: string;
   stat: string;
@@ -46,96 +48,112 @@ type EcosystemModule = {
   // reads "1 Language" rather than "1L Language"
   accentExpands?: boolean;
   desc: string;
+  // the install command / syntax token shown in mono under the description
+  // ("pip install byllm", "jac nacompile", "@schedule", …)
+  pip?: string;
   active?: boolean;
 };
 
 const ECOSYSTEM_MODULES: EcosystemModule[][] = [
   [
     {
-      name: "Jac",
-      stat: "1",
-      statWord: "Language",
-      statWordStatic: true,
-      desc: "The language. A superset of Python built from the ground up for agents, apps, and AI.",
-    },
-    {
       name: "byLLM",
-      stat: "∞",
-      statWord: "Reasoning",
-      desc: "Makes the model a native type — reasoning becomes a function body the language fills in.",
+      stat: "0",
+      statWord: "Prompts",
+      statWordStatic: true,
+      desc: "No prompt engineering. Python could not — byLLM did. Write a function signature and the compiler writes the prompt for you.",
+      pip: "pip install byllm",
     },
     {
-      name: "Jac-Scale",
-      stat: "10",
-      statAccent: "×",
-      statWord: "Faster",
-      desc: "Faster deployment. Python could not — Jac-Scale did. Scale-out without rewriting a line.",
+      name: "jac-scale",
+      stat: "0",
+      statWord: "Config",
+      statWordStatic: true,
+      desc: "Faster deployment. Python could not — jac-scale did. Scale to Kubernetes without writing a single YAML file.",
+      pip: "pip install jac-scale",
+    },
+    {
+      name: "jac-client",
+      stat: "0",
+      statWord: "Middleware",
+      statWordStatic: true,
+      desc: "No middleware. Python could not — jac-client did. Call your backend from React-style components with zero glue code.",
+      pip: "pip install jac-client",
       active: true,
     },
     {
-      name: "Jac-Cloud",
+      name: "jac-shadcn",
       stat: "0",
-      statWord: "Config",
-      desc: "Zero-config cloud runtime. Ship your graph straight to production as a live service.",
+      statWord: "CSS",
+      statWordStatic: true,
+      desc: "Pre-built UI. Python could not — jac-shadcn did. Drop in beautiful, customizable components without leaving Jac.",
+      pip: "pip install jac-shadcn",
     },
     {
-      name: "OSP",
+      name: "jac-mcp",
+      stat: "0",
+      statWord: "Docs Needed",
+      statWordStatic: true,
+      desc: "AI-assisted coding. Python could not — jac-mcp did. Give any AI coding assistant deep knowledge of Jac through the Model Context Protocol.",
+      pip: "pip install jac-mcp",
+    },
+    {
+      name: "jac-super",
       stat: "1",
-      statAccent: "G",
-      statWord: "Graph",
-      accentExpands: true,
-      desc: "Object-Spatial Programming. Memory and relationships are a first-class graph, not bolt-ons.",
-    },
-    {
-      name: "Jac-Studio",
-      stat: "360",
-      statAccent: "°",
-      statWord: "Visibility",
-      desc: "Visual observability. Watch agents walk the graph and inspect every node in real time.",
+      statWord: "Command",
+      statWordStatic: true,
+      desc: "Better developer experience. Python could not — jac-super did. Rich-formatted CLI output with themes, panels, and spinners.",
+      pip: "pip install jac-super",
+      active: true,
     },
   ],
   [
     {
-      name: "Jac-Client",
+      name: "OSP",
       stat: "0",
-      statWord: "Middleware",
-      desc: "No middleware. Python could not — Jac-Client did. Call your backend with zero glue code.",
-      active: true,
-    },
-    {
-      name: "Jac-Serve",
-      stat: "1",
-      statAccent: "ms",
-      statWord: "Latency",
-      desc: "Turns any walker into an endpoint instantly. APIs without the boilerplate or the framework.",
-    },
-    {
-      name: "Jac-Test",
-      stat: "100",
-      statAccent: "%",
-      statWord: "Coverage",
-      desc: "Native testing for graphs and agents. Assert over walks, not mocks.",
-    },
-    {
-      name: "Jac-LSP",
-      stat: "<>",
-      statWord: "Tooling",
-      desc: "First-class editor tooling — autocomplete, types, and jump-to-def for Jac everywhere.",
-    },
-    {
-      name: "Jac-Splice",
-      stat: "N",
-      statAccent: "+",
-      statWord: "Machines",
+      statWord: "SQL",
       statWordStatic: true,
-      desc: "Distributes a single program across machines. One graph, many nodes, no orchestration tax.",
+      desc: "Built into jaclang. No graph library. Python could not — OSP did. Model your entire domain as nodes, edges, and walkers that traverse them — no Neo4j, no NetworkX.",
     },
     {
-      name: "Jaseci-Hub",
-      stat: "1k",
-      statAccent: "+",
-      statWord: "Packages",
-      desc: "The package registry. Share and install JacPacks — reusable agents, walkers, and tools.",
+      name: "Codespaces",
+      stat: "3",
+      statWord: "Targets",
+      statWordStatic: true,
+      desc: "Built into jaclang. One language, three targets. Python could not — Codespaces did. Compile to Python bytecode, JavaScript, and native machine code from the same file.",
+      pip: "to sv: / to cl: / to na:",
+    },
+    {
+      name: "Native Compilation",
+      stat: "C",
+      statAccent: "-level",
+      statWord: "Speed",
+      statWordStatic: true,
+      desc: "Built into jaclang. Bare-metal speed. Python could not — native compilation did. Compile Jac to LLVM machine code — no Python runtime, no external compiler, no external linker.",
+      pip: "jac nacompile",
+    },
+    {
+      name: "Built-in Auth",
+      stat: "0",
+      statWord: "Auth Code",
+      statWordStatic: true,
+      desc: "Built into jac-scale. Per-user isolation. Python could not — Jac's auth runtime did. Each user gets their own root graph with zero auth middleware code.",
+      pip: "jacLogin / jacSignup / :priv",
+    },
+    {
+      name: "WebSockets & Webhooks",
+      stat: "1",
+      statWord: "Decorator",
+      statWordStatic: true,
+      desc: "Built into jac-scale. Real-time communication. Python could not — jac-scale did. Turn any walker into a WebSocket or webhook endpoint with a single decorator — HMAC verification, API keys, and connection management included.",
+    },
+    {
+      name: "Scheduled Tasks",
+      stat: "1",
+      statWord: "Line",
+      statWordStatic: true,
+      desc: "Built into jac-scale[scheduler]. Background jobs. Python could not — @schedule did. Cron jobs and interval tasks as a decorator on any walker or function — no Celery, no task queue, no separate worker process.",
+      pip: "@schedule",
     },
   ],
 ];
@@ -149,7 +167,7 @@ const ECOSYSTEM_LAYOUT = [
   { boxes: 1, h: 44 },
   { boxes: 2, h: 64 },
   { boxes: 1, h: 52 },
-  { boxes: 4, h: 90 },
+  { boxes: 4, h: 94 },
   { boxes: 1, h: 68 },
   { boxes: 3, h: 100 },
 ];
@@ -180,7 +198,7 @@ function EcoColumn({
           }`}
         >
           <div className={styles.bentoStat}>
-            {mod.stat}
+            <span className={styles.bentoStatNum}>{mod.stat}</span>
             {mod.statAccent ? (
               <span
                 className={`${styles.accent} ${
@@ -203,6 +221,7 @@ function EcoColumn({
           <div className={styles.bentoContent}>
             <div className={styles.bentoName}>{mod.name}</div>
             <p className={styles.bentoDesc}>{mod.desc}</p>
+            {mod.pip ? <div className={styles.bentoPip}>{mod.pip}</div> : null}
           </div>
         </div>
       ))}
@@ -288,7 +307,7 @@ export default function Home() {
           </div>
         </div>
         <div className={styles.jarCopy}>
-          <h2 className={styles.h2}>Python, LangChain, they&rsquo;re all broken.</h2>
+          <h2 className={styles.h2}>Jac is more efficient than Python and its abstractions.</h2>
           <ManifestoAccordion />
         </div>
       </section>
@@ -302,7 +321,7 @@ export default function Home() {
           <BlockTower />
         </div>
         <div className={styles.jarCopy}>
-          <h2 className={styles.h2}>Python, LangChain, they&rsquo;re all broken.</h2>
+          <h2 className={styles.h2}>Jac is more efficient than Python and its abstractions.</h2>
           <ManifestoAccordion variant="tower" />
         </div>
       </section>
@@ -336,7 +355,9 @@ export default function Home() {
       <section className={`${styles.section} ${styles.ecoSection}`}>
         <div className={styles.ecoStage}>
           <h2 className={`${styles.h2} ${styles.stairHeader}`} id="ecosystem">
-            We built the Jaseci Ecosystem.
+            We built Jaseci.
+            <br />
+            An Ecosystem.
           </h2>
 
           <div className={styles.bento} id="ecosystem-grid">
@@ -370,7 +391,9 @@ export default function Home() {
           {/* LEFT — the why */}
           <div className={styles.projectsIntro}>
             <h2 className={styles.h2}>
-              Why did you start coding anyway?
+              Why did you
+              <br />
+              start coding?
             </h2>
             <p className={styles.body}>
               Dennis Ritchie&rsquo;s philosophy of why he built the C was the

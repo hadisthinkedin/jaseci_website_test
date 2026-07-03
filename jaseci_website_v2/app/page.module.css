@@ -98,13 +98,13 @@
   top: 50%;
   left: 0;
   width: 100%;
-  height: 1.5px;
+  height: 1px;
   transform: translateY(-50%);
 }
 .corner::after {
   left: 50%;
   top: 0;
-  width: 1.5px;
+  width: 1px;
   height: 100%;
   transform: translateX(-50%);
 }
@@ -925,10 +925,11 @@
   margin-top: 0;
 }
 
-/* Jac-Scale and Jac-Client ship expanded — the bigger half of their column,
-   description already showing */
+/* jac-client and jac-super ship expanded — the bigger share of their column,
+   description already showing. 2.6 (was 1.8) so the longer module copy fits
+   without clipping in the resting state. */
 .bentoBox.bentoBoxActive {
-  flex-grow: 1.8;
+  flex-grow: 2.6;
 }
 .bentoBoxActive .bentoDesc {
   opacity: 1;
@@ -962,6 +963,12 @@
   white-space: nowrap;
 }
 
+/* the leading number (0, 1, 3, C…) carries the accent — an always-visible
+   orange pop across every tile, while the completing word stays fg black */
+.bentoStatNum {
+  color: var(--accent);
+}
+
 .bentoContent {
   min-width: 0;
 }
@@ -983,6 +990,24 @@
   transition: opacity 0.35s ease 0.12s;
 }
 .bentoBox:hover .bentoDesc {
+  opacity: 1;
+}
+
+/* the install command / syntax token under the description ("pip install
+   byllm", "@schedule", …) — mono + accent so it reads as code; fades in with
+   the description */
+.bentoPip {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.35s ease 0.12s;
+}
+.bentoBox:hover .bentoPip,
+.bentoBoxActive .bentoPip {
   opacity: 1;
 }
 
@@ -1036,7 +1061,8 @@
     min-height: 110px;
   }
   .bentoDesc,
-  .bentoStatWord {
+  .bentoStatWord,
+  .bentoPip {
     opacity: 1;
   }
   .bentoAccentSwap {
