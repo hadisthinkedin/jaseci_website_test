@@ -68,7 +68,6 @@
 .node,
 .rootNode,
 .hubNode,
-.hubRing,
 .label {
   pointer-events: none;
 }
@@ -96,15 +95,6 @@
 
 .hubNode {
   fill: var(--foreground);
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
-.hubRing {
-  fill: none;
-  stroke: var(--foreground);
-  stroke-width: 1.2;
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
@@ -163,10 +153,6 @@
   animation: fade 0.5s ease forwards;
   animation-delay: var(--d, 0s);
 }
-.play .hubRing {
-  animation: ripple 2.6s ease-out infinite;
-  animation-delay: var(--d, 0s);
-}
 
 @keyframes draw {
   to {
@@ -197,17 +183,6 @@
     opacity: 0.5;
   }
 }
-@keyframes ripple {
-  0% {
-    opacity: 0.4;
-    transform: scale(0.6);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(2.8);
-  }
-}
-
 /* reduced motion — show the finished web, no draw / twinkle / float (the JS
    float bails out too, so the points just rest at their base positions). */
 @media (prefers-reduced-motion: reduce) {
@@ -216,8 +191,7 @@
   .play .node,
   .play .rootNode,
   .play .hubNode,
-  .play .label,
-  .play .hubRing {
+  .play .label {
     animation: none;
   }
   .line {
@@ -228,8 +202,5 @@
   .hubNode,
   .label {
     opacity: 1;
-  }
-  .hubRing {
-    opacity: 0.3;
   }
 }

@@ -529,22 +529,14 @@ export default function LineageBloom() {
             );
           if (n.kind === "hub")
             return (
-              <g key={`n${i}`}>
-                <circle
-                  className={styles.hubRing}
-                  cx={n.x}
-                  cy={n.y}
-                  r={13}
-                  style={cssVar(1.5)}
-                />
-                <circle
-                  className={styles.hubNode}
-                  cx={n.x}
-                  cy={n.y}
-                  r={7}
-                  style={cssVar(0.3)}
-                />
-              </g>
+              <circle
+                key={`n${i}`}
+                className={styles.hubNode}
+                cx={n.x}
+                cy={n.y}
+                r={7}
+                style={cssVar(0.3)}
+              />
             );
           return (
             <circle
