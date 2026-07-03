@@ -5,7 +5,7 @@
    them regardless of real length. Nodes, labels,
    gridlines and eras stagger in via animation-delay
    set per index in the component; the header, frame,
-   ticks, hatches, legend, guide, ring, annotation
+   ticks, hatches, legend, guide, annotation
    and dimension line carry fixed delays here. Tiers:
    primary milestones read crisp, the flat languages
    recede (muted), Jac pops.
@@ -205,15 +205,6 @@
   animation-name: popAccent;
 }
 
-/* emphasis ring on the Jac node */
-.halo {
-  fill: none;
-  stroke: var(--accent);
-  stroke-width: 1.5;
-  opacity: 0;
-  animation: fadeRing 0.6s ease 2.15s forwards;
-}
-
 /* ── Labels ────────────────────────────────────────────────────────────── */
 
 .xlabel {
@@ -319,11 +310,6 @@
     opacity: 0.55;
   }
 }
-@keyframes fadeRing {
-  to {
-    opacity: 0.4;
-  }
-}
 @keyframes fadeHatchFg {
   to {
     opacity: 0.07;
@@ -396,10 +382,6 @@
   .dimension,
   .dimLineEnd {
     opacity: 1;
-    animation: none;
-  }
-  .halo {
-    opacity: 0.4;
     animation: none;
   }
   .frame,

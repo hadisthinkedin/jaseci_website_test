@@ -194,10 +194,9 @@ export default function AbstractionTrend() {
         <path className={styles.legacy} d={LEGACY} pathLength={1} />
         <path className={styles.leap} d={LEAP} pathLength={1} />
 
-        {/* emphasis ring + annotation on Jac;
-            the label stacks on two lines, centred over the node so it
-            reads as a caption on the peak without spilling past the frame */}
-        <circle className={styles.halo} cx={656} cy={100} r={16.5} />
+        {/* annotation on Jac — the label stacks on two lines, centred
+            over the node so it reads as a caption on the peak without
+            spilling past the frame */}
         <text className={styles.annotation} x={656} y={63} textAnchor="middle">
           <tspan x={656}>THE</tspan>
           <tspan x={656} dy={16}>LEAP</tspan>
