@@ -19,9 +19,8 @@ import styles from "./AbstractionTrend.module.css";
    of incremental steps, one leap.
 
    Pure CSS animation, no client JS: draw-in on
-   load, then an infinite radar pulse on the Jac
-   node. Honours prefers-reduced-motion (renders
-   the final frame, pulse off).
+   load. Honours prefers-reduced-motion (renders
+   the final frame).
    ─────────────────────────────────────────────── */
 
 type Tier = "primary" | "muted" | "accent";
@@ -195,11 +194,10 @@ export default function AbstractionTrend() {
         <path className={styles.legacy} d={LEGACY} pathLength={1} />
         <path className={styles.leap} d={LEAP} pathLength={1} />
 
-        {/* emphasis ring + infinite radar pulse + annotation on Jac;
+        {/* emphasis ring + annotation on Jac;
             the label stacks on two lines, centred over the node so it
             reads as a caption on the peak without spilling past the frame */}
         <circle className={styles.halo} cx={656} cy={100} r={16.5} />
-        <circle className={styles.pulse} cx={656} cy={100} r={11} />
         <text className={styles.annotation} x={656} y={63} textAnchor="middle">
           <tspan x={656}>THE</tspan>
           <tspan x={656} dy={16}>LEAP</tspan>
