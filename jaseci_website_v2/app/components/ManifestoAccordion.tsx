@@ -15,11 +15,11 @@ import styles from "./ManifestoAccordion.module.css";
 const ITEMS = [
   {
     headline: "Your application is unstable, relying on so many abstractions",
-    body: "When you need to change something on the frontend, you need to change something on the backend (and the middleware). Long term maintenance is easy because everything is done with 13x less files — the same app that takes a Python + React stack 13 files is a single .jac file.",
+    body: "When you need to change something on the frontend, you need to change something on the backend (and the middleware). Long term maintenance is easy because everything is done with 13x less files: the same app that takes a Python + React stack 13 files is a single .jac file.",
   },
   {
     headline: "Prompts can be simplified. It should be simplified. Jac makes it simplified.",
-    body: "We know the obvious: coders are the ones coding. So we made a typed syntax — by llm() — that compresses your 500 word prompt into a single line of code, and the compiler derives the prompt from the meaning already in your program.",
+    body: "We know the obvious: coders are the ones coding. So we made a typed syntax, by llm(), that compresses your 500 word prompt into a single line of code, and the compiler derives the prompt from the meaning already in your program.",
   },
   {
     headline: "Machine learning was bolted onto Python, Jac was primarily built for artificial intelligence",

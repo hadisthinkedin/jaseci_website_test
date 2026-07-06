@@ -284,7 +284,7 @@ function EcoColumn({
 const LEAP_COPY = {
   headline:
     "Though devs used Jac, their application was still bogged down because they depended on a third-party stack. So, Jac became npm, PyPI and C-ABI interoperable.",
-  body: "Jac was C-level fast by itself — it compiles down to native machine code — but when teamed up with React for the frontend, and then CORS config for the middleware, and then Vercel for deployment, things slowed down. So, in the latest Jac, we decided to have those dependencies built into Jac. Now, when building your AI application, all you need is Jac. But what should we call this individual stack in layman’s terms? What should the solution to multiple problems be dubbed as?",
+  body: "Jac was C-level fast by itself, compiling down to native machine code, but when teamed up with React for the frontend, and then CORS config for the middleware, and then Vercel for deployment, things slowed down. So, in the latest Jac, we decided to have those dependencies built into Jac. Now, when building your AI application, all you need is Jac. But what should we call this individual stack in layman’s terms? What should the solution to multiple problems be dubbed as?",
 };
 
 export default function Home() {
@@ -477,8 +477,8 @@ export default function Home() {
               that people should spend their time coding something innovative,
               nothing else. His instinct was to take away the boilerplate, like
               registers, that stood between us and human ideation. We want to
-              replicate that same philosophy today — take away that boilerplate
-              and give devs more time.
+              replicate that same philosophy today, and take away that
+              boilerplate and give devs more time.
             </p>
           </div>
 

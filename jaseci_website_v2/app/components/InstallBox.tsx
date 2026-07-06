@@ -9,7 +9,7 @@ import styles from "./InstallBox.module.css";
    button. Rebuilt in CSS Modules on the site's locked palette (white surface,
    orange --accent). Linux/macOS runs the official curl installer; Windows
    runs the same installer through WSL (jaclang no longer ships via pip, and
-   upstream's native PowerShell installer is still "coming soon" — see
+   upstream's native PowerShell installer is still "coming soon"; see
    scripts/install.sh in the jaseci repo). Long commands ellipsize visually (see .pre in the
    module css) but the copy button always copies the full string.
    ─────────────────────────────────────────────── */
