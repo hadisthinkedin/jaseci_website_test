@@ -27,7 +27,7 @@ type CaseStudy = {
 const CASES: CaseStudy[] = [
   {
     brand: "Tobu",
-    lede: "From concept to production in 6 weeks.",
+    lede: "From concept to production-ready in 6 weeks.",
     stats: [
       { num: "$1.5M", label: "Raised so far on the Jaseci-built platform" },
       { num: "92.84%", label: "Retrieval accuracy on real Tobu user data" },
@@ -63,7 +63,7 @@ const CASES: CaseStudy[] = [
     href: "#cases",
   },
   {
-    brand: "TruSelph",
+    brand: "TrueSelph",
     lede: "Under Development.",
     stats: [
       { num: "X", label: "X" },

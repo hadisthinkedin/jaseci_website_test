@@ -71,17 +71,17 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
       statWord: "Prompts",
       statWordStatic: true,
       desc: "No prompt engineering. Python could not — byLLM did. Write a function signature and the compiler writes the prompt for you.",
-      pip: "pip install byllm",
+      pip: "jac install byllm",
     },
     {
-      name: "jac-super",
+      name: "Jac Console",
       href: "https://github.com/jaseci-labs/jaseci/blob/main/jac/jaclang/cli/console.jac",
-      stat: "1",
-      statWord: "Command",
+      stat: "0",
+      statWord: "Installs",
       statWordStatic: true,
       accentWord: true,
-      desc: "Better developer experience. Python could not — jac-super did. Rich-formatted CLI output with themes, panels, and spinners.",
-      pip: "pip install jac-super",
+      desc: "Better developer experience. Python could not — Jac's console did. Rich-formatted CLI output with themes, panels, and spinners, built straight into jaclang core.",
+      pip: "built into jac",
     },
     {
       name: "jac-client",
@@ -91,7 +91,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
       statWordStatic: true,
       accentWord: true,
       desc: "No middleware. Python could not — jac-client did. Call your backend from React-style components with zero glue code.",
-      pip: "pip install jac-client",
+      pip: "[plugins.client]",
       active: true,
     },
     {
@@ -101,7 +101,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
       statWord: "CSS",
       statWordStatic: true,
       desc: "Pre-built UI. Python could not — jac-shadcn did. Drop in beautiful, customizable components without leaving Jac.",
-      pip: "pip install jac-shadcn",
+      pip: "jac add --shadcn",
     },
     {
       name: "jac-mcp",
@@ -111,7 +111,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
       statWordStatic: true,
       accentWord: true,
       desc: "AI-assisted coding. Python could not — jac-mcp did. Give any AI coding assistant deep knowledge of Jac through the Model Context Protocol.",
-      pip: "pip install jac-mcp",
+      pip: "jac mcp",
     },
     {
       name: "jac-scale",
@@ -120,7 +120,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
       statWord: "Config",
       statWordStatic: true,
       desc: "Faster deployment. Python could not — jac-scale did. Scale to Kubernetes without writing a single YAML file.",
-      pip: "pip install jac-scale",
+      pip: "jac start --scale",
       active: true,
     },
   ],
@@ -160,8 +160,8 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
       statWord: "Auth Code",
       statWordStatic: true,
       accentWord: true,
-      desc: "Built into jac-scale. Per-user isolation. Python could not — Jac's auth runtime did. Each user gets their own root graph with zero auth middleware code.",
-      pip: "jacLogin / jacSignup / :priv",
+      desc: "Built into Jac Scale. Per-user isolation. Python could not — Jac's auth runtime did. Each user gets their own root graph with zero auth middleware code.",
+      pip: "jacLogin / jacSignup / def:priv",
     },
     {
       name: "WebSockets & Webhooks",
@@ -169,7 +169,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
       stat: "1",
       statWord: "Decorator",
       statWordStatic: true,
-      desc: "Built into jac-scale. Real-time communication. Python could not — jac-scale did. Turn any walker into a WebSocket or webhook endpoint with a single decorator — HMAC verification, API keys, and connection management included.",
+      desc: "Built into Jac Scale. Real-time communication. Python could not — Jac Scale did. Turn any walker into a WebSocket or webhook endpoint with a single decorator — HMAC verification, API keys, and connection management included.",
     },
     {
       name: "Scheduled Tasks",
@@ -178,7 +178,7 @@ const ECOSYSTEM_MODULES: EcosystemModule[][] = [
       statWord: "Line",
       statWordStatic: true,
       accentWord: true,
-      desc: "Built into jac-scale[scheduler]. Background jobs. Python could not — @schedule did. Cron jobs and interval tasks as a decorator on any walker or function — no Celery, no task queue, no separate worker process.",
+      desc: "Built into Jac Scale. Background jobs. Python could not — @schedule did. Cron jobs and interval tasks as a decorator on any walker or function — no Celery, no task queue, no separate worker process.",
       pip: "@schedule",
     },
   ],
@@ -283,8 +283,8 @@ function EcoColumn({
 // as an orange drawer on hover
 const LEAP_COPY = {
   headline:
-    "Though devs used Jac, their application was still too slow because they depended on a third-party stack.",
-  body: "Jac was just as fast as C by itself, but when teamed up with React for the frontend, and then CORS for the middleware, and then Vercel for deployment, things slowed down. So, in Jac v2, we decided to have those dependencies built into Jac. Now, when building your AI application, all you need is Jac. But what should we call this individual stack in layman’s terms? What should the solution to multiple problems be dubbed as?",
+    "Though devs used Jac, their application was still bogged down because they depended on a third-party stack. So, Jac became npm, PyPI and C-ABI interoperable.",
+  body: "Jac was C-level fast by itself — it compiles down to native machine code — but when teamed up with React for the frontend, and then CORS config for the middleware, and then Vercel for deployment, things slowed down. So, in the latest Jac, we decided to have those dependencies built into Jac. Now, when building your AI application, all you need is Jac. But what should we call this individual stack in layman’s terms? What should the solution to multiple problems be dubbed as?",
 };
 
 export default function Home() {
@@ -415,7 +415,7 @@ export default function Home() {
           <div className={styles.askEcoContent}>
             <h2 className={styles.h2}>
               Developers needed <s className={styles.strikeMore}>more</s>{" "}
-              <span className={styles.accent}>interoperts</span>.
+              <span className={styles.accent}>interop</span>.
             </h2>
             <EvolutionBox headline={LEAP_COPY.headline} body={LEAP_COPY.body} />
           </div>
@@ -473,12 +473,12 @@ export default function Home() {
               start coding?
             </h2>
             <p className={styles.body}>
-              Dennis Ritchie&rsquo;s philosophy of why he built the C was the
-              idea that people should spend their time coding something
-              innovative, nothing else. His instinct was to take away the
-              boilerplate, like registers, that stood between us and human
-              ideation. We want to replicate that same philosophy over 50 years
-              ago, and take away that boilerplate and give devs more time.
+              When Dennis Ritchie built C over 50 years ago, his philosophy was
+              that people should spend their time coding something innovative,
+              nothing else. His instinct was to take away the boilerplate, like
+              registers, that stood between us and human ideation. We want to
+              replicate that same philosophy today — take away that boilerplate
+              and give devs more time.
             </p>
           </div>
 
@@ -761,6 +761,13 @@ export default function Home() {
                 rel="noopener noreferrer"
               >
                 LinkedIn
+              </a>
+              <a
+                href="https://www.youtube.com/@Jac-Jaseci"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                YouTube
               </a>
               <a
                 href="https://blogs.jaseci.org/"

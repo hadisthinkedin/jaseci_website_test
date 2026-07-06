@@ -8,7 +8,9 @@ import styles from "./InstallBox.module.css";
    box: two OS tabs sitting on an accent-bordered terminal block with a copy
    button. Rebuilt in CSS Modules on the site's locked palette (white surface,
    orange --accent). Linux/macOS runs the official curl installer; Windows
-   keeps the pip install. Long commands ellipsize visually (see .pre in the
+   runs the same installer through WSL (jaclang no longer ships via pip, and
+   upstream's native PowerShell installer is still "coming soon" — see
+   scripts/install.sh in the jaseci repo). Long commands ellipsize visually (see .pre in the
    module css) but the copy button always copies the full string.
    ─────────────────────────────────────────────── */
 
@@ -19,7 +21,12 @@ const TABS = [
     command:
       "curl -fsSL https://raw.githubusercontent.com/jaseci-labs/jaseci/main/scripts/install.sh | bash",
   },
-  { id: "windows", label: "Windows", command: "pip install jaclang" },
+  {
+    id: "windows",
+    label: "Windows (WSL)",
+    command:
+      "curl -fsSL https://raw.githubusercontent.com/jaseci-labs/jaseci/main/scripts/install.sh | bash",
+  },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];

@@ -2,12 +2,12 @@ import styles from "./AbstractionTrend.module.css";
 
 /* ───────────────────────────────────────────────
    Abstraction trendline (hero visual). Assembly →
-   Fortran → C → C++ → Java → Python → JS/TS, each
+   C → C++ → Java → Python → JS/TS, each
    generation plotted by how much it raised
-   abstraction. Fortran, C++ and JS/TS sit flat (no
-   real gain), so they recede to small muted dots
-   between the milestones — then Jac: the leap, in
-   orange.
+   abstraction. C++ and JS/TS sit flat (no real
+   gain over the step before), so they recede to
+   small muted dots between the milestones — then
+   Jac: the leap, in orange.
 
    Structure: an HTML header row (mono eyebrow title
    + the "1940s → NOW" span, matching the site's
@@ -34,7 +34,6 @@ const NODES: {
   tier: Tier;
 }[] = [
   { id: "asm", label: "Assembly", era: "1940s", x: 96, y: 457, tier: "primary" },
-  { id: "fortran", label: "Fortran", era: "1950s", x: 176, y: 457, tier: "muted" },
   { id: "c", label: "C", era: "1970s", x: 256, y: 375, tier: "primary" },
   { id: "cpp", label: "C++", era: "1980s", x: 336, y: 375, tier: "muted" },
   { id: "java", label: "Java", era: "1990s", x: 416, y: 302, tier: "primary" },
@@ -71,7 +70,7 @@ export default function AbstractionTrend() {
     <div
       className={styles.wrap}
       role="img"
-      aria-label="Chart: programming-language abstraction rising over fifty years — Assembly, Fortran, C, C++, Java, Python and JS/TS climb from machine level to dynamic — then the leap to Jac, AI-native."
+      aria-label="Chart: programming-language abstraction rising over fifty years — Assembly, C, C++, Java, Python and JS/TS climb from machine level to dynamic — then the leap to Jac, AI-native."
     >
       {/* header row — same mono eyebrow treatment as the rest of the site */}
       <div className={styles.figHead}>
