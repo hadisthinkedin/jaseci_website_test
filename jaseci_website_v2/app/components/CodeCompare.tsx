@@ -22,7 +22,7 @@ import styles from "./CodeCompare.module.css";
 
 type Lang = "jac" | "python" | "jsx" | "json" | "txt";
 
-const JAC_FILE = `"""The entire app — data model, API, persistence, UI. One file."""
+const JAC_FILE = `"""One file — data model, API, persistence, UI."""
 
 node Todo {
     has title: str,
@@ -81,7 +81,8 @@ cl def:pub app -> JsxElement {
 
     async def toggle(id: str) {
         updated = await toggle_todo(id);
-        todos = [updated if jid(t) == id else t for t in todos];
+        todos = [updated if jid(t) == id
+                 else t for t in todos];
     }
 
     async def remove(id: str) {
@@ -108,7 +109,9 @@ cl def:pub app -> JsxElement {
                         onChange={lambda { toggle(jid(t)); }}
                     />
                     <span>{t.title}</span>
-                    <button onClick={lambda { remove(jid(t)); }}>
+                    <button
+                        onClick={lambda { remove(jid(t)); }}
+                    >
                         X
                     </button>
                 </div> for t in todos

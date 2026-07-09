@@ -225,23 +225,31 @@ button.tab:hover:not(.tabOn) {
   }
 }
 
+/* lines soft-wrap (hanging, past the gutter) so the pane never needs a
+   horizontal scrollbar at any width */
 .ln {
-  white-space: pre;
+  position: relative;
+  white-space: pre-wrap;
+  padding-left: 48px;
   padding-right: 18px;
 }
 
-/* gutter line numbers */
+/* gutter line numbers — pinned to the row and spanning its full height,
+   so the gutter rule stays continuous even when a line wraps */
 .ln::before {
   counter-increment: line;
   content: counter(line);
-  display: inline-block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
   width: 34px;
-  margin-right: 14px;
   padding-right: 8px;
   text-align: right;
   border-right: 1px solid rgba(0, 0, 0, 0.15);
   color: #b3b3b3;
   font-size: 10.5px;
+  line-height: 1.83; /* matches the 12px × 1.6 row line box */
 }
 
 /* token palette — the site's inks only */
