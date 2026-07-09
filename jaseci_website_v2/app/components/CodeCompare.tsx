@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import styles from "./CodeCompare.module.css";
 
 /* ───────────────────────────────────────────────
@@ -413,6 +413,37 @@ export default function CodeCompare() {
   const [active, setActive] = useState(0);
   const file = STACK_FILES[active];
 
+  // custom overlay scroll indicator for the stack's tab strip — the native
+  // bar is hidden (it carves a lane below the tabs and leaves a white gap),
+  // so a 3px thumb is drawn over the tabs' bottom edge instead. Rendered
+  // only while the strip actually overflows.
+  const tabScrollRef = useRef<HTMLDivElement>(null);
+  const [thumb, setThumb] = useState({ left: 0, width: 0, visible: false });
+  const syncThumb = () => {
+    const el = tabScrollRef.current;
+    if (!el) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    if (scrollWidth <= clientWidth + 1) {
+      setThumb((t) => (t.visible ? { left: 0, width: 0, visible: false } : t));
+      return;
+    }
+    setThumb({
+      left: (scrollLeft / scrollWidth) * 100,
+      width: (clientWidth / scrollWidth) * 100,
+      visible: true,
+    });
+  };
+  useEffect(() => {
+    syncThumb();
+    const el = tabScrollRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(syncThumb);
+    ro.observe(el);
+    // tab widths shift when the mono webfont lands
+    document.fonts?.ready.then(syncThumb);
+    return () => ro.disconnect();
+  }, []);
+
   return (
     <div className={styles.duel}>
       {/* LEFT — one Jac file */}
@@ -456,23 +487,35 @@ export default function CodeCompare() {
           <div className={styles.title}>todo — react + flask + cors</div>
           <div className={styles.count}>{STACK_FILES.length} files</div>
         </div>
-        <div
-          className={styles.tabRow}
-          role="tablist"
-          aria-label="Files in the React + Flask stack"
-        >
-          {STACK_FILES.map((f, i) => (
-            <button
-              key={f.name}
-              type="button"
-              role="tab"
-              aria-selected={active === i}
-              className={`${styles.tab} ${active === i ? styles.tabOn : ""}`}
-              onClick={() => setActive(i)}
-            >
-              {f.name}
-            </button>
-          ))}
+        <div className={styles.tabWrap}>
+          <div
+            ref={tabScrollRef}
+            onScroll={syncThumb}
+            className={styles.tabScroll}
+            role="tablist"
+            aria-label="Files in the React + Flask stack"
+          >
+            {STACK_FILES.map((f, i) => (
+              <button
+                key={f.name}
+                type="button"
+                role="tab"
+                aria-selected={active === i}
+                className={`${styles.tab} ${active === i ? styles.tabOn : ""}`}
+                onClick={() => setActive(i)}
+              >
+                {f.name}
+              </button>
+            ))}
+          </div>
+          {/* the scroll position, drawn over the tabs' bottom edge */}
+          {thumb.visible && (
+            <span
+              aria-hidden="true"
+              className={styles.tabThumb}
+              style={{ left: `${thumb.left}%`, width: `${thumb.width}%` }}
+            />
+          )}
         </div>
         <CodePane key={file.name} code={file.code} lang={file.lang} />
         <div className={styles.status}>

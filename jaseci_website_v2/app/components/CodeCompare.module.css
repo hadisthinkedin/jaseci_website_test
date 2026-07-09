@@ -92,13 +92,41 @@
 
 /* ── file tabs — InstallBox tab DNA ────────────────────────────────────── */
 
+/* the left editor's strip — one tab, nothing to scroll */
 .tabRow {
   flex: none;
   display: flex;
-  flex-wrap: nowrap;
-  /* more files than fit — the row scrolls sideways, which is the point */
-  overflow-x: auto;
   border-bottom: 1px solid #000;
+}
+
+/* the stack's strip: more files than fit, so it scrolls sideways. The
+   native scrollbar is hidden — it takes layout space and leaves a white
+   gap between the tabs and the border — and .tabThumb overlays the scroll
+   position on the tabs' bottom edge instead. */
+.tabWrap {
+  position: relative;
+  flex: none;
+  border-bottom: 1px solid #000;
+}
+
+.tabScroll {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+}
+.tabScroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* the overlay thumb — rides in front of the tabs, never takes space */
+.tabThumb {
+  position: absolute;
+  bottom: 0;
+  height: 3px;
+  background: var(--accent);
+  z-index: 1;
+  pointer-events: none;
 }
 
 .tab {
@@ -166,42 +194,14 @@ button.tab:hover:not(.tabOn) {
   background: var(--accent);
 }
 .code::-webkit-scrollbar-track,
-.code::-webkit-scrollbar-corner,
-.tabRow::-webkit-scrollbar-track,
-.tabRow::-webkit-scrollbar-corner {
+.code::-webkit-scrollbar-corner {
   background: transparent;
 }
 
-/* the tab strip's bar: a 3px sliver riding the tabs' bottom edge, and only
-   when the row actually overflows (overflow-x: auto). Invisible until the
-   row is hovered, so at rest nothing sits under the tabs at all. */
-.tabRow::-webkit-scrollbar {
-  height: 3px;
-  background: transparent;
-}
-.tabRow::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 0;
-}
-.tabRow:hover::-webkit-scrollbar-thumb {
-  background: #000;
-}
-.tabRow::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
-}
-
-/* Firefox can't square or overlay its thumb — thin + auto-hide colors are
-   as close as it gets */
+/* Firefox can't square its thumb — thin + black is as close as it gets */
 @supports not selector(::-webkit-scrollbar) {
   .code {
     scrollbar-width: thin;
-    scrollbar-color: #000 transparent;
-  }
-  .tabRow {
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
-  }
-  .tabRow:hover {
     scrollbar-color: #000 transparent;
   }
 }
