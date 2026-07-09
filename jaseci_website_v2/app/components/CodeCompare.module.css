@@ -186,17 +186,23 @@ button.tab:hover:not(.tabOn) {
 
 /* ── scrollbars — square, like everything else here ────────────────────── */
 
-/* WebKit/Blink: hard-cornered black thumb on a bare track. The standard
-   scrollbar-* properties live in the Firefox-only block below — when
-   they're set, Chrome ignores ::-webkit-scrollbar styling entirely. */
+/* WebKit/Blink: hard-cornered black thumb on a bare track, transparent at
+   rest — it shows while the pane is hovered or scrolled (.codeLit is held
+   by JS during scrolling, dropped ~0.7s after). The standard scrollbar-*
+   properties live in the Firefox-only block below — when they're set,
+   Chrome ignores ::-webkit-scrollbar styling entirely. */
 .code::-webkit-scrollbar {
   width: 8px;
   height: 8px;
   background: transparent;
 }
 .code::-webkit-scrollbar-thumb {
-  background: #000;
+  background: transparent;
   border-radius: 0;
+}
+.code:hover::-webkit-scrollbar-thumb,
+.codeLit::-webkit-scrollbar-thumb {
+  background: #000;
 }
 .code::-webkit-scrollbar-thumb:hover {
   background: var(--accent);
@@ -206,10 +212,15 @@ button.tab:hover:not(.tabOn) {
   background: transparent;
 }
 
-/* Firefox can't square its thumb — thin + black is as close as it gets */
+/* Firefox can't square its thumb — thin + the same rest/hover/scroll
+   states is as close as it gets */
 @supports not selector(::-webkit-scrollbar) {
   .code {
     scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  .code:hover,
+  .codeLit {
     scrollbar-color: #000 transparent;
   }
 }

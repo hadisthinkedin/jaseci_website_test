@@ -396,8 +396,27 @@ function highlightLine(line: string, lang: Lang, key: number) {
 }
 
 function CodePane({ code, lang }: { code: string; lang: Lang }) {
+  // like the tab strip's thumb: the pane's scrollbar rests transparent and
+  // only shows while hovered (CSS) or scrolling, fading ~0.7s after
+  const [lit, setLit] = useState(false);
+  const timer = useRef<number | null>(null);
+  const onScroll = () => {
+    setLit(true);
+    if (timer.current !== null) window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setLit(false), 700);
+  };
+  useEffect(
+    () => () => {
+      if (timer.current !== null) window.clearTimeout(timer.current);
+    },
+    [],
+  );
+
   return (
-    <div className={styles.code}>
+    <div
+      className={`${styles.code} ${lit ? styles.codeLit : ""}`}
+      onScroll={onScroll}
+    >
       {code.split("\n").map((l, i) => (
         <div className={styles.ln} key={i}>
           {l ? highlightLine(l, lang, i) : " "}
