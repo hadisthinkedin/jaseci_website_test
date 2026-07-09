@@ -379,9 +379,7 @@ export default function Home() {
       {/* ---------- THE RECEIPT — the same to-do app, built twice ---------- */}
 
       <section className={`${styles.section} ${styles.compareSection}`}>
-        <div className={styles.eyebrow}>
-          THE SAME TO-DO APP, BUILT TWICE
-        </div>
+        <h2 className={styles.h2}>The same to-do app, built twice.</h2>
         <CodeCompare />
       </section>
 

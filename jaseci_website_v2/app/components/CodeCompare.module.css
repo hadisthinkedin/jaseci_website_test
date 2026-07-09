@@ -125,8 +125,8 @@
 .tabThumb {
   position: absolute;
   bottom: 0;
-  height: 3px;
-  background: var(--accent);
+  height: 2px;
+  background: var(--muted);
   z-index: 1;
   pointer-events: none;
   opacity: 0;
@@ -172,10 +172,22 @@ button.tab:hover:not(.tabOn) {
 
 /* ── code pane ─────────────────────────────────────────────────────────── */
 
+/* the pane is a wrapper (positions the overlay thumb) around the actual
+   scroller, whose native scrollbar is fully hidden */
+.codeWrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .code {
   flex: 1;
   min-height: 0;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none; /* Firefox */
   padding: 12px 0 18px;
   font-family: var(--font-mono);
   font-size: 12px;
@@ -183,45 +195,34 @@ button.tab:hover:not(.tabOn) {
   color: #000;
   counter-reset: line;
 }
-
-/* ── scrollbars — square, like everything else here ────────────────────── */
-
-/* WebKit/Blink: hard-cornered black thumb on a bare track, transparent at
-   rest — it shows while the pane is hovered or scrolled (.codeLit is held
-   by JS during scrolling, dropped ~0.7s after). The standard scrollbar-*
-   properties live in the Firefox-only block below — when they're set,
-   Chrome ignores ::-webkit-scrollbar styling entirely. */
 .code::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-  background: transparent;
-}
-.code::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 0;
-}
-.code:hover::-webkit-scrollbar-thumb,
-.codeLit::-webkit-scrollbar-thumb {
-  background: #000;
-}
-.code::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
-}
-.code::-webkit-scrollbar-track,
-.code::-webkit-scrollbar-corner {
-  background: transparent;
+  display: none;
 }
 
-/* Firefox can't square its thumb — thin + the same rest/hover/scroll
-   states is as close as it gets */
-@supports not selector(::-webkit-scrollbar) {
-  .code {
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
-  }
-  .code:hover,
-  .codeLit {
-    scrollbar-color: #000 transparent;
+/* ── the pane's overlay scroll thumb ───────────────────────────────────── */
+
+/* same DNA as .tabThumb, vertical: square, site-grey, transparent at
+   rest, fades in on hover or while scrolling (.codeThumbLit is held by
+   JS during scrolling, dropped ~0.7s after) and fades back out */
+.codeThumb {
+  position: absolute;
+  right: 3px;
+  width: 4px;
+  background: var(--muted);
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.codeWrap:hover .codeThumb,
+.codeThumbLit {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabThumb,
+  .codeThumb {
+    transition: none;
   }
 }
 

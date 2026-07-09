@@ -398,33 +398,81 @@ function highlightLine(line: string, lang: Lang, key: number) {
   return out;
 }
 
-function CodePane({ code, lang }: { code: string; lang: Lang }) {
-  // like the tab strip's thumb: the pane's scrollbar rests transparent and
-  // only shows while hovered (CSS) or scrolling, fading ~0.7s after
+/* ── overlay scroll thumbs ─────────────────────────────────────────────── */
+
+/* Native scrollbars can't fade (their colors don't animate) and their
+   lanes take layout space, so both scroll surfaces hide the real bar and
+   draw a custom thumb instead: transparent at rest, faded in while the
+   surface is hovered (CSS) or scrolling, faded back out ~0.7s after the
+   last scroll event. Rendered only while there's overflow to scroll. */
+function useScrollThumb(axis: "x" | "y") {
+  const ref = useRef<HTMLDivElement>(null);
+  const [bar, setBar] = useState({ start: 0, size: 0, visible: false });
   const [lit, setLit] = useState(false);
   const timer = useRef<number | null>(null);
+
+  const sync = () => {
+    const el = ref.current;
+    if (!el) return;
+    const scroll = axis === "x" ? el.scrollLeft : el.scrollTop;
+    const total = axis === "x" ? el.scrollWidth : el.scrollHeight;
+    const view = axis === "x" ? el.clientWidth : el.clientHeight;
+    if (total <= view + 1) {
+      setBar((b) => (b.visible ? { start: 0, size: 0, visible: false } : b));
+      return;
+    }
+    setBar({
+      start: (scroll / total) * 100,
+      size: (view / total) * 100,
+      visible: true,
+    });
+  };
+
   const onScroll = () => {
+    sync();
     setLit(true);
     if (timer.current !== null) window.clearTimeout(timer.current);
     timer.current = window.setTimeout(() => setLit(false), 700);
   };
-  useEffect(
-    () => () => {
+
+  useEffect(() => {
+    sync();
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver(sync);
+    ro.observe(el);
+    // metrics shift when the mono webfont lands
+    document.fonts?.ready.then(sync);
+    return () => {
+      ro.disconnect();
       if (timer.current !== null) window.clearTimeout(timer.current);
-    },
-    [],
-  );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return { ref, bar, lit, onScroll };
+}
+
+function CodePane({ code, lang }: { code: string; lang: Lang }) {
+  const { ref, bar, lit, onScroll } = useScrollThumb("y");
 
   return (
-    <div
-      className={`${styles.code} ${lit ? styles.codeLit : ""}`}
-      onScroll={onScroll}
-    >
+    <div className={styles.codeWrap}>
+      <div ref={ref} onScroll={onScroll} className={styles.code}>
       {code.split("\n").map((l, i) => (
         <div className={styles.ln} key={i}>
           {l ? highlightLine(l, lang, i) : " "}
         </div>
       ))}
+      </div>
+      {/* the scroll position, drawn over the pane's right edge */}
+      {bar.visible && (
+        <span
+          aria-hidden="true"
+          className={`${styles.codeThumb} ${lit ? styles.codeThumbLit : ""}`}
+          style={{ top: `${bar.start}%`, height: `${bar.size}%` }}
+        />
+      )}
     </div>
   );
 }
@@ -435,53 +483,13 @@ export default function CodeCompare() {
   const [active, setActive] = useState(0);
   const file = STACK_FILES[active];
 
-  // custom overlay scroll indicator for the stack's tab strip — the native
-  // bar is hidden (it carves a lane below the tabs and leaves a white gap),
-  // so a 3px thumb is drawn over the tabs' bottom edge instead. Rendered
-  // only while the strip actually overflows.
-  const tabScrollRef = useRef<HTMLDivElement>(null);
-  const [thumb, setThumb] = useState({ left: 0, width: 0, visible: false });
-  const syncThumb = () => {
-    const el = tabScrollRef.current;
-    if (!el) return;
-    const { scrollLeft, scrollWidth, clientWidth } = el;
-    if (scrollWidth <= clientWidth + 1) {
-      setThumb((t) => (t.visible ? { left: 0, width: 0, visible: false } : t));
-      return;
-    }
-    setThumb({
-      left: (scrollLeft / scrollWidth) * 100,
-      width: (clientWidth / scrollWidth) * 100,
-      visible: true,
-    });
-  };
-  useEffect(() => {
-    syncThumb();
-    const el = tabScrollRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(syncThumb);
-    ro.observe(el);
-    // tab widths shift when the mono webfont lands
-    document.fonts?.ready.then(syncThumb);
-    return () => ro.disconnect();
-  }, []);
-
-  // the thumb stays transparent at rest — it lights up while the strip is
-  // hovered (CSS) or being scrolled, then fades back out shortly after
-  const [thumbLit, setThumbLit] = useState(false);
-  const litTimer = useRef<number | null>(null);
-  const handleTabScroll = () => {
-    syncThumb();
-    setThumbLit(true);
-    if (litTimer.current !== null) window.clearTimeout(litTimer.current);
-    litTimer.current = window.setTimeout(() => setThumbLit(false), 700);
-  };
-  useEffect(
-    () => () => {
-      if (litTimer.current !== null) window.clearTimeout(litTimer.current);
-    },
-    [],
-  );
+  // overlay scroll indicator for the stack's tab strip — see useScrollThumb
+  const {
+    ref: tabRef,
+    bar: tabBar,
+    lit: tabLit,
+    onScroll: onTabScroll,
+  } = useScrollThumb("x");
 
   return (
     <div className={styles.duel}>
@@ -505,7 +513,7 @@ export default function CodeCompare() {
             <span className={styles.dollar}>$</span> jac start app.jac
           </span>
           <span className={styles.note}>
-            {JAC_LINES} lines · 1 process — ui, api, persistence
+            {JAC_LINES} lines · 1 process
           </span>
         </div>
       </div>
@@ -528,8 +536,8 @@ export default function CodeCompare() {
         </div>
         <div className={styles.tabWrap}>
           <div
-            ref={tabScrollRef}
-            onScroll={handleTabScroll}
+            ref={tabRef}
+            onScroll={onTabScroll}
             className={styles.tabScroll}
             role="tablist"
             aria-label="Files in the React + Flask stack"
@@ -548,13 +556,16 @@ export default function CodeCompare() {
             ))}
           </div>
           {/* the scroll position, drawn over the tabs' bottom edge */}
-          {thumb.visible && (
+          {tabBar.visible && (
             <span
               aria-hidden="true"
               className={`${styles.tabThumb} ${
-                thumbLit ? styles.tabThumbLit : ""
+                tabLit ? styles.tabThumbLit : ""
               }`}
-              style={{ left: `${thumb.left}%`, width: `${thumb.width}%` }}
+              style={{
+                left: `${tabBar.start}%`,
+                width: `${tabBar.size}%`,
+              }}
             />
           )}
         </div>
@@ -565,7 +576,7 @@ export default function CodeCompare() {
             <span className={styles.amp}>&amp;</span> npm run dev
           </span>
           <span className={styles.note}>
-            {STACK_LINES} lines · 2 processes + CORS between them
+            {STACK_LINES} lines · 2 processes + CORS
           </span>
         </div>
       </div>
