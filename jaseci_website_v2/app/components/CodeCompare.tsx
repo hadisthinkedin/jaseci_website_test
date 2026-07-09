@@ -444,6 +444,23 @@ export default function CodeCompare() {
     return () => ro.disconnect();
   }, []);
 
+  // the thumb stays transparent at rest — it lights up while the strip is
+  // hovered (CSS) or being scrolled, then fades back out shortly after
+  const [thumbLit, setThumbLit] = useState(false);
+  const litTimer = useRef<number | null>(null);
+  const handleTabScroll = () => {
+    syncThumb();
+    setThumbLit(true);
+    if (litTimer.current !== null) window.clearTimeout(litTimer.current);
+    litTimer.current = window.setTimeout(() => setThumbLit(false), 700);
+  };
+  useEffect(
+    () => () => {
+      if (litTimer.current !== null) window.clearTimeout(litTimer.current);
+    },
+    [],
+  );
+
   return (
     <div className={styles.duel}>
       {/* LEFT — one Jac file */}
@@ -490,7 +507,7 @@ export default function CodeCompare() {
         <div className={styles.tabWrap}>
           <div
             ref={tabScrollRef}
-            onScroll={syncThumb}
+            onScroll={handleTabScroll}
             className={styles.tabScroll}
             role="tablist"
             aria-label="Files in the React + Flask stack"
@@ -512,7 +529,9 @@ export default function CodeCompare() {
           {thumb.visible && (
             <span
               aria-hidden="true"
-              className={styles.tabThumb}
+              className={`${styles.tabThumb} ${
+                thumbLit ? styles.tabThumbLit : ""
+              }`}
               style={{ left: `${thumb.left}%`, width: `${thumb.width}%` }}
             />
           )}

@@ -119,7 +119,9 @@
   display: none;
 }
 
-/* the overlay thumb — rides in front of the tabs, never takes space */
+/* the overlay thumb — rides in front of the tabs, never takes space.
+   Transparent at rest; fades in while the strip is hovered or scrolled
+   (.tabThumbLit is held by JS during scrolling, dropped ~0.7s after) */
 .tabThumb {
   position: absolute;
   bottom: 0;
@@ -127,6 +129,12 @@
   background: var(--accent);
   z-index: 1;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.tabWrap:hover .tabThumb,
+.tabThumbLit {
+  opacity: 1;
 }
 
 .tab {
