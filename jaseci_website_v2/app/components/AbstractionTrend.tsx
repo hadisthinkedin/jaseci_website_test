@@ -9,12 +9,11 @@ import styles from "./AbstractionTrend.module.css";
    small muted dots between the milestones — then
    Jac: the leap, in orange.
 
-   Structure: an HTML header row (mono eyebrow title
-   + the "1940s → NOW" span, matching the site's
+   Structure: an HTML header row (a mono eyebrow
+   title explaining the plot, matching the site's
    label convention) above the SVG plot. The figure
    furniture (hairline frame, dotted tier gridlines,
-   axis ticks, hatched areas, in-plot legend, era
-   labels and the "≈ 50 years" dimension line)
+   axis ticks, hatched areas and era labels)
    carries the same story as the copy: fifty years
    of incremental steps, one leap.
 
@@ -75,9 +74,8 @@ export default function AbstractionTrend() {
       {/* header row — same mono eyebrow treatment as the rest of the site */}
       <div className={styles.figHead}>
         <span className={styles.figTitle}>
-          ABSTRACTION PER LANGUAGE GENERATION
+          HOW FAR EACH LANGUAGE ROSE ABOVE THE MACHINE
         </span>
-        <span className={styles.figMeta}>1940s → NOW</span>
       </div>
 
       <svg
@@ -174,18 +172,6 @@ export default function AbstractionTrend() {
           />
         ))}
 
-        {/* in-plot legend — decodes the node tiers, fills the empty upper-left */}
-        <g className={styles.legend}>
-          <circle className={styles.legendDotPrimary} cx={102} cy={119} r={5.5} />
-          <text className={styles.legendText} x={117} y={123}>
-            RAISED ABSTRACTION
-          </text>
-          <circle className={styles.legendDotMuted} cx={102} cy={141} r={4.5} />
-          <text className={styles.legendText} x={117} y={145}>
-            NO REAL GAIN
-          </text>
-        </g>
-
         {/* one faint guide grounding the leap to Jac */}
         <line className={styles.guide} x1={656} y1={BASE_Y} x2={656} y2={100} />
 
@@ -261,29 +247,6 @@ export default function AbstractionTrend() {
             {n.era}
           </text>
         ))}
-
-        {/* dimension line — the fifty years the staircase took, drawn L→R */}
-        <g className={styles.dimension}>
-          <text className={styles.dimText} x={336} y={574} textAnchor="middle">
-            ≈ 50 YEARS OF INCREMENTAL STEPS
-          </text>
-          <line
-            className={styles.dimRule}
-            x1={96}
-            y1={584}
-            x2={576}
-            y2={584}
-            pathLength={1}
-          />
-          <line className={styles.dimLine} x1={96} y1={579} x2={96} y2={589} />
-          <line
-            className={`${styles.dimLine} ${styles.dimLineEnd}`}
-            x1={576}
-            y1={579}
-            x2={576}
-            y2={589}
-          />
-        </g>
       </svg>
     </div>
   );

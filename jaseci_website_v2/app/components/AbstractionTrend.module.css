@@ -48,13 +48,6 @@
   color: var(--foreground);
 }
 
-.figMeta {
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  color: var(--muted);
-  white-space: nowrap;
-}
-
 /* ── Plot frame + axis ticks ───────────────────────────────────────────── */
 
 .frame {
@@ -108,26 +101,6 @@
 .levelLabelAccent {
   fill: var(--accent);
   font-weight: 700;
-}
-
-/* ── In-plot legend — decodes the node tiers ───────────────────────────── */
-
-.legend {
-  opacity: 0;
-  animation: fade 0.6s ease 0.75s forwards;
-}
-.legendDotPrimary {
-  fill: var(--background);
-  stroke: var(--foreground);
-  stroke-width: 2;
-}
-.legendDotMuted {
-  fill: var(--muted);
-}
-.legendText {
-  fill: var(--muted);
-  font-size: 10.5px;
-  letter-spacing: 0.14em;
 }
 
 /* ── Hatched areas under the trend ─────────────────────────────────────── */
@@ -374,7 +347,6 @@
     animation: none;
   }
   .figHead,
-  .legend,
   .levelLabel,
   .xlabel,
   .eraLabel,

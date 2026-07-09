@@ -12,6 +12,7 @@ import ProofGrid from "./components/ProofGrid";
 import BlockTower from "./components/BlockTower";
 import BlackHole from "./components/BlackHole";
 import NeuralNetwork from "./components/NeuralNetwork";
+import CodeCompare from "./components/CodeCompare";
 
 // The frameworks to toss in the bin — each drops in as an orange hexagon that
 // flips to the logo (forced white-on-black) on hover. SVGs live at
@@ -283,7 +284,7 @@ function EcoColumn({
 // as an orange drawer on hover
 const LEAP_COPY = {
   headline:
-    "Though devs used Jac, their application was still bogged down because they depended on a third-party stack. So, Jac became npm, PyPI and C-ABI interoperable.",
+    "So, Jac became npm, PyPI and C-ABI interoperable.",
   body: "Jac was C-level fast by itself, compiling down to native machine code, but when teamed up with React for the frontend, and then CORS config for the middleware, and then Vercel for deployment, things slowed down. So, in the latest Jac, we decided to have those dependencies built into Jac. Now, when building your AI application, all you need is Jac. But what should we call this individual stack in layman’s terms? What should the solution to multiple problems be dubbed as?",
 };
 
@@ -348,12 +349,9 @@ export default function Home() {
               />
             </h1>
             <p className={styles.heroLede}>
-              Instead of building your AI applications with python, langchain
-              and abstraction slop, use a language that is built exactly for AI
-              development. Forget boilerplate traditions like overcomplicated
-              prompts, unnecessary middleware, and lengthy deployments.
-              Let&rsquo;s bring back the coding joy by making Jac aware of the
-              complexity, and remove it.
+              Build complete applications with backend + frontend + AI in a
+              single unified language. Access both PyPI and npm ecosystems,
+              deploy from laptop to cloud with zero code changes.
             </p>
             <InstallBox />
           </div>
@@ -378,6 +376,15 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ---------- THE RECEIPT — the same to-do app, built twice ---------- */}
+
+      <section className={`${styles.section} ${styles.compareSection}`}>
+        <div className={styles.eyebrow}>
+          THE SAME TO-DO APP, BUILT TWICE
+        </div>
+        <CodeCompare />
+      </section>
+
       {/* ---------- PROOF ---------- */}
 
       <ProofGrid />
@@ -390,7 +397,7 @@ export default function Home() {
           <div className={styles.askEcoContent}>
             <h2 className={styles.h2}>
               Developers needed <s className={styles.strikeMore}>more</s>{" "}
-              <span className={styles.accent}>interop</span>.
+              <span className={styles.accent}>interop.</span>
             </h2>
             <EvolutionBox headline={LEAP_COPY.headline} body={LEAP_COPY.body} />
           </div>

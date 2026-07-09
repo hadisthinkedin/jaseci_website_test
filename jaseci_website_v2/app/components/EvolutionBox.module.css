@@ -1,17 +1,20 @@
-/* EvolutionBox — statement slab + orange story drawer.
-   One fixed-height hairline frame: big headline on the left, empty white
-   canvas on the right. On hover/focus an orange drawer slides in from the
-   right edge over that canvas (width 0 → --storyW), with its text pinned
-   right so the wipe reveals it without any rewrap. Fixed height means the
-   page below never reflows. ≤900px it stacks and stays open (no hover on
-   touch), with the story dark-on-white per the site's mobile pattern. */
+/* EvolutionBox — statement slab + interop terminal + orange story drawer.
+   One fixed-height hairline frame: big headline on the left, the animated
+   InteropTerminal filling a flush right panel (width --storyW, hairline
+   divider). Hovering the statement (or keyboard-focusing the frame) slides
+   the orange drawer in from the right edge over the terminal (width 0 →
+   --storyW), with its text pinned right so the wipe reveals it without any
+   rewrap. Fixed height means the page below never reflows. ≤900px it
+   stacks statement / terminal / story and stays open (no hover on touch),
+   with the story dark-on-white per the site's mobile pattern. */
 
 .frame {
-  /* the drawer's open width — fixed px so the wipe never rewraps text */
+  /* the drawer's (and terminal panel's) width — fixed px so the wipe
+     never rewraps text and covers the terminal exactly */
   --storyW: 480px;
 
   position: relative;
-  height: 300px;
+  height: 340px;
   border: 1px solid #000;
   background: var(--background);
   overflow: hidden;
@@ -42,6 +45,19 @@
   transition: color 0.18s ease;
 }
 
+/* ── the interop terminal panel (under the drawer) ───────────────────── */
+
+/* flush right panel, same width as the drawer so the wipe covers it
+   exactly; hairline divider carries the bento-grid language */
+.demo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--storyW);
+  border-left: 1px solid #000;
+}
+
 /* ── the orange story drawer ─────────────────────────────────────────── */
 
 .story {
@@ -54,7 +70,11 @@
   background: var(--accent);
   transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s ease;
 }
-.frame:hover .story,
+/* the drawer opens from the statement side (not the whole frame) so
+   hovering the terminal doesn't cover the very animation being watched;
+   .story:hover keeps it open once the pointer travels onto it */
+.statement:hover ~ .story,
+.story:hover,
 .frame:focus-visible .story,
 .frame[data-open="true"] .story {
   width: var(--storyW);
@@ -100,7 +120,9 @@
 .icon {
   position: absolute;
   top: 20px;
-  right: 20px;
+  /* pinned just left of the terminal seam, in the statement's gutter —
+     the spot the drawer slides out from */
+  right: calc(var(--storyW) + 20px);
   z-index: 2;
   width: 24px;
   height: 24px;
@@ -130,21 +152,18 @@
   width: 2px;
   height: 11px;
 }
-.frame:hover .icon,
-.frame:focus-visible .icon,
+/* the icon sits over white in every state except the frozen black slab,
+   so only data-open flips it to white */
 .frame[data-open="true"] .icon {
   border-color: #fff;
 }
-.frame:hover .icon::before,
-.frame:hover .icon::after,
-.frame:focus-visible .icon::before,
-.frame:focus-visible .icon::after,
 .frame[data-open="true"] .icon::before,
 .frame[data-open="true"] .icon::after {
   background: #fff;
 }
 /* + → − while the drawer is out */
-.frame:hover .icon::after,
+.statement:hover ~ .icon::after,
+.story:hover ~ .icon::after,
 .frame:focus-visible .icon::after,
 .frame[data-open="true"] .icon::after {
   transform: translate(-50%, -50%) scaleY(0);
@@ -193,6 +212,15 @@
   }
   .statement {
     padding: 18px 20px;
+  }
+  /* terminal becomes a stacked band between statement and story — fixed
+     height so the animation keeps a stable stage */
+  .demo {
+    position: static;
+    width: auto;
+    height: 320px;
+    border-left: none;
+    border-top: 1px solid #000;
   }
   .icon {
     display: none;

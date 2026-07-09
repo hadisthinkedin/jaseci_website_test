@@ -2,14 +2,17 @@
 
 import { useState } from "react";
 import styles from "./EvolutionBox.module.css";
+import InteropTerminal from "./InteropTerminal";
 
 /* EvolutionBox — the "evolution → the leap" beat as a statement slab.
-   A fixed-height hairline frame with the headline set large on the left
-   and empty canvas on the right. Hovering (or keyboard focus) slides an
-   orange story drawer in from the right edge — the same horizontal-wipe
-   DNA as the old step cards. Clicking the +/− button freezes the drawer
-   open (data-open) until clicked again, matching the step cards and the
-   manifesto boxes. Touch widths stack the story below, always open. */
+   A fixed-height hairline frame: headline set large on the left, and the
+   InteropTerminal demo (the animated npm/PyPI/C-ABI proof) filling the
+   right panel. Hovering the statement (or keyboard-focusing the frame)
+   slides the orange story drawer in from the right edge, wiping over the
+   terminal — the same horizontal-wipe DNA as the old step cards. Clicking
+   the +/− button freezes the drawer open (data-open) until clicked again,
+   matching the step cards and the manifesto boxes. Touch widths stack
+   statement / terminal / story, story always open. */
 
 export default function EvolutionBox({
   headline,
@@ -26,6 +29,12 @@ export default function EvolutionBox({
     <div className={styles.frame} tabIndex={0} data-open={frozen}>
       <div className={styles.statement}>
         <h3 className={styles.headline}>{headline}</h3>
+      </div>
+
+      {/* the interop demo — a live terminal pinned flush to the right panel;
+          the story drawer (below, later in DOM) wipes over it */}
+      <div className={styles.demo}>
+        <InteropTerminal />
       </div>
 
       {/* the orange drawer — width animates 0 → var(--storyW); its inner

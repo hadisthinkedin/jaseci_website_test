@@ -1,0 +1,315 @@
+/* CodeCompare — two editor windows, same DNA as InteropTerminal: white
+   surfaces, hairline black chrome, the nav's diagonal hatch on the
+   titlebars, JetBrains mono, orange accent. Sharp corners, no shadows.
+   Left window is the one-file Jac app (orange tab); right is the
+   React + Flask + CORS pile with a tab per file — more tabs than fit,
+   so the row scrolls sideways on purpose. A square "VS" stamp rides
+   the seam. */
+
+.duel {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: stretch;
+}
+
+/* ── window shell ──────────────────────────────────────────────────────── */
+
+.win {
+  display: flex;
+  flex-direction: column;
+  height: 640px;
+  min-width: 0;
+  border: 1px solid #000;
+  background: #fff;
+}
+
+.chrome {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 38px;
+  padding: 0 14px;
+  border-bottom: 1px solid #000;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.06) 0,
+    rgba(0, 0, 0, 0.06) 1px,
+    transparent 1px,
+    transparent 9px
+  );
+}
+
+.lights {
+  display: flex;
+  gap: 6px;
+}
+
+.light {
+  display: block;
+  width: 9px;
+  height: 9px;
+  border: 1px solid #000;
+  background: transparent;
+}
+.light:first-child {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.title {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #595959;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* file-count chip, top right of the chrome */
+.count {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border: 1px solid #000;
+  background: #fff;
+  color: #000;
+}
+.countAccent {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ── file tabs — InstallBox tab DNA ────────────────────────────────────── */
+
+.tabRow {
+  flex: none;
+  display: flex;
+  flex-wrap: nowrap;
+  /* more files than fit — the row scrolls sideways, which is the point */
+  overflow-x: auto;
+  border-bottom: 1px solid #000;
+}
+
+.tab {
+  flex: none;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1;
+  padding: 8px 13px;
+  background: #fff;
+  border: none;
+  border-right: 1px solid #000;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+button.tab:hover:not(.tabOn) {
+  color: #000;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* active file — black slab, like the frozen manifesto boxes */
+.tabOn {
+  background: #000;
+  color: #fff;
+}
+
+/* the single Jac tab — the accent, no pointer games */
+.tabJac {
+  background: var(--accent);
+  color: #fff;
+  cursor: default;
+}
+
+/* ── code pane ─────────────────────────────────────────────────────────── */
+
+.code {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 12px 0 18px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  color: #000;
+  counter-reset: line;
+}
+
+/* ── scrollbars — square, like everything else here ────────────────────── */
+
+/* WebKit/Blink: hard-cornered black thumb on a bare track. The standard
+   scrollbar-* properties live in the Firefox-only block below — when
+   they're set, Chrome ignores ::-webkit-scrollbar styling entirely. */
+.code::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background: transparent;
+}
+.code::-webkit-scrollbar-thumb {
+  background: #000;
+  border-radius: 0;
+}
+.code::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+.code::-webkit-scrollbar-track,
+.code::-webkit-scrollbar-corner,
+.tabRow::-webkit-scrollbar-track,
+.tabRow::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* the tab strip's bar: a 3px sliver riding the tabs' bottom edge, and only
+   when the row actually overflows (overflow-x: auto). Invisible until the
+   row is hovered, so at rest nothing sits under the tabs at all. */
+.tabRow::-webkit-scrollbar {
+  height: 3px;
+  background: transparent;
+}
+.tabRow::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 0;
+}
+.tabRow:hover::-webkit-scrollbar-thumb {
+  background: #000;
+}
+.tabRow::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Firefox can't square or overlay its thumb — thin + auto-hide colors are
+   as close as it gets */
+@supports not selector(::-webkit-scrollbar) {
+  .code {
+    scrollbar-width: thin;
+    scrollbar-color: #000 transparent;
+  }
+  .tabRow {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  .tabRow:hover {
+    scrollbar-color: #000 transparent;
+  }
+}
+
+.ln {
+  white-space: pre;
+  padding-right: 18px;
+}
+
+/* gutter line numbers */
+.ln::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 34px;
+  margin-right: 14px;
+  padding-right: 8px;
+  text-align: right;
+  border-right: 1px solid rgba(0, 0, 0, 0.15);
+  color: #b3b3b3;
+  font-size: 10.5px;
+}
+
+/* token palette — the site's inks only */
+.kw {
+  color: var(--accent);
+  font-weight: 500;
+}
+.str {
+  color: #595959;
+}
+.com {
+  color: #9a9a9a;
+}
+.tag {
+  font-weight: 700;
+}
+
+/* ── status bar ────────────────────────────────────────────────────────── */
+
+.status {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 14px;
+  border-top: 1px solid #000;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cmd {
+  color: #000;
+  white-space: nowrap;
+}
+
+.dollar,
+.amp {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.note {
+  color: #8a8a8a;
+  text-align: right;
+}
+
+/* ── the VS stamp on the seam ──────────────────────────────────────────── */
+
+.vs {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #000;
+  background: var(--background);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+/* ── stacked below desktop ─────────────────────────────────────────────── */
+
+@media (max-width: 1020px) {
+  .duel {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .win {
+    height: 540px;
+  }
+  /* the stamp joins the flow between the two windows */
+  .vs {
+    position: static;
+    transform: none;
+    justify-self: center;
+  }
+  .note {
+    display: none; /* keep the status bar to the command on tight widths */
+  }
+}

@@ -244,6 +244,14 @@
   margin-top: 24px;
 }
 
+/* ---------- the receipt — code duel under the stack frame ---------- */
+
+/* the editors prove the frame directly above, so they hug it instead of
+   taking the full 120px section gap */
+.compareSection {
+  padding-top: 0;
+}
+
 /* ---------- the ask → so i built jaseci ---------- */
 
 /* stacked top/bottom: the copy + evolution step cards ride on top, the trend

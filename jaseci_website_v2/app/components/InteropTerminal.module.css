@@ -1,0 +1,201 @@
+/* InteropTerminal — terminal window on the site's locked system: white
+   surface, hairline black chrome, the nav's diagonal-hatch texture on the
+   titlebar, JetBrains mono, orange accent. Sharp corners, no shadows —
+   flat like every other panel on the page. */
+
+.win {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* ── titlebar ──────────────────────────────────────────────────────────── */
+
+.chrome {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 38px;
+  padding: 0 14px;
+  border-bottom: 1px solid #000;
+  /* the nav's blueprint hatch */
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.06) 0,
+    rgba(0, 0, 0, 0.06) 1px,
+    transparent 1px,
+    transparent 9px
+  );
+}
+
+.lights {
+  display: flex;
+  gap: 6px;
+}
+
+/* square traffic lights — the first one runs hot (orange) */
+.light {
+  display: block;
+  width: 9px;
+  height: 9px;
+  border: 1px solid #000;
+  background: transparent;
+}
+.light:first-child {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.title {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #595959;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chips {
+  flex: none;
+  display: flex;
+  gap: 4px;
+}
+
+.chip {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border: 1px solid #b3b3b3;
+  background: #fff;
+  color: #8a8a8a;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* the active compile target lights up as the loop advances */
+.win[data-seg="0"] .chip:nth-child(1),
+.win[data-seg="1"] .chip:nth-child(2),
+.win[data-seg="2"] .chip:nth-child(3) {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* ── terminal body ─────────────────────────────────────────────────────── */
+
+.term {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden; /* bottom-follow scroll is driven from JS */
+  padding: 14px 18px 16px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.62;
+  color: #000;
+}
+
+.line {
+  white-space: pre-wrap;
+}
+
+/* token palette — restrained to the site's inks */
+.kw {
+  color: var(--accent);
+  font-weight: 500;
+}
+.com {
+  color: #9a9a9a;
+}
+.dim {
+  color: #595959;
+}
+.faint {
+  color: #d4d4d4;
+}
+.acc {
+  color: var(--accent);
+}
+.tag {
+  font-weight: 700;
+}
+
+.prompt {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 1.02em;
+  background: #000;
+  transform: translateY(2px);
+  margin-left: 1px;
+}
+
+/* ── the takeaway box (scales in per segment) ──────────────────────────── */
+
+.box {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1.55fr;
+  border: 1px solid #000;
+  margin: 16px 2px 6px;
+  transform-origin: top;
+}
+
+/* label riding the top border, registration-mark style */
+.legend {
+  position: absolute;
+  top: -0.7em;
+  left: 12px;
+  padding: 0 7px;
+  background: #fff;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.boxL {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 14px 12px;
+  border-right: 1px solid #000;
+  text-align: center;
+}
+
+.boxBig {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.boxSub {
+  font-size: 9.5px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #595959;
+}
+
+.boxR {
+  display: flex;
+  align-items: center;
+  padding: 13px 14px;
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: #595959;
+}
