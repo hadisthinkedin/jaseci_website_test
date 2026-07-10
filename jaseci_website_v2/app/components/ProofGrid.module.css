@@ -96,7 +96,7 @@
 .logoCard {
   flex: 1;
   min-height: 88px;
-  border: 1px solid #000;
+  border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -123,10 +123,15 @@
 .logoCard:hover .logoMarkImg {
   filter: brightness(0) invert(1);
 }
+/* dark theme — the grayscale marks are dark-on-transparent; invert them to
+   light so they read on the dark card (hover's white knockout still wins) */
+:global(html[data-theme="dark"]) .logoMarkImg {
+  filter: grayscale(1) invert(1);
+}
 /* nvidia is a single black wordmark, drawn as a mask: black at rest,
    knocked out to white on the orange hover fill */
 .logoMarkMask {
-  background-color: #000;
+  background-color: var(--foreground);
   -webkit-mask-image: var(--logo);
   mask-image: var(--logo);
   -webkit-mask-repeat: no-repeat;
@@ -144,7 +149,7 @@
 /* ── 01 — Enterprise: Pocketnest marquee ───────────────────────────────── */
 
 .feature {
-  border: 1px solid #000;
+  border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   padding: 36px 40px;
@@ -213,7 +218,7 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  border: 1px solid #000;
+  border: 1px solid var(--border);
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-mono);
@@ -223,8 +228,8 @@
   transition: background 0.15s ease, color 0.15s ease;
 }
 .caseArrow:hover {
-  background: #000;
-  color: #fff;
+  background: var(--foreground);
+  color: var(--background);
 }
 .caseTabs {
   display: flex;
@@ -374,7 +379,7 @@
   align-items: center;
   gap: 16px;
   padding: 24px 26px;
-  border: 1px solid #000;
+  border: 1px solid var(--border);
   transition: padding-left 0.15s ease, border-color 0.2s ease;
 }
 .paper:hover {
@@ -398,8 +403,8 @@
   font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #fff;
-  background: #000;
+  color: var(--background);
+  background: var(--foreground);
   transition: background 0.15s ease;
 }
 /* invert the key badge to a white box on the orange fill */
@@ -433,7 +438,7 @@
   font-family: var(--font-mono);
   font-size: 16px;
   line-height: 1;
-  color: #000;
+  color: var(--foreground);
   transition: transform 0.15s ease, color 0.15s ease;
 }
 .paper:hover .paperArrow {

@@ -1,0 +1,37 @@
+/* ThemeToggle — a bordered square holding a half-filled square, drawn
+   entirely in currentColor so it rides every nav state for free: ink on
+   the flat bar, white on the orange hover fill, inverted ink in dark. */
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid currentColor;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* the glyph — half ink, half paper, split on the diagonal */
+.glyph {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border: 1px solid currentColor;
+  background: linear-gradient(135deg, currentColor 50%, transparent 50%);
+  transition: transform 0.25s ease;
+}
+
+/* hover spins the split — "flip the ink" */
+.toggle:hover .glyph {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glyph {
+    transition: none;
+  }
+}

@@ -20,17 +20,26 @@ export const metadata: Metadata = {
     "Jac is the programming language built to program AI. Applications. Agents. Workflows. Everything AI.",
 };
 
+// Runs before anything paints (parser-blocking, first thing in <body>) so a
+// returning dark-mode visitor never flashes white: saved choice first, then
+// the OS preference. ThemeToggle (in the nav) flips data-theme + this key.
+const THEME_INIT = `(function(){try{var t=localStorage.getItem("jac-theme");if(t!=="dark"&&t!=="light"){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}document.documentElement.dataset.theme=t;}catch(e){}})();`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
+    // suppressHydrationWarning: the theme script mutates data-theme on <html>
+    // before React hydrates, which is an expected server/client mismatch
     <html
       lang="en"
       className={`${geist.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
     >
       <body>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
         {/*
           Adobe Fonts — Mr Eaves XL Sans (the paragraph face; see --font-body in
           globals.css). It's licensed, so it loads only through YOUR Adobe

@@ -44,6 +44,15 @@
   transform: scale(1);
 }
 
+/* dark theme — a black hover tile would melt into the page, so the tile
+   flips to paper and the logo knocks to a black silhouette instead */
+:global(html[data-theme="dark"]) .hex:hover {
+  background: var(--foreground);
+}
+:global(html[data-theme="dark"]) .hexLogo {
+  filter: brightness(0);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hex,
   .hexLogo {

@@ -8,7 +8,7 @@
 }
 
 .box {
-  border: 1px solid #000;
+  border: 1px solid var(--border);
   background: var(--background);
   transition: background 0.18s ease, border-color 0.18s ease;
 }
@@ -30,15 +30,15 @@
    until the +/− is clicked again. Equal specificity to :hover but declared
    later, so the lock wins whenever a box is both open and hovered. */
 .box[data-open="true"] {
-  background: #000;
-  border-color: #000;
+  background: var(--foreground);
+  border-color: var(--foreground);
 }
 .box[data-open="true"] .headline {
-  color: #fff;
+  color: var(--background);
 }
 .box[data-open="true"] .body {
-  color: #fff;
-  border-top-color: rgba(255, 255, 255, 0.5);
+  color: var(--background);
+  border-top-color: color-mix(in srgb, var(--background) 50%, transparent);
 }
 
 /* clickable header row */
@@ -70,7 +70,7 @@
   flex-shrink: 0;
   width: 24px;
   height: 24px;
-  border: 1px solid #000;
+  border: 1px solid var(--border);
   transition: background 0.18s ease, border-color 0.18s ease;
 }
 .icon::before,
@@ -79,7 +79,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  background: #000;
+  background: var(--foreground);
   transform: translate(-50%, -50%);
   transition: transform 0.25s ease, background 0.18s ease;
 }
@@ -99,11 +99,11 @@
    reads as a minus */
 .box[data-open="true"] .icon {
   background: transparent;
-  border-color: #fff;
+  border-color: var(--background);
 }
 .box[data-open="true"] .icon::before,
 .box[data-open="true"] .icon::after {
-  background: #fff;
+  background: var(--background);
 }
 /* hover → box fills orange, so the button goes white to stay visible */
 .box:hover .icon {
@@ -138,8 +138,8 @@
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.55;
-  color: #333;
-  border-top: 1px solid #000;
+  color: var(--ink-soft);
+  border-top: 1px solid var(--border);
   padding: 14px 18px 18px;
 }
 
@@ -185,7 +185,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: #000;
+  background: var(--foreground);
   transform: translate(var(--depth), var(--depth));
   transition: background 0.18s ease;
 }
@@ -200,7 +200,7 @@
    it reads as one black monolith, not a black front with an orange side.
    Declared after the hover rule so it wins when a block is open and hovered. */
 .tower .box[data-open="true"]::before {
-  background: #000;
+  background: var(--foreground);
 }
 
 @media (prefers-reduced-motion: reduce) {

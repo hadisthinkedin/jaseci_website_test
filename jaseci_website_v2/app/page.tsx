@@ -13,6 +13,7 @@ import BlockTower from "./components/BlockTower";
 import BlackHole from "./components/BlackHole";
 import NeuralNetwork from "./components/NeuralNetwork";
 import CodeCompare from "./components/CodeCompare";
+import ThemeToggle from "./components/ThemeToggle";
 
 // The frameworks to toss in the bin — each drops in as an orange hexagon that
 // flips to the logo (forced white-on-black) on hover. SVGs live at
@@ -283,8 +284,8 @@ function EcoColumn({
 // headline set large on the frame, the full story paragraph slides in
 // as an orange drawer on hover
 const LEAP_COPY = {
-  headline:
-    "So, Jac became npm, PyPI and C-ABI interoperable.",
+  // the \n forces the break before "C-ABI" (the headline renders pre-line)
+  headline: "So, Jac became npm, PyPI and\nC-ABI interoperable.",
   body: "Jac was C-level fast by itself, compiling down to native machine code, but when teamed up with React for the frontend, and then CORS config for the middleware, and then Vercel for deployment, things slowed down. So, in the latest Jac, we decided to have those dependencies built into Jac. Now, when building your AI application, all you need is Jac. But what should we call this individual stack in layman’s terms? What should the solution to multiple problems be dubbed as?",
 };
 
@@ -327,6 +328,7 @@ export default function Home() {
             >
               Community
             </a>
+            <ThemeToggle />
           </div>
           {/* registration-mark corners — fade in when the nav detaches */}
           <span aria-hidden className={`${styles.corner} ${styles.cornerTL}`} />

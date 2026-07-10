@@ -21,8 +21,8 @@
   flex-direction: column;
   height: 640px;
   min-width: 0;
-  border: 1px solid #000;
-  background: #fff;
+  border: 1px solid var(--border);
+  background: var(--background);
 }
 
 .chrome {
@@ -32,11 +32,11 @@
   gap: 14px;
   height: 38px;
   padding: 0 14px;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid var(--border);
   background-image: repeating-linear-gradient(
     45deg,
-    rgba(0, 0, 0, 0.06) 0,
-    rgba(0, 0, 0, 0.06) 1px,
+    var(--hatch) 0,
+    var(--hatch) 1px,
     transparent 1px,
     transparent 9px
   );
@@ -51,7 +51,7 @@
   display: block;
   width: 9px;
   height: 9px;
-  border: 1px solid #000;
+  border: 1px solid var(--border);
   background: transparent;
 }
 .light:first-child {
@@ -66,7 +66,7 @@
   font-size: 10.5px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #595959;
+  color: var(--muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -80,9 +80,9 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 2px 7px;
-  border: 1px solid #000;
-  background: #fff;
-  color: #000;
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--foreground);
 }
 .countAccent {
   border-color: var(--accent);
@@ -96,7 +96,7 @@
 .tabRow {
   flex: none;
   display: flex;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid var(--border);
 }
 
 /* the stack's strip: more files than fit, so it scrolls sideways. The
@@ -106,7 +106,7 @@
 .tabWrap {
   position: relative;
   flex: none;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid var(--border);
 }
 
 .tabScroll {
@@ -144,29 +144,29 @@
   font-size: 11px;
   line-height: 1;
   padding: 8px 13px;
-  background: #fff;
+  background: var(--background);
   border: none;
-  border-right: 1px solid #000;
+  border-right: 1px solid var(--border);
   color: var(--muted);
   cursor: pointer;
   transition: color 0.15s ease, background 0.15s ease;
 }
 
 button.tab:hover:not(.tabOn) {
-  color: #000;
-  background: rgba(0, 0, 0, 0.05);
+  color: var(--foreground);
+  background: var(--tint);
 }
 
 /* active file — black slab, like the frozen manifesto boxes */
 .tabOn {
-  background: #000;
-  color: #fff;
+  background: var(--foreground);
+  color: var(--background);
 }
 
 /* the single Jac tab — the accent, no pointer games */
 .tabJac {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   cursor: default;
 }
 
@@ -192,7 +192,7 @@ button.tab:hover:not(.tabOn) {
   font-family: var(--font-mono);
   font-size: 12px;
   line-height: 1.6;
-  color: #000;
+  color: var(--foreground);
   counter-reset: line;
 }
 .code::-webkit-scrollbar {
@@ -247,8 +247,8 @@ button.tab:hover:not(.tabOn) {
   width: 34px;
   padding-right: 8px;
   text-align: right;
-  border-right: 1px solid rgba(0, 0, 0, 0.15);
-  color: #b3b3b3;
+  border-right: 1px solid var(--hairline-faint);
+  color: var(--grey-3);
   font-size: 10.5px;
   line-height: 1.83; /* matches the 12px × 1.6 row line box */
 }
@@ -259,10 +259,10 @@ button.tab:hover:not(.tabOn) {
   font-weight: 500;
 }
 .str {
-  color: #595959;
+  color: var(--muted);
 }
 .com {
-  color: #9a9a9a;
+  color: var(--grey-2);
 }
 .tag {
   font-weight: 700;
@@ -277,7 +277,7 @@ button.tab:hover:not(.tabOn) {
   justify-content: space-between;
   gap: 12px;
   padding: 9px 14px;
-  border-top: 1px solid #000;
+  border-top: 1px solid var(--border);
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.05em;
@@ -285,7 +285,7 @@ button.tab:hover:not(.tabOn) {
 }
 
 .cmd {
-  color: #000;
+  color: var(--foreground);
   white-space: nowrap;
 }
 
@@ -296,7 +296,7 @@ button.tab:hover:not(.tabOn) {
 }
 
 .note {
-  color: #8a8a8a;
+  color: var(--grey-2);
   text-align: right;
 }
 
@@ -313,7 +313,7 @@ button.tab:hover:not(.tabOn) {
   justify-content: center;
   width: 44px;
   height: 44px;
-  border: 1px solid #000;
+  border: 1px solid var(--border);
   background: var(--background);
   font-family: var(--font-mono);
   font-size: 13px;

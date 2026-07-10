@@ -65,8 +65,8 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  border: 1px solid #000;
-  background: #fff;
+  border: 1px solid var(--border);
+  background: var(--background);
   /* only the faces are hit targets, so hovering recolors the one block you point at */
   pointer-events: auto;
   transition: background-color 0.18s ease;
@@ -112,7 +112,7 @@
   font-size: 22px;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #000;
+  color: var(--foreground);
   white-space: nowrap;
   transition: color 0.18s ease;
 }
@@ -152,6 +152,34 @@
 }
 .block:hover .logo {
   filter: brightness(0) invert(1);
+}
+
+/* ── dark theme ──────────────────────────────────────────────────────
+   The brand logos are dark marks — knock them out to paper so they read
+   on the inverted faces (the orange hover knockout above already matches). */
+:global(html[data-theme="dark"]) .logo {
+  filter: brightness(0) invert(1);
+}
+
+/* the "Your Application" monolith flips to a paper block, its lit-solid
+   shading inverted (top face lightest); hover still floods it orange */
+:global(html[data-theme="dark"]) .isDark .face {
+  background: #d9d9d9;
+}
+:global(html[data-theme="dark"]) .isDark .front {
+  background: #ededed;
+}
+:global(html[data-theme="dark"]) .isDark .top {
+  background: #ffffff;
+}
+:global(html[data-theme="dark"]) .isDark .name {
+  color: #0f0f0f;
+}
+:global(html[data-theme="dark"]) .isDark:hover .face {
+  background: var(--accent);
+}
+:global(html[data-theme="dark"]) .isDark:hover .name {
+  color: #fff;
 }
 
 @media (max-width: 980px) {

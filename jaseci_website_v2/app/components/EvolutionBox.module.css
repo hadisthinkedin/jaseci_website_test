@@ -15,7 +15,7 @@
 
   position: relative;
   height: 340px;
-  border: 1px solid #000;
+  border: 1px solid var(--border);
   background: var(--background);
   overflow: hidden;
   outline: none;
@@ -41,7 +41,9 @@
   line-height: 1.18;
   letter-spacing: -0.02em;
   color: var(--foreground);
-  max-width: 24ch;
+  max-width: 30ch;
+  /* honour the \n the page copy uses to control the break point */
+  white-space: pre-line;
   transition: color 0.18s ease;
 }
 
@@ -55,7 +57,7 @@
   right: 0;
   bottom: 0;
   width: var(--storyW);
-  border-left: 1px solid #000;
+  border-left: 1px solid var(--border);
 }
 
 /* ── the orange story drawer ─────────────────────────────────────────── */
@@ -84,14 +86,14 @@
       with white text: distinct from the transient orange hover preview, and
       it holds even when you hover away — until the +/− is clicked again ──── */
 .frame[data-open="true"] {
-  background: #000;
-  border-color: #000;
+  background: var(--foreground);
+  border-color: var(--foreground);
 }
 .frame[data-open="true"] .headline {
-  color: #fff;
+  color: var(--background);
 }
 .frame[data-open="true"] .story {
-  background: #000;
+  background: var(--foreground);
 }
 
 /* text pinned at final width to the right edge → clean wipe, no rewrap */
@@ -112,7 +114,14 @@
   font-family: var(--font-body);
   font-size: 15px;
   line-height: 1.55;
+  /* on the orange hover drawer — stays white in both themes */
   color: #fff;
+}
+
+/* frozen (data-open) the drawer is an ink slab, not orange — flip the copy
+   to paper so it stays legible in both themes */
+.frame[data-open="true"] .storyText {
+  color: var(--background);
 }
 
 /* ── the +/− affordance (rides above the drawer) ─────────────────────── */
@@ -128,7 +137,7 @@
   height: 24px;
   padding: 0;
   background: transparent;
-  border: 1px solid #000;
+  border: 1px solid var(--border);
   cursor: pointer;
   -webkit-appearance: none;
   appearance: none;
@@ -140,7 +149,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  background: #000;
+  background: var(--foreground);
   transform: translate(-50%, -50%);
   transition: transform 0.25s ease, background 0.18s ease;
 }
@@ -155,11 +164,11 @@
 /* the icon sits over white in every state except the frozen black slab,
    so only data-open flips it to white */
 .frame[data-open="true"] .icon {
-  border-color: #fff;
+  border-color: var(--background);
 }
 .frame[data-open="true"] .icon::before,
 .frame[data-open="true"] .icon::after {
-  background: #fff;
+  background: var(--background);
 }
 /* + → − while the drawer is out */
 .statement:hover ~ .icon::after,
@@ -202,7 +211,7 @@
      even if a frozen state somehow carried over from a wider layout */
   .frame[data-open="true"] {
     background: var(--background);
-    border-color: #000;
+    border-color: var(--border);
   }
   .frame[data-open="true"] .headline {
     color: var(--foreground);
@@ -220,7 +229,7 @@
     width: auto;
     height: 320px;
     border-left: none;
-    border-top: 1px solid #000;
+    border-top: 1px solid var(--border);
   }
   .icon {
     display: none;
@@ -232,15 +241,16 @@
     position: static;
     width: auto;
     background: var(--background);
-    border-top: 1px solid #000;
+    border-top: 1px solid var(--border);
   }
   .storyInner {
     position: static;
     width: auto;
     padding: 18px 20px;
   }
-  .storyText {
-    color: #333;
+  .storyText,
+  .frame[data-open="true"] .storyText {
+    color: var(--ink-soft);
   }
 }
 
